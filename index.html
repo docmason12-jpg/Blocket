@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blocket</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-menu">
+            <div class="menu-item" onclick="openTab('collection')">Collection</div>
+            <div class="menu-item" onclick="openTab('market')">Market</div>
+            <div class="menu-item" onclick="openTab('library')">Library</div>
+            <div class="menu-item" onclick="openTab('stats')">Stats</div>
+            <div class="menu-item" onclick="openTab('info')">Info</div>
+        </div>
+    </aside>
+
+    <!-- Main Area -->
+    <main class="main">
+
+        <!-- Player Info -->
+        <div class="player-info">
+            <div class="username">USERNAME</div>
+
+            <div class="coins">
+                🪙 <span id="coinAmount">1000</span>
+            </div>
+
+            <div class="equipped">
+                <div>Equipped</div>
+                <div>Block</div>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <div class="main-content" id="mainContent">
+            <h1>Welcome to Blocket!</h1>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

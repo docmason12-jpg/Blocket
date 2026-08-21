@@ -1,0 +1,647 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    background: white;
+    color: black;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 32%;
+    height: 100vh;
+    background: #8a00ff;
+    color: white;
+}
+
+.logo {
+    font-size: 70px;
+    padding: 10px;
+    letter-spacing: 1px;
+}
+
+.sidebar-menu {
+    margin-top: 55px;
+}
+
+.menu-item {
+    font-size: 42px;
+    padding: 14px 20px;
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+
+/* =========================
+   MAIN AREA
+========================= */
+
+.main {
+    margin-left: 32%;
+    min-height: 100vh;
+    position: relative;
+}
+
+
+/* =========================
+   PLAYER INFO
+========================= */
+
+.player-info {
+    position: absolute;
+    top: 22px;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.username {
+    font-size: 58px;
+}
+
+.equipped {
+    background: #8a00ff;
+    color: black;
+    padding: 25px 10px;
+    border-radius: 15px;
+    font-size: 28px;
+    text-align: center;
+    min-width: 130px;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.main-content {
+    position: absolute;
+    top: 32%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 90%;
+}
+
+.main-content h1 {
+    font-size: 70px;
+    margin: 0;
+    line-height: 1.3;
+}
+
+
+/* =========================
+   MARKET
+========================= */
+
+.market-grid {
+    display: flex;
+    gap: 20px;
+    margin-top: 35px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+
+/* Thin box cards */
+
+.pack-card {
+    background: #8a00ff;
+    color: white;
+    padding: 18px;
+    border-radius: 15px;
+    width: 230px;
+    min-height: 190px;
+    text-align: center;
+}
+
+.pack-card h2 {
+    font-size: 26px;
+    margin: 5px 0 10px;
+}
+
+.pack-card p {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+.pack-price {
+    font-size: 20px !important;
+}
+
+
+/* Buy button */
+
+.buy-button {
+    background: white;
+    color: #8a00ff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.buy-button:hover {
+    transform: scale(1.05);
+}
+
+
+/* =========================
+   DAILY SPIN
+========================= */
+
+.daily-card {
+    background: #8a00ff;
+    color: white;
+    padding: 18px;
+    border-radius: 15px;
+    width: 230px;
+    min-height: 190px;
+    text-align: center;
+}
+
+.daily-card h2 {
+    font-size: 26px;
+    margin: 5px 0 10px;
+}
+
+.daily-card p {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+.spin-button {
+    background: white;
+    color: #8a00ff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.spin-button:hover {
+    transform: scale(1.05);
+}
+
+.spin-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* Full-screen spin */
+
+.spin-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.spin-window {
+    text-align: center;
+    color: white;
+}
+
+.spin-window h1 {
+    font-size: 55px;
+}
+
+
+/* Wheel */
+
+.wheel {
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    border: 12px solid white;
+    margin: 30px auto;
+
+    background: conic-gradient(
+        #ff5252 0deg 51deg,
+        #ffb52e 51deg 102deg,
+        #ffe04a 102deg 153deg,
+        #55d66a 153deg 204deg,
+        #45b8ff 204deg 255deg,
+        #8c5cff 255deg 306deg,
+        #ff5cdb 306deg 360deg
+    );
+
+    transition:
+        transform 3s
+        cubic-bezier(0.12, 0.8, 0.18, 1);
+
+    position: relative;
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 45px;
+    color: white;
+    z-index: 2;
+}
+
+.spin-result {
+    font-size: 30px;
+    margin-top: 20px;
+}
+
+.spin-result strong {
+    display: block;
+    font-size: 55px;
+    margin-top: 10px;
+}
+
+.close-spin {
+    margin-top: 30px;
+    padding: 15px 35px;
+    border: none;
+    border-radius: 12px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-spin:hover {
+    transform: scale(1.05);
+}
+
+
+/* =========================
+   COLLECTION
+========================= */
+
+.collection-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.collection-block {
+    width: 210px;
+    padding: 20px;
+    background: #f1f1f1;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.collection-block-name {
+    font-size: 23px;
+    margin-bottom: 10px;
+}
+
+.collection-count {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.empty-collection {
+    font-size: 24px;
+}
+
+
+/* Equip */
+
+.equip-button {
+    background: #8a00ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.equip-button:hover {
+    transform: scale(1.05);
+}
+
+.equip-button:disabled {
+    opacity: 0.6;
+    cursor: default;
+    transform: none;
+}
+
+
+/* Sell */
+
+.sell-button {
+    background: #222;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.sell-button:hover {
+    transform: scale(1.05);
+}
+
+
+/* =========================
+   LIBRARY
+========================= */
+
+.library-description {
+    font-size: 20px;
+}
+
+.library-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.library-block {
+    width: 210px;
+    padding: 20px;
+    background: #f1f1f1;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.library-block-name {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.library-sell {
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+
+/* =========================
+   RARITIES
+========================= */
+
+.library-rarity,
+.collection-rarity,
+.rarity {
+    font-weight: bold;
+}
+
+
+/* Common */
+
+.library-rarity.common,
+.collection-rarity.common,
+.rarity.common {
+    color: #777;
+}
+
+
+/* Uncommon */
+
+.library-rarity.uncommon,
+.collection-rarity.uncommon,
+.rarity.uncommon {
+    color: #22a447;
+}
+
+
+/* Rare */
+
+.library-rarity.rare,
+.collection-rarity.rare,
+.rarity.rare {
+    color: #1687d9;
+}
+
+
+/* Epic */
+
+.library-rarity.epic,
+.collection-rarity.epic,
+.rarity.epic {
+    color: #a855f7;
+}
+
+
+/* Legendary */
+
+.library-rarity.legendary,
+.collection-rarity.legendary,
+.rarity.legendary {
+    color: #e58a00;
+}
+
+
+/* Chroma */
+
+.library-rarity.chroma,
+.collection-rarity.chroma,
+.rarity.chroma {
+    color: #ff00d4;
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+.stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.stat-card {
+    width: 220px;
+    padding: 20px;
+    background: #f1f1f1;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.stat-card h2 {
+    font-size: 20px;
+}
+
+.stat-card p {
+    font-size: 30px;
+}
+
+
+/* =========================
+   INFO
+========================= */
+
+.info-card {
+    background: #f1f1f1;
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+.info-card h2 {
+    font-size: 28px;
+}
+
+.info-card p {
+    font-size: 18px;
+}
+
+
+/* =========================
+   BOX OPENING
+========================= */
+
+.pack-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.94);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+
+/* Rolling screen */
+
+.pack-opening {
+    text-align: center;
+    color: white;
+}
+
+.opening-box-name {
+    font-size: 32px;
+    margin-bottom: 25px;
+}
+
+.rolling-text {
+    font-size: 65px;
+    min-width: 500px;
+    margin-bottom: 30px;
+
+    animation: rollPulse 0.15s infinite alternate;
+}
+
+@keyframes rollPulse {
+
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.04);
+    }
+
+}
+
+.opening-text {
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+
+/* Skip */
+
+.skip-button {
+    background: white;
+    color: black;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 12px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.skip-button:hover {
+    transform: scale(1.05);
+}
+
+
+/* =========================
+   BOX REVEAL
+========================= */
+
+.pack-reveal {
+    text-align: center;
+    color: white;
+}
+
+.you-got {
+    font-size: 40px;
+    margin-bottom: 30px;
+}
+
+.revealed-block {
+    font-size: 75px;
+    margin-bottom: 20px;
+    animation: revealPop 0.5s ease;
+}
+
+@keyframes revealPop {
+
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+}
+
+.rarity {
+    font-size: 35px;
+    margin-bottom: 35px;
+}
+
+.close-pack {
+    background: white;
+    color: black;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 12px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-pack:hover {
+    transform: scale(1.05);
+}
