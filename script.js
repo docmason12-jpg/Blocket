@@ -1,26 +1,45 @@
-let coins = Number(localStorage.getItem("blocketCoins")) || 1000;
+let coins =
+    Number(localStorage.getItem("blocketCoins")) || 1000;
 
-let collection = JSON.parse(
-    localStorage.getItem("blocketCollection")
-) || {};
 
-let boxesOpened = Number(
-    localStorage.getItem("blocketBoxesOpened")
-) || Number(localStorage.getItem("blocketPacksOpened")) || 0;
+let collection =
+    JSON.parse(
+        localStorage.getItem("blocketCollection")
+    ) || {};
+
+
+let boxesOpened =
+    Number(
+        localStorage.getItem("blocketBoxesOpened")
+    ) ||
+    Number(
+        localStorage.getItem("blocketPacksOpened")
+    ) ||
+    0;
+
 
 let lastDailySpin =
-    localStorage.getItem("blocketDailySpin") || "";
+    localStorage.getItem(
+        "blocketDailySpin"
+    ) || "";
+
 
 let equippedBlock =
-    localStorage.getItem("blocketEquippedBlock") || "Block";
+    localStorage.getItem(
+        "blocketEquippedBlock"
+    ) || "Block";
+
 
 const boxes = {
 
     color: {
+
         name: "COLOR BOX",
+
         price: 20,
 
         blocks: [
+
             { name: "Red Block", rarity: "Common" },
             { name: "Yellow Block", rarity: "Common" },
             { name: "Blue Block", rarity: "Common" },
@@ -38,14 +57,20 @@ const boxes = {
             { name: "Brown Block", rarity: "Legendary" },
 
             { name: "Rainbow Block", rarity: "Chroma" }
+
         ]
+
     },
 
+
     robot: {
+
         name: "ROBOT BOX",
+
         price: 15,
 
         blocks: [
+
             { name: "Rusty Bot", rarity: "Common" },
             { name: "Lil Bot", rarity: "Common" },
 
@@ -56,20 +81,33 @@ const boxes = {
             { name: "Titan", rarity: "Epic" },
 
             { name: "Mega Titan", rarity: "Legendary" }
+
         ]
+
     }
+
 };
+
 
 const sellValues = {
+
     Common: 5,
+
     Uncommon: 10,
+
     Rare: 25,
+
     Epic: 50,
+
     Legendary: 100,
+
     Chroma: 500
+
 };
 
+
 let currentRolling = null;
+
 let rollingInterval = null;
 
 
@@ -108,6 +146,7 @@ function saveGame() {
         "blocketEquippedBlock",
         equippedBlock
     );
+
 }
 
 
@@ -118,13 +157,19 @@ function saveGame() {
 function updateCoins() {
 
     const coinAmount =
-        document.getElementById("coinAmount");
+        document.getElementById(
+            "coinAmount"
+        );
 
     if (coinAmount) {
-        coinAmount.textContent = coins;
+
+        coinAmount.textContent =
+            coins;
+
     }
 
     saveGame();
+
 }
 
 
@@ -135,51 +180,69 @@ function updateCoins() {
 function updateEquipped() {
 
     const equipped =
-        document.querySelector(".equipped");
+        document.querySelector(
+            ".equipped"
+        );
 
     if (!equipped) return;
 
+
     equipped.innerHTML = `
+
         <div>Equipped</div>
+
         <div>${equippedBlock}</div>
+
     `;
+
 }
 
 
 function equipBlock(blockName) {
 
     if (!collection[blockName]) {
+
         return;
+
     }
 
-    equippedBlock = blockName;
+
+    equippedBlock =
+        blockName;
+
 
     localStorage.setItem(
         "blocketEquippedBlock",
         equippedBlock
     );
 
+
     updateEquipped();
 
     showCollection();
+
 }
 
 
 /* =========================
-   DATE / DAILY SPIN
+   DAILY SPIN
 ========================= */
 
 function getToday() {
 
-    const now = new Date();
+    const now =
+        new Date();
+
 
     return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+
 }
 
 
 function canDailySpin() {
 
     return lastDailySpin !== getToday();
+
 }
 
 
@@ -190,24 +253,39 @@ function canDailySpin() {
 function openTab(tab) {
 
     if (tab === "collection") {
+
         showCollection();
+
     }
+
 
     if (tab === "market") {
+
         showMarket();
+
     }
+
 
     if (tab === "library") {
+
         showLibrary();
+
     }
+
 
     if (tab === "stats") {
+
         showStats();
+
     }
 
+
     if (tab === "info") {
+
         showInfo();
+
     }
+
 }
 
 
@@ -218,16 +296,22 @@ function openTab(tab) {
 function showMarket() {
 
     const mainContent =
-        document.getElementById("mainContent");
+        document.getElementById(
+            "mainContent"
+        );
+
 
     const dailyAvailable =
         canDailySpin();
+
 
     mainContent.innerHTML = `
 
         <h1>MARKET</h1>
 
+
         <div class="market-grid">
+
 
             <div class="pack-card">
 
@@ -290,17 +374,21 @@ function showMarket() {
                     onclick="dailySpin()"
                     ${dailyAvailable ? "" : "disabled"}
                 >
+
                     ${
                         dailyAvailable
                         ? "SPIN!"
                         : "COME BACK TOMORROW"
                     }
+
                 </button>
 
             </div>
 
         </div>
+
     `;
+
 }
 
 
@@ -311,56 +399,91 @@ function showMarket() {
 function showStats() {
 
     const mainContent =
-        document.getElementById("mainContent");
+        document.getElementById(
+            "mainContent"
+        );
+
 
     let totalBlocks = 0;
 
-    Object.values(collection).forEach(block => {
-        totalBlocks += block.amount;
-    });
+
+    Object.values(collection)
+        .forEach(block => {
+
+            totalBlocks +=
+                block.amount;
+
+        });
+
 
     const uniqueBlocks =
         Object.keys(collection).length;
 
+
     const allBlocks =
         Object.values(boxes)
-        .flatMap(box => box.blocks);
+        .flatMap(
+            box => box.blocks
+        );
 
-    let rarestBlock = "None";
+
+    let rarestBlock =
+        "None";
+
 
     if (collection["Rainbow Block"]) {
 
-        rarestBlock = "Rainbow Block";
+        rarestBlock =
+            "Rainbow Block";
 
-    } else if (collection["Mega Titan"]) {
+    }
 
-        rarestBlock = "Mega Titan";
-
-    } else if (collection["Brown Block"]) {
-
-        rarestBlock = "Brown Block";
-
-    } else if (collection["Titan"]) {
-
-        rarestBlock = "Titan";
-
-    } else if (uniqueBlocks > 0) {
+    else if (collection["Mega Titan"]) {
 
         rarestBlock =
-            Object.keys(collection)[0];
+            "Mega Titan";
+
     }
+
+    else if (collection["Brown Block"]) {
+
+        rarestBlock =
+            "Brown Block";
+
+    }
+
+    else if (collection["Titan"]) {
+
+        rarestBlock =
+            "Titan";
+
+    }
+
+    else if (uniqueBlocks > 0) {
+
+        rarestBlock =
+            Object.keys(
+                collection
+            )[0];
+
+    }
+
 
     mainContent.innerHTML = `
 
         <h1>STATS</h1>
 
+
         <div class="stats-grid">
+
 
             <div class="stat-card">
 
                 <h2>🪙 COINS</h2>
 
-                <p>${coins}</p>
+                <p>
+                    ${coins}
+                </p>
 
             </div>
 
@@ -369,7 +492,9 @@ function showStats() {
 
                 <h2>📦 BOXES OPENED</h2>
 
-                <p>${boxesOpened}</p>
+                <p>
+                    ${boxesOpened}
+                </p>
 
             </div>
 
@@ -378,7 +503,9 @@ function showStats() {
 
                 <h2>🧱 TOTAL BLOCKS</h2>
 
-                <p>${totalBlocks}</p>
+                <p>
+                    ${totalBlocks}
+                </p>
 
             </div>
 
@@ -398,12 +525,17 @@ function showStats() {
 
                 <h2>⭐ RAREST BLOCK</h2>
 
-                <p>${rarestBlock}</p>
+                <p>
+                    ${rarestBlock}
+                </p>
 
             </div>
 
+
         </div>
+
     `;
+
 }
 
 
@@ -414,18 +546,29 @@ function showStats() {
 function showLibrary() {
 
     const mainContent =
-        document.getElementById("mainContent");
+        document.getElementById(
+            "mainContent"
+        );
+
 
     const allBlocks =
         Object.values(boxes)
-        .flatMap(box => box.blocks);
+        .flatMap(
+            box => box.blocks
+        );
 
-    let blocksHTML = "";
+
+    let blocksHTML =
+        "";
+
 
     allBlocks.forEach(block => {
 
         const sellValue =
-            sellValues[block.rarity];
+            sellValues[
+                block.rarity
+            ];
+
 
         blocksHTML += `
 
@@ -443,13 +586,16 @@ function showLibrary() {
                 </div>
 
                 <div class="library-sell">
-                    Sell Value: ${sellValue} 🪙
+                    Sell Value:
+                    ${sellValue} 🪙
                 </div>
 
             </div>
 
         `;
+
     });
+
 
     mainContent.innerHTML = `
 
@@ -466,6 +612,7 @@ function showLibrary() {
         </div>
 
     `;
+
 }
 
 
@@ -476,79 +623,121 @@ function showLibrary() {
 function showCollection() {
 
     const mainContent =
-        document.getElementById("mainContent");
+        document.getElementById(
+            "mainContent"
+        );
 
-    let blocksHTML = "";
+
+    let blocksHTML =
+        "";
+
 
     const ownedBlocks =
-        Object.keys(collection);
+        Object.keys(
+            collection
+        );
+
 
     if (ownedBlocks.length === 0) {
 
         blocksHTML = `
+
             <p class="empty-collection">
-                You haven't collected any Blocks yet!
+
+                You haven't collected
+                any Blocks yet!
+
             </p>
+
         `;
 
-    } else {
-
-        ownedBlocks.forEach(blockName => {
-
-            const block =
-                collection[blockName];
-
-            const sellValue =
-                sellValues[block.rarity];
-
-            const isEquipped =
-                equippedBlock === block.name;
-
-            blocksHTML += `
-
-                <div class="collection-block">
-
-                    <div class="collection-block-name">
-                        ${block.name}
-                    </div>
-
-                    <div
-                        class="collection-rarity
-                        ${block.rarity.toLowerCase()}"
-                    >
-                        ${block.rarity}
-                    </div>
-
-                    <div class="collection-count">
-                        x${block.amount}
-                    </div>
-
-
-                    <button
-                        class="equip-button"
-                        onclick="equipBlock('${block.name}')"
-                        ${isEquipped ? "disabled" : ""}
-                    >
-                        ${
-                            isEquipped
-                            ? "EQUIPPED"
-                            : "EQUIP"
-                        }
-                    </button>
-
-
-                    <button
-                        class="sell-button"
-                        onclick="sellBlock('${block.name}')"
-                    >
-                        SELL +${sellValue} 🪙
-                    </button>
-
-                </div>
-
-            `;
-        });
     }
+
+    else {
+
+        ownedBlocks.forEach(
+            blockName => {
+
+                const block =
+                    collection[
+                        blockName
+                    ];
+
+
+                const sellValue =
+                    sellValues[
+                        block.rarity
+                    ];
+
+
+                const isEquipped =
+                    equippedBlock ===
+                    block.name;
+
+
+                blocksHTML += `
+
+                    <div class="collection-block">
+
+                        <div class="collection-block-name">
+
+                            ${block.name}
+
+                        </div>
+
+
+                        <div
+                            class="collection-rarity
+                            ${block.rarity.toLowerCase()}"
+                        >
+
+                            ${block.rarity}
+
+                        </div>
+
+
+                        <div class="collection-count">
+
+                            x${block.amount}
+
+                        </div>
+
+
+                        <button
+                            class="equip-button"
+                            onclick="equipBlock('${block.name}')"
+                            ${isEquipped ? "disabled" : ""}
+                        >
+
+                            ${
+                                isEquipped
+                                ? "EQUIPPED"
+                                : "EQUIP"
+                            }
+
+                        </button>
+
+
+                        <button
+                            class="sell-button"
+                            onclick="sellBlock('${block.name}')"
+                        >
+
+                            SELL
+                            +${sellValue} 🪙
+
+                        </button>
+
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+    }
+
 
     mainContent.innerHTML = `
 
@@ -561,6 +750,7 @@ function showCollection() {
         </div>
 
     `;
+
 }
 
 
@@ -571,43 +761,61 @@ function showCollection() {
 function showInfo() {
 
     const mainContent =
-        document.getElementById("mainContent");
+        document.getElementById(
+            "mainContent"
+        );
+
 
     mainContent.innerHTML = `
 
         <h1>INFO</h1>
 
+
         <div class="info-card">
 
-            <h2>ABOUT BLOCKET</h2>
+            <h2>
+                ABOUT BLOCKET
+            </h2>
 
             <p>
                 Welcome to Blocket!
             </p>
 
             <p>
-                Collect Blocks, open Boxes,
-                discover rare Blocks, and build
-                your collection.
+                Collect Blocks,
+                open Boxes,
+                discover rare Blocks,
+                and build your collection.
             </p>
 
-            <h2>RARITIES</h2>
+
+            <h2>
+                RARITIES
+            </h2>
 
             <p>
-                Common → Uncommon → Rare →
-                Epic → Legendary → Chroma
+                Common →
+                Uncommon →
+                Rare →
+                Epic →
+                Legendary →
+                Chroma
             </p>
 
-            <h2>BOXES</h2>
+
+            <h2>
+                BOXES
+            </h2>
 
             <p>
-                Open different Boxes to discover
-                different Blocks.
+                Open different Boxes
+                to discover different Blocks.
             </p>
 
         </div>
 
     `;
+
 }
 
 
@@ -620,11 +828,10 @@ function getRandomBlock(boxType) {
     const box =
         boxes[boxType];
 
+
     const roll =
         Math.random() * 100;
 
-
-    /* COLOR BOX */
 
     if (boxType === "color") {
 
@@ -637,6 +844,7 @@ function getRandomBlock(boxType) {
 
         }
 
+
         if (roll < 5) {
 
             return getBlockByRarity(
@@ -645,6 +853,7 @@ function getRandomBlock(boxType) {
             );
 
         }
+
 
         if (roll < 15) {
 
@@ -655,6 +864,7 @@ function getRandomBlock(boxType) {
 
         }
 
+
         if (roll < 35) {
 
             return getBlockByRarity(
@@ -663,6 +873,7 @@ function getRandomBlock(boxType) {
             );
 
         }
+
 
         if (roll < 60) {
 
@@ -673,14 +884,14 @@ function getRandomBlock(boxType) {
 
         }
 
+
         return getBlockByRarity(
             box.blocks,
             "Common"
         );
+
     }
 
-
-    /* ROBOT BOX */
 
     if (boxType === "robot") {
 
@@ -693,6 +904,7 @@ function getRandomBlock(boxType) {
 
         }
 
+
         if (roll < 10) {
 
             return getBlockByRarity(
@@ -701,6 +913,7 @@ function getRandomBlock(boxType) {
             );
 
         }
+
 
         if (roll < 25) {
 
@@ -711,6 +924,7 @@ function getRandomBlock(boxType) {
 
         }
 
+
         if (roll < 50) {
 
             return getBlockByRarity(
@@ -720,20 +934,28 @@ function getRandomBlock(boxType) {
 
         }
 
+
         return getBlockByRarity(
             box.blocks,
             "Common"
         );
+
     }
+
 }
 
 
-function getBlockByRarity(blocks, rarity) {
+function getBlockByRarity(
+    blocks,
+    rarity
+) {
 
     const possibleBlocks =
         blocks.filter(
-            block => block.rarity === rarity
+            block =>
+                block.rarity === rarity
         );
+
 
     return possibleBlocks[
         Math.floor(
@@ -741,6 +963,7 @@ function getBlockByRarity(blocks, rarity) {
             possibleBlocks.length
         )
     ];
+
 }
 
 
@@ -753,6 +976,7 @@ function buyBox(boxType) {
     const box =
         boxes[boxType];
 
+
     if (coins < box.price) {
 
         alert(
@@ -760,17 +984,25 @@ function buyBox(boxType) {
         );
 
         return;
+
     }
 
-    coins -= box.price;
+
+    coins -=
+        box.price;
+
 
     boxesOpened++;
+
 
     saveGame();
 
     updateCoins();
 
-    startBoxOpening(boxType);
+    startBoxOpening(
+        boxType
+    );
+
 }
 
 
@@ -778,65 +1010,93 @@ function buyBox(boxType) {
    BOX OPENING
 ========================= */
 
-function startBoxOpening(boxType) {
+function startBoxOpening(
+    boxType
+) {
 
     const box =
         boxes[boxType];
 
+
     const overlay =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     overlay.className =
         "pack-overlay";
+
 
     overlay.innerHTML = `
 
         <div class="pack-opening">
 
             <div class="opening-box-name">
+
                 ${box.name}
+
             </div>
+
 
             <div
                 class="rolling-text"
                 id="rollingText"
             >
+
                 ${box.blocks[0].name}
+
             </div>
 
+
             <div class="opening-text">
-                OPENING ${box.name}...
+
+                OPENING
+                ${box.name}...
+
             </div>
+
 
             <button
                 class="skip-button"
                 onclick="skipPackOpening()"
             >
+
                 SKIP
+
             </button>
 
         </div>
 
     `;
 
+
     document.body.appendChild(
         overlay
     );
+
 
     const rollingText =
         document.getElementById(
             "rollingText"
         );
 
+
     const rollingBlocks =
         box.blocks.map(
-            block => block.name
+            block =>
+                block.name
         );
 
+
     currentRolling =
-        getRandomBlock(boxType);
+        getRandomBlock(
+            boxType
+        );
+
 
     let rollCount = 0;
+
 
     rollingInterval =
         setInterval(() => {
@@ -849,10 +1109,13 @@ function startBoxOpening(boxType) {
                     )
                 ];
 
+
             rollingText.textContent =
                 randomName;
 
+
             rollCount++;
+
 
             if (rollCount >= 25) {
 
@@ -861,16 +1124,25 @@ function startBoxOpening(boxType) {
             }
 
         }, 100);
+
 }
 
+
+/* =========================
+   SKIP
+========================= */
 
 function skipPackOpening() {
 
     if (!currentRolling) {
+
         return;
+
     }
 
+
     finishPackOpening();
+
 }
 
 
@@ -882,33 +1154,46 @@ function finishPackOpening() {
             rollingInterval
         );
 
-        rollingInterval = null;
+        rollingInterval =
+            null;
+
     }
 
+
     if (!currentRolling) {
+
         return;
+
     }
+
 
     const wonBlock =
         currentRolling;
 
-    currentRolling = null;
+
+    currentRolling =
+        null;
+
 
     addToCollection(
         wonBlock
     );
 
+
     revealBlock(
         wonBlock
     );
+
 }
 
 
 /* =========================
-   COLLECTION ADD
+   ADD COLLECTION
 ========================= */
 
-function addToCollection(block) {
+function addToCollection(
+    block
+) {
 
     if (collection[block.name]) {
 
@@ -916,22 +1201,30 @@ function addToCollection(block) {
             block.name
         ].amount++;
 
-    } else {
+    }
+
+    else {
 
         collection[
             block.name
         ] = {
 
-            name: block.name,
+            name:
+                block.name,
 
-            rarity: block.rarity,
+            rarity:
+                block.rarity,
 
-            amount: 1
+            amount:
+                1
 
         };
+
     }
 
+
     saveGame();
+
 }
 
 
@@ -939,32 +1232,53 @@ function addToCollection(block) {
    SELL
 ========================= */
 
-function sellBlock(blockName) {
+function sellBlock(
+    blockName
+) {
 
     const block =
-        collection[blockName];
+        collection[
+            blockName
+        ];
+
 
     if (!block) {
+
         return;
+
     }
 
+
     const sellValue =
-        sellValues[block.rarity];
+        sellValues[
+            block.rarity
+        ];
+
 
     block.amount--;
 
-    coins += sellValue;
+
+    coins +=
+        sellValue;
 
 
     if (block.amount <= 0) {
 
-        if (equippedBlock === blockName) {
+        if (
+            equippedBlock ===
+            blockName
+        ) {
 
-            equippedBlock = "Block";
+            equippedBlock =
+                "Block";
 
         }
 
-        delete collection[blockName];
+
+        delete collection[
+            blockName
+        ];
+
     }
 
 
@@ -975,6 +1289,7 @@ function sellBlock(blockName) {
     updateEquipped();
 
     showCollection();
+
 }
 
 
@@ -985,20 +1300,30 @@ function sellBlock(blockName) {
 function dailySpin() {
 
     if (!canDailySpin()) {
+
         return;
+
     }
 
+
     const overlay =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     overlay.className =
         "spin-overlay";
+
 
     overlay.innerHTML = `
 
         <div class="spin-window">
 
-            <h1>🎡 DAILY SPIN</h1>
+            <h1>
+                🎡 DAILY SPIN
+            </h1>
+
 
             <div
                 class="wheel"
@@ -1011,27 +1336,34 @@ function dailySpin() {
 
             </div>
 
+
             <div
                 class="spin-result"
                 id="spinResult"
             >
+
                 SPINNING...
+
             </div>
 
         </div>
 
     `;
 
+
     document.body.appendChild(
         overlay
     );
+
 
     const wheel =
         document.getElementById(
             "dailyWheel"
         );
 
+
     const rewards = [
+
         500,
         750,
         1000,
@@ -1039,7 +1371,9 @@ function dailySpin() {
         1500,
         1750,
         2000
+
     ];
+
 
     const winningReward =
         rewards[
@@ -1049,10 +1383,13 @@ function dailySpin() {
             )
         ];
 
+
     const rotations =
-        5 + Math.floor(
+        5 +
+        Math.floor(
             Math.random() * 3
         );
+
 
     wheel.style.transform =
         `rotate(${
@@ -1063,14 +1400,18 @@ function dailySpin() {
 
     setTimeout(() => {
 
-        coins += winningReward;
+        coins +=
+            winningReward;
+
 
         lastDailySpin =
             getToday();
 
+
         saveGame();
 
         updateCoins();
+
 
         document.getElementById(
             "spinResult"
@@ -1084,24 +1425,30 @@ function dailySpin() {
 
         `;
 
+
         const closeButton =
             document.createElement(
                 "button"
             );
 
+
         closeButton.className =
             "close-spin";
+
 
         closeButton.textContent =
             "CONTINUE";
 
-        closeButton.onclick = () => {
 
-            overlay.remove();
+        closeButton.onclick =
+            () => {
 
-            showMarket();
+                overlay.remove();
 
-        };
+                showMarket();
+
+            };
+
 
         document.querySelector(
             ".spin-window"
@@ -1109,7 +1456,9 @@ function dailySpin() {
             closeButton
         );
 
+
     }, 3000);
+
 }
 
 
@@ -1117,47 +1466,62 @@ function dailySpin() {
    REVEAL
 ========================= */
 
-function revealBlock(block) {
+function revealBlock(
+    block
+) {
 
     const overlay =
         document.querySelector(
             ".pack-overlay"
         );
 
+
     overlay.innerHTML = `
 
         <div class="pack-reveal">
 
             <div class="you-got">
+
                 YOU GOT!
+
             </div>
 
+
             <div class="revealed-block">
+
                 ${block.name}
+
             </div>
+
 
             <div
                 class="rarity
                 ${block.rarity.toLowerCase()}"
             >
+
                 ${block.rarity}
+
             </div>
+
 
             <button
                 class="close-pack"
                 onclick="closePack()"
             >
+
                 CONTINUE
+
             </button>
 
         </div>
 
     `;
+
 }
 
 
 /* =========================
-   CLOSE BOX
+   CLOSE PACK
 ========================= */
 
 function closePack() {
@@ -1167,9 +1531,153 @@ function closePack() {
             ".pack-overlay"
         );
 
+
     if (overlay) {
+
         overlay.remove();
+
     }
+
+}
+
+
+/* =====================================================
+   ACCOUNT UI
+===================================================== */
+
+function openAccount() {
+
+    document.getElementById(
+        "accountOverlay"
+    ).style.display =
+        "flex";
+
+}
+
+
+function closeAccount() {
+
+    document.getElementById(
+        "accountOverlay"
+    ).style.display =
+        "none";
+
+}
+
+
+function showLogin() {
+
+    const content =
+        document.getElementById(
+            "accountContent"
+        );
+
+
+    content.innerHTML = `
+
+        <h2>LOG IN</h2>
+
+
+        <input
+            id="loginUsername"
+            class="account-input"
+            type="text"
+            placeholder="Username"
+        >
+
+
+        <input
+            id="loginPassword"
+            class="account-input"
+            type="password"
+            placeholder="Password"
+        >
+
+
+        <button
+            class="account-main-button"
+            onclick="login()"
+        >
+
+            LOG IN
+
+        </button>
+
+
+        <p>
+            Don't have an account?
+        </p>
+
+
+        <button
+            class="account-link-button"
+            onclick="showSignup()"
+        >
+
+            SIGN UP
+
+        </button>
+
+    `;
+
+}
+
+
+function showSignup() {
+
+    const content =
+        document.getElementById(
+            "accountContent"
+        );
+
+
+    content.innerHTML = `
+
+        <h2>SIGN UP</h2>
+
+
+        <input
+            id="signupUsername"
+            class="account-input"
+            type="text"
+            placeholder="Username"
+        >
+
+
+        <input
+            id="signupPassword"
+            class="account-input"
+            type="password"
+            placeholder="Password"
+        >
+
+
+        <button
+            class="account-main-button"
+            onclick="signup()"
+        >
+
+            CREATE ACCOUNT
+
+        </button>
+
+
+        <p>
+            Already have an account?
+        </p>
+
+
+        <button
+            class="account-link-button"
+            onclick="showLogin()"
+        >
+
+            LOG IN
+
+        </button>
+
+    `;
+
 }
 
 
@@ -1178,4 +1686,5 @@ function closePack() {
 ========================= */
 
 updateEquipped();
+
 updateCoins();

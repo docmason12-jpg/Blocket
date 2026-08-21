@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Blocket</title>
     <link rel="stylesheet" href="style.css">
@@ -8,40 +9,140 @@
 <body>
 
     <!-- Left Sidebar -->
+
     <aside class="sidebar">
+
         <div class="sidebar-menu">
-            <div class="menu-item" onclick="openTab('collection')">Collection</div>
-            <div class="menu-item" onclick="openTab('market')">Market</div>
-            <div class="menu-item" onclick="openTab('library')">Library</div>
-            <div class="menu-item" onclick="openTab('stats')">Stats</div>
-            <div class="menu-item" onclick="openTab('info')">Info</div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('collection')"
+            >
+                Collection
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('market')"
+            >
+                Market
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('library')"
+            >
+                Library
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('stats')"
+            >
+                Stats
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('info')"
+            >
+                Info
+            </div>
+
         </div>
+
     </aside>
 
+
     <!-- Main Area -->
+
     <main class="main">
 
         <!-- Player Info -->
-        <div class="player-info">
-            <div class="username">USERNAME</div>
 
-            <div class="coins">
-                🪙 <span id="coinAmount">1000</span>
-            </div>
+        <div class="player-info">
+
+            <button
+                class="account-button"
+                onclick="openAccount()"
+            >
+                ACCOUNT
+            </button>
 
             <div class="equipped">
+
                 <div>Equipped</div>
+
                 <div>Block</div>
+
             </div>
+
         </div>
 
-        <!-- Main Menu -->
-        <div class="main-content" id="mainContent">
+
+        <!-- Main Content -->
+
+        <div
+            class="main-content"
+            id="mainContent"
+        >
+
             <h1>Welcome to Blocket!</h1>
+
         </div>
 
     </main>
 
+
+    <!-- Account Popup -->
+
+    <div
+        id="accountOverlay"
+        class="account-overlay"
+    >
+
+        <div class="account-window">
+
+            <button
+                class="account-close"
+                onclick="closeAccount()"
+            >
+                ×
+            </button>
+
+
+            <h1>BLOCKET</h1>
+
+
+            <div id="accountContent">
+
+                <h2>ACCOUNT</h2>
+
+
+                <button
+                    class="account-main-button"
+                    onclick="showLogin()"
+                >
+                    LOG IN
+                </button>
+
+
+                <button
+                    class="account-main-button"
+                    onclick="showSignup()"
+                >
+                    SIGN UP
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
     <script src="script.js"></script>
+
 </body>
+
 </html>
