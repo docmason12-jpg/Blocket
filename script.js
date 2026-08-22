@@ -10,10 +10,40 @@
 const SUPABASE_URL = "https://whakyhbtqwfvicicnttu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gKxzj3EC0h2FeLLST2JflA_QGBdSRbD";
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+const supabaseClient =
+    window.supabase?.createClient
+        ? window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        )
+        : {
+            auth: {
+                signUp: async () => ({
+                    data: null,
+                    error: {
+                        message: "Account service is unavailable."
+                    }
+                }),
+                signInWithPassword: async () => ({
+                    data: null,
+                    error: {
+                        message: "Account service is unavailable."
+                    }
+                }),
+                getUser: async () => ({
+                    data: { user: null },
+                    error: null
+                }),
+                signOut: async () => ({ error: null }),
+                onAuthStateChange: () => ({
+                    data: {
+                        subscription: {
+                            unsubscribe: () => {}
+                        }
+                    }
+                })
+            }
+        };
 let coins =
     Number(localStorage.getItem("blocketCoins")) || 1000;
 
