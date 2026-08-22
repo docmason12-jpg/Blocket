@@ -14,18 +14,17 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
-
-
-/* =========================
-   GAME DATA
-========================= */
-
 let coins =
     Number(localStorage.getItem("blocketCoins")) || 1000;
 
 let collection =
     JSON.parse(
         localStorage.getItem("blocketCollection")
+    ) || {};
+
+let backgroundCollection =
+    JSON.parse(
+        localStorage.getItem("blocketBackgroundCollection")
     ) || {};
 
 let boxesOpened =
@@ -37,14 +36,26 @@ let boxesOpened =
     ) ||
     0;
 
+let packStats =
+    JSON.parse(
+        localStorage.getItem("blocketPackStats")
+    ) || {};
+
 let lastDailySpin =
     localStorage.getItem("blocketDailySpin") || "";
 
 let equippedBlock =
     localStorage.getItem("blocketEquippedBlock") || "Block";
 
+let equippedBackground =
+    localStorage.getItem("blocketEquippedBackground") || "Default";
+
+let isDarkMode =
+    localStorage.getItem("blocketTheme") === "dark";
+
 let currentRolling = null;
 let rollingInterval = null;
+let currentBoxType = null;
 
 
 /* =========================
@@ -104,6 +115,377 @@ const boxes = {
 
         ]
 
+    },
+
+    ocean: {
+
+        name: "OCEAN PACK",
+
+        price: 25,
+
+        blocks: [
+
+            { name: "Fish", rarity: "Common" },
+            { name: "Dolphin", rarity: "Common" },
+
+            { name: "Shark", rarity: "Uncommon" },
+
+            { name: "Whale", rarity: "Rare" },
+
+            { name: "Giant Squid", rarity: "Epic" },
+
+            { name: "Kraken", rarity: "Legendary" },
+
+            { name: "Megalodon", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    breakfast: {
+
+        name: "BREAKFAST BOX",
+
+        price: 20,
+
+        blocks: [
+
+            { name: "Toast", rarity: "Common" },
+            { name: "Cereal", rarity: "Common" },
+
+            { name: "Pancakes", rarity: "Uncommon" },
+
+            { name: "Bacon", rarity: "Rare" },
+
+            { name: "Donut", rarity: "Epic" },
+
+            { name: "Waffle", rarity: "Legendary" },
+
+            { name: "Waffles with Ice Cream", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    lunch: {
+
+        name: "LUNCH BOX",
+
+        price: 25,
+
+        blocks: [
+
+            { name: "Apple", rarity: "Common" },
+            { name: "Sandwich", rarity: "Common" },
+
+            { name: "Fries", rarity: "Uncommon" },
+
+            { name: "Burger", rarity: "Rare" },
+
+            { name: "Pizza", rarity: "Epic" },
+
+            { name: "Sushi", rarity: "Legendary" },
+
+            { name: "Cake", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    supper: {
+
+        name: "SUPPER BOX",
+
+        price: 30,
+
+        blocks: [
+
+            { name: "Rice", rarity: "Common" },
+            { name: "Soup", rarity: "Common" },
+
+            { name: "Mashed Potatoes", rarity: "Uncommon" },
+
+            { name: "Chicken", rarity: "Rare" },
+
+            { name: "Steak", rarity: "Epic" },
+
+            { name: "Lobster", rarity: "Legendary" },
+
+            { name: "Feast", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    sports: {
+
+        name: "SPORTS BOX",
+
+        price: 25,
+
+        blocks: [
+
+            { name: "Soccer Ball", rarity: "Common" },
+            { name: "Basketball", rarity: "Common" },
+
+            { name: "Baseball", rarity: "Uncommon" },
+
+            { name: "Football", rarity: "Rare" },
+
+            { name: "Tennis", rarity: "Epic" },
+
+            { name: "Hockey", rarity: "Legendary" },
+
+            { name: "Trophy", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    pirate: {
+
+        name: "PIRATE PACK",
+
+        price: 30,
+
+        blocks: [
+
+            { name: "Pirate Shipmate", rarity: "Common" },
+            { name: "Pirate Rookie", rarity: "Common" },
+
+            { name: "Pirate Sailor", rarity: "Uncommon" },
+
+            { name: "Pirate Swordsman", rarity: "Rare" },
+
+            { name: "Pirate Captain's Mate", rarity: "Epic" },
+
+            { name: "Pirate Captain", rarity: "Legendary" },
+
+            { name: "Davy Jones", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    dinosaur: {
+
+        name: "DINOSAUR BOX",
+
+        price: 30,
+
+        blocks: [
+
+            { name: "Triceratops", rarity: "Common" },
+            { name: "Stegosaurus", rarity: "Common" },
+
+            { name: "Velociraptor", rarity: "Uncommon" },
+
+            { name: "Ankylosaurus", rarity: "Rare" },
+
+            { name: "Spinosaurus", rarity: "Epic" },
+
+            { name: "T-Rex", rarity: "Legendary" },
+
+            { name: "Giganotosaurus", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    science: {
+
+        name: "SCIENCE BOX",
+
+        price: 30,
+
+        blocks: [
+
+            { name: "Test Tube", rarity: "Common" },
+            { name: "Beaker", rarity: "Common" },
+
+            { name: "Microscope", rarity: "Uncommon" },
+
+            { name: "Scientist", rarity: "Rare" },
+
+            { name: "Robot Scientist", rarity: "Epic" },
+
+            { name: "Mad Scientist", rarity: "Legendary" }
+
+        ]
+
+    },
+
+    superhero: {
+
+        name: "SUPERHERO BOX",
+
+        price: 35,
+
+        blocks: [
+
+            { name: "Rookie Hero", rarity: "Common" },
+            { name: "Sidekick", rarity: "Common" },
+
+            { name: "Superhero", rarity: "Uncommon" },
+
+            { name: "Speedster", rarity: "Rare" },
+
+            { name: "Supervillain", rarity: "Epic" },
+
+            { name: "Superhero Captain", rarity: "Legendary" },
+
+            { name: "Cosmic Hero", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    alien: {
+
+        name: "ALIEN BOX",
+
+        price: 35,
+
+        blocks: [
+
+            { name: "Little Alien", rarity: "Common" },
+            { name: "Green Alien", rarity: "Common" },
+
+            { name: "Alien Scout", rarity: "Uncommon" },
+
+            { name: "Alien Warrior", rarity: "Rare" },
+
+            { name: "Alien Commander", rarity: "Epic" },
+
+            { name: "Alien Overlord", rarity: "Legendary" },
+
+            { name: "Galactic Alien", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    bird: {
+
+        name: "BIRD BOX",
+
+        price: 35,
+
+        blocks: [
+
+            { name: "Sparrow", rarity: "Common" },
+            { name: "Pigeon", rarity: "Common" },
+
+            { name: "Blue Jay", rarity: "Uncommon" },
+
+            { name: "Parrot", rarity: "Rare" },
+
+            { name: "Eagle", rarity: "Epic" },
+
+            { name: "Falcon", rarity: "Legendary" },
+
+            { name: "Phoenix", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    school: {
+
+        name: "SCHOOL BOX",
+
+        price: 30,
+
+        blocks: [
+
+            { name: "Pencil", rarity: "Common" },
+            { name: "Notebook", rarity: "Common" },
+
+            { name: "Ruler", rarity: "Uncommon" },
+
+            { name: "Backpack", rarity: "Rare" },
+
+            { name: "Locker", rarity: "Epic" },
+
+            { name: "Smart Board", rarity: "Legendary" }
+
+        ]
+
+    },
+
+    pet: {
+
+        name: "PET BOX",
+
+        price: 35,
+
+        blocks: [
+
+            { name: "Cat", rarity: "Common" },
+            { name: "Dog", rarity: "Common" },
+
+            { name: "Hamster", rarity: "Uncommon" },
+
+            { name: "Rabbit", rarity: "Rare" },
+
+            { name: "Parrot", rarity: "Epic" },
+
+            { name: "Dragon", rarity: "Legendary" },
+
+            { name: "Unicorn", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    ore: {
+
+        name: "ORE BOX",
+
+        price: 30,
+
+        blocks: [
+
+            { name: "Stone", rarity: "Common" },
+            { name: "Coal", rarity: "Common" },
+
+            { name: "Copper", rarity: "Uncommon" },
+
+            { name: "Gold", rarity: "Rare" },
+
+            { name: "Diamond", rarity: "Epic" },
+
+            { name: "Ruby", rarity: "Legendary" }
+
+        ]
+
+    },
+
+    background: {
+
+        name: "BACKGROUND BOX",
+
+        price: 35,
+
+        isBackground: true,
+
+        backgrounds: [
+
+            { name: "Forest", rarity: "Common" },
+            { name: "Ocean", rarity: "Common" },
+
+            { name: "Night", rarity: "Uncommon" },
+
+            { name: "Volcano", rarity: "Rare" },
+
+            { name: "Storm", rarity: "Epic" },
+
+            { name: "Fire", rarity: "Legendary" },
+
+            { name: "Rainbow", rarity: "Chroma" }
+
+        ]
+
     }
 
 };
@@ -142,6 +524,11 @@ function saveGame() {
     );
 
     localStorage.setItem(
+        "blocketBackgroundCollection",
+        JSON.stringify(backgroundCollection)
+    );
+
+    localStorage.setItem(
         "blocketBoxesOpened",
         boxesOpened
     );
@@ -152,6 +539,11 @@ function saveGame() {
     );
 
     localStorage.setItem(
+        "blocketPackStats",
+        JSON.stringify(packStats)
+    );
+
+    localStorage.setItem(
         "blocketDailySpin",
         lastDailySpin
     );
@@ -159,6 +551,11 @@ function saveGame() {
     localStorage.setItem(
         "blocketEquippedBlock",
         equippedBlock
+    );
+
+    localStorage.setItem(
+        "blocketEquippedBackground",
+        equippedBackground
     );
 
 }
@@ -185,6 +582,129 @@ function updateCoins() {
 
 
 /* =====================================================
+   THEME
+===================================================== */
+
+function updateTheme() {
+
+    document.body.classList.toggle(
+        "dark-mode",
+        isDarkMode
+    );
+
+    applyEquippedBackground();
+
+    const themeButton =
+        document.getElementById("themeButton");
+
+    if (themeButton) {
+
+        themeButton.textContent =
+            isDarkMode ? "☀️" : "🌙";
+
+        themeButton.setAttribute(
+            "aria-label",
+            isDarkMode
+                ? "Switch to light mode"
+                : "Switch to dark mode"
+        );
+
+    }
+
+}
+
+
+const backgroundStyles = {
+    Default: "",
+    Forest: "linear-gradient(135deg, #173d2b, #6aa85f)",
+    Ocean: "linear-gradient(135deg, #0b4770, #5bc0d1)",
+    Night: "linear-gradient(135deg, #090d29, #394c86)",
+    Volcano: "linear-gradient(135deg, #321515, #d04d2f)",
+    Storm: "linear-gradient(135deg, #353c52, #9aa7c2)",
+    Fire: "linear-gradient(135deg, #641b0b, #f29c38)",
+    Rainbow: "linear-gradient(120deg, #f66, #fc6, #6d6, #6cf, #c8f)"
+};
+
+
+function applyEquippedBackground() {
+
+    document.body.style.background =
+        backgroundStyles[equippedBackground] || "";
+
+}
+
+
+function equipBackground(backgroundName) {
+
+    if (!backgroundCollection[backgroundName]) return;
+
+    equippedBackground = backgroundName;
+    saveGame();
+    applyEquippedBackground();
+    showBackgrounds();
+
+}
+
+
+function getBoxRewards(box) {
+
+    return box.isBackground ? box.backgrounds : box.blocks;
+
+}
+
+
+function showBackgrounds() {
+
+    const mainContent = document.getElementById("mainContent");
+    const backgrounds = boxes.background.backgrounds;
+
+    mainContent.innerHTML = `
+        <h1>BACKGROUNDS</h1>
+        <div class="collection-grid">
+            ${backgrounds.map(background => {
+                const owned = backgroundCollection[background.name];
+                const equipped = equippedBackground === background.name;
+
+                return `
+                    <div class="collection-block ${owned ? "" : "undiscovered"}">
+                        <div class="collection-block-name">
+                            ${owned ? background.name : "???"}
+                        </div>
+                        <div class="collection-rarity ${background.rarity.toLowerCase()}">
+                            ${background.rarity}
+                        </div>
+                        <div class="collection-count">
+                            ${owned ? `x${owned.amount}` : "Not discovered"}
+                        </div>
+                        ${owned ? `
+                            <button class="equip-button" onclick='equipBackground(${JSON.stringify(background.name)})' ${equipped ? "disabled" : ""}>
+                                ${equipped ? "EQUIPPED" : "EQUIP"}
+                            </button>
+                        ` : ""}
+                    </div>
+                `;
+            }).join("")}
+        </div>
+    `;
+
+}
+
+
+function toggleTheme() {
+
+    isDarkMode = !isDarkMode;
+
+    localStorage.setItem(
+        "blocketTheme",
+        isDarkMode ? "dark" : "light"
+    );
+
+    updateTheme();
+
+}
+
+
+/* =====================================================
    EQUIPPED BLOCK
 ===================================================== */
 
@@ -197,9 +717,13 @@ function updateEquipped() {
 
     equipped.innerHTML = `
 
-        <div>Equipped</div>
+        <div>Equipped Block</div>
 
         <div>${equippedBlock}</div>
+
+        <div class="equipped-background-label">Background</div>
+
+        <div>${equippedBackground}</div>
 
     `;
 
@@ -249,8 +773,16 @@ function canDailySpin() {
 
 function openTab(tab) {
 
+    if (flapRace) {
+        stopFlapRace();
+    }
+
     if (tab === "collection") {
         showCollection();
+    }
+
+    if (tab === "backgrounds") {
+        showBackgrounds();
     }
 
     if (tab === "market") {
@@ -267,6 +799,18 @@ function openTab(tab) {
 
     if (tab === "info") {
         showInfo();
+    }
+
+    if (tab === "host") {
+        showHost();
+    }
+
+    if (tab === "play") {
+        showPlay();
+    }
+
+    if (tab === "updates") {
+        showUpdates();
     }
 
 }
@@ -287,6 +831,10 @@ function showMarket() {
     mainContent.innerHTML = `
 
         <h1>MARKET</h1>
+
+        <div class="market-balance">
+            🪙 <span id="coinAmount">${coins}</span> COINS
+        </div>
 
         <div class="market-grid">
 
@@ -334,6 +882,336 @@ function showMarket() {
             </div>
 
 
+            <div class="pack-card">
+
+                <h2>🌊 OCEAN PACK</h2>
+
+                <p>
+                    Contains mysterious ocean Blocks!
+                </p>
+
+                <p class="pack-price">
+                    25 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('ocean')"
+                >
+                    BUY PACK
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🍳 BREAKFAST BOX</h2>
+
+                <p>
+                    Contains delicious breakfast Blocks!
+                </p>
+
+                <p class="pack-price">
+                    20 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('breakfast')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🥪 LUNCH BOX</h2>
+
+                <p>
+                    Contains tasty lunch Blocks!
+                </p>
+
+                <p class="pack-price">
+                    25 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('lunch')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🍽️ SUPPER BOX</h2>
+
+                <p>
+                    Contains hearty supper Blocks!
+                </p>
+
+                <p class="pack-price">
+                    30 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('supper')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🏅 SPORTS BOX</h2>
+
+                <p>
+                    Contains exciting sports Blocks!
+                </p>
+
+                <p class="pack-price">
+                    25 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('sports')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🏴‍☠️ PIRATE PACK</h2>
+
+                <p>
+                    Contains legendary pirate Blocks!
+                </p>
+
+                <p class="pack-price">
+                    30 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('pirate')"
+                >
+                    BUY PACK
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🦖 DINOSAUR BOX</h2>
+
+                <p>
+                    Contains powerful prehistoric Blocks!
+                </p>
+
+                <p class="pack-price">
+                    30 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('dinosaur')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🔬 SCIENCE BOX</h2>
+
+                <p>
+                    Contains fascinating science Blocks!
+                </p>
+
+                <p class="pack-price">
+                    30 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('science')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🦸 SUPERHERO BOX</h2>
+
+                <p>
+                    Contains powerful hero Blocks!
+                </p>
+
+                <p class="pack-price">
+                    35 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('superhero')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>👽 ALIEN BOX</h2>
+
+                <p>
+                    Contains mysterious alien Blocks!
+                </p>
+
+                <p class="pack-price">
+                    35 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('alien')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🐦 BIRD BOX</h2>
+
+                <p>
+                    Contains colorful flying Blocks!
+                </p>
+
+                <p class="pack-price">
+                    35 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('bird')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>📚 SCHOOL BOX</h2>
+
+                <p>
+                    Contains useful school Blocks!
+                </p>
+
+                <p class="pack-price">
+                    30 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('school')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🐾 PET BOX</h2>
+
+                <p>
+                    Contains adorable pet Blocks!
+                </p>
+
+                <p class="pack-price">
+                    35 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('pet')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>⛏️ ORE BOX</h2>
+
+                <p>
+                    Contains valuable mining Blocks!
+                </p>
+
+                <p class="pack-price">
+                    30 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('ore')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🖼️ BACKGROUND BOX</h2>
+
+                <p>
+                    Contains backgrounds for your profile and UI!
+                </p>
+
+                <p class="pack-price">
+                    35 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('background')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
             <div class="daily-card">
 
                 <h2>🎡 DAILY SPIN</h2>
@@ -366,6 +1244,125 @@ function showMarket() {
 
     `;
 
+    const packCards =
+        mainContent.querySelectorAll(".pack-card");
+
+    Object.keys(boxes).forEach((boxType, index) => {
+
+        const packCard = packCards[index];
+
+        packCard.dataset.boxType = boxType;
+        packCard.title = "Click to view pack information";
+        packCard.addEventListener(
+            "click",
+            () => showPackInfo(boxType)
+        );
+
+        packCard.querySelector("button").addEventListener(
+            "click",
+            event => event.stopPropagation()
+        );
+
+    });
+
+}
+
+
+function getRarityRank(rarity) {
+
+    return [
+        "Common",
+        "Uncommon",
+        "Rare",
+        "Epic",
+        "Legendary",
+        "Chroma"
+    ].indexOf(rarity);
+
+}
+
+
+function getPackStats(boxType) {
+
+    return packStats[boxType] || {
+        opens: 0,
+        luckiestPull: null
+    };
+
+}
+
+
+function showPackInfo(boxType) {
+
+    const mainContent =
+        document.getElementById("mainContent");
+
+    const box = boxes[boxType];
+    const stats = getPackStats(boxType);
+
+    const blocksHTML =
+        getBoxRewards(box).map(block => `
+
+            <div class="pack-info-row">
+
+                <span>${block.name}</span>
+
+                <span class="library-rarity ${block.rarity.toLowerCase()}">
+                    ${block.rarity}
+                </span>
+
+            </div>
+
+        `).join("");
+
+    const luckiestPull =
+        stats.luckiestPull
+            ? `${stats.luckiestPull.name} (${stats.luckiestPull.rarity})`
+            : "None yet";
+
+    mainContent.innerHTML = `
+
+        <button
+            class="back-button"
+            onclick="showMarket()"
+            type="button"
+        >
+            BACK TO MARKET
+        </button>
+
+        <h1>${box.name}</h1>
+
+        <div class="pack-summary">
+
+            <div>
+                <span>PACK COST</span>
+                <strong>${box.price} COINS</strong>
+            </div>
+
+            <div>
+                <span>YOUR OPENS</span>
+                <strong>${stats.opens}</strong>
+            </div>
+
+            <div>
+                <span>LUCKIEST PULL</span>
+                <strong>${luckiestPull}</strong>
+            </div>
+
+        </div>
+
+        <div class="info-card pack-contents">
+
+            <h2>WHAT'S INSIDE</h2>
+
+            <div class="pack-info-list">
+                ${blocksHTML}
+            </div>
+
+        </div>
+
+    `;
+
 }
 
 
@@ -389,8 +1386,12 @@ function showStats() {
     const uniqueBlocks =
         Object.keys(collection).length;
 
+    const dailySpinStatus =
+        canDailySpin() ? "READY" : "CLAIMED TODAY";
+
     const allBlocks =
         Object.values(boxes)
+            .filter(box => !box.isBackground)
             .flatMap(box => box.blocks);
 
     let rarestBlock = "None";
@@ -399,9 +1400,69 @@ function showStats() {
 
         rarestBlock = "Rainbow Block";
 
+    } else if (collection["Megalodon"]) {
+
+        rarestBlock = "Megalodon";
+
+    } else if (collection["Trophy"]) {
+
+        rarestBlock = "Trophy";
+
+    } else if (collection["Davy Jones"]) {
+
+        rarestBlock = "Davy Jones";
+
+    } else if (collection["Giganotosaurus"]) {
+
+        rarestBlock = "Giganotosaurus";
+
+    } else if (collection["Cosmic Hero"]) {
+
+        rarestBlock = "Cosmic Hero";
+
+    } else if (collection["Galactic Alien"]) {
+
+        rarestBlock = "Galactic Alien";
+
+    } else if (collection["Phoenix"]) {
+
+        rarestBlock = "Phoenix";
+
     } else if (collection["Mega Titan"]) {
 
         rarestBlock = "Mega Titan";
+
+    } else if (collection["Kraken"]) {
+
+        rarestBlock = "Kraken";
+
+    } else if (collection["Hockey"]) {
+
+        rarestBlock = "Hockey";
+
+    } else if (collection["Pirate Captain"]) {
+
+        rarestBlock = "Pirate Captain";
+
+    } else if (collection["T-Rex"]) {
+
+        rarestBlock = "T-Rex";
+
+    } else if (collection["Falcon"]) {
+
+        rarestBlock = "Falcon";
+
+    } else if (collection["Smart Board"]) {
+
+        rarestBlock = "Smart Board";
+
+    } else if (collection["Unicorn"]) {
+
+        rarestBlock = "Unicorn";
+
+    } else if (collection["Ruby"]) {
+
+        rarestBlock = "Ruby";
 
     } else if (collection["Brown Block"]) {
 
@@ -438,6 +1499,15 @@ function showStats() {
                 <h2>📦 BOXES OPENED</h2>
 
                 <p>${boxesOpened}</p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h2>🎡 DAILY SPIN</h2>
+
+                <p>${dailySpinStatus}</p>
 
             </div>
 
@@ -486,6 +1556,7 @@ function showLibrary() {
 
     const allBlocks =
         Object.values(boxes)
+            .filter(box => !box.isBackground)
             .flatMap(box => box.blocks);
 
     let blocksHTML = "";
@@ -545,97 +1616,148 @@ function showLibrary() {
    COLLECTION
 ===================================================== */
 
-function showCollection() {
+function showCollection(rarityFilter = "All") {
 
     const mainContent =
         document.getElementById("mainContent");
 
-    let blocksHTML = "";
+    const allBlocks =
+        Object.entries(boxes)
+            .filter(([, box]) => !box.isBackground)
+            .flatMap(([boxType, box]) =>
+            box.blocks.map(block => ({
+                ...block,
+                packName: box.name,
+                boxType
+            }))
+        );
 
-    const ownedBlocks =
-        Object.keys(collection);
+    const filteredBlocks =
+        rarityFilter === "All"
+            ? allBlocks
+            : allBlocks.filter(block =>
+                block.rarity === rarityFilter
+            );
 
-    if (ownedBlocks.length === 0) {
+    const blocksHTML =
+        filteredBlocks.map(block => {
 
-        blocksHTML = `
-
-            <p class="empty-collection">
-                You haven't collected any Blocks yet!
-            </p>
-
-        `;
-
-    } else {
-
-        ownedBlocks.forEach(blockName => {
-
-            const block =
-                collection[blockName];
-
-            const sellValue =
-                sellValues[block.rarity];
+            const ownedBlock =
+                collection[block.name];
 
             const isEquipped =
-                equippedBlock === block.name;
+                ownedBlock && equippedBlock === block.name;
 
-            blocksHTML += `
+            if (!ownedBlock) {
+                return `
+
+                    <div class="collection-block undiscovered">
+
+                        <div class="collection-block-name">
+                            ???
+                        </div>
+
+                        <div
+                            class="collection-rarity ${block.rarity.toLowerCase()}"
+                        >
+                            ${block.rarity}
+                        </div>
+
+                        <div class="collection-pack">
+                            From: ${block.packName}
+                        </div>
+
+                        <div class="collection-count">
+                            Not discovered
+                        </div>
+
+                    </div>
+
+                `;
+            }
+
+            const sellValue =
+                sellValues[ownedBlock.rarity];
+
+            return `
 
                 <div class="collection-block">
 
                     <div class="collection-block-name">
-                        ${block.name}
+                        ${ownedBlock.name}
                     </div>
 
                     <div
-                        class="collection-rarity ${block.rarity.toLowerCase()}"
+                        class="collection-rarity ${ownedBlock.rarity.toLowerCase()}"
                     >
-                        ${block.rarity}
+                        ${ownedBlock.rarity}
+                    </div>
+
+                    <div class="collection-pack">
+                        From: ${block.packName}
                     </div>
 
                     <div class="collection-count">
-                        x${block.amount}
+                        x${ownedBlock.amount}
                     </div>
 
                     <button
                         class="equip-button"
-                        onclick="equipBlock('${block.name}')"
+                        onclick='equipBlock(${JSON.stringify(block.name)})'
                         ${isEquipped ? "disabled" : ""}
                     >
-
-                        ${
-                            isEquipped
-                            ? "EQUIPPED"
-                            : "EQUIP"
-                        }
-
+                        ${isEquipped ? "EQUIPPED" : "EQUIP"}
                     </button>
 
                     <button
                         class="sell-button"
-                        onclick="sellBlock('${block.name}')"
+                        onclick="sellBlock(${JSON.stringify(block.name)})"
                     >
-
-                        SELL
-                        +${sellValue} 🪙
-
+                        SELL +${sellValue} 🪙
                     </button>
 
                 </div>
 
             `;
 
-        });
-
-    }
+        }).join("");
 
     mainContent.innerHTML = `
 
         <h1>COLLECTION</h1>
 
+        <div class="collection-tools">
+
+            <label for="rarityFilter">FILTER BY RARITY</label>
+
+            <select
+                id="rarityFilter"
+                onchange="showCollection(this.value)"
+            >
+                <option value="All" ${rarityFilter === "All" ? "selected" : ""}>
+                    All Rarities
+                </option>
+                ${[
+                    "Common",
+                    "Uncommon",
+                    "Rare",
+                    "Epic",
+                    "Legendary",
+                    "Chroma"
+                ].map(rarity => `
+                    <option
+                        value="${rarity}"
+                        ${rarityFilter === rarity ? "selected" : ""}
+                    >
+                        ${rarity}
+                    </option>
+                `).join("")}
+            </select>
+
+        </div>
+
         <div class="collection-grid">
-
             ${blocksHTML}
-
         </div>
 
     `;
@@ -696,16 +1818,847 @@ function showInfo() {
 
 
 /* =====================================================
+   HOST
+===================================================== */
+
+function showHost() {
+
+    const mainContent =
+        document.getElementById("mainContent");
+
+    mainContent.innerHTML = `
+
+        <h1>HOST</h1>
+
+        <div class="info-card game-lobby">
+
+            <h2>🐦 FLAP RACE</h2>
+
+            <p>
+                Host a race through a long obstacle course.
+            </p>
+
+            <label for="raceTime">RACE TIME</label>
+
+            <select id="raceTime" class="game-select">
+                <option value="30">30 seconds</option>
+                <option value="60" selected>60 seconds</option>
+                <option value="90">90 seconds</option>
+            </select>
+
+            <button
+                class="buy-button"
+                onclick="createFlapRace()"
+                type="button"
+            >
+                CREATE FLAP RACE
+            </button>
+
+            <p id="hostStatus" class="game-status"></p>
+            <div id="roomCodeDisplay" class="room-code-display"></div>
+
+        </div>
+
+    `;
+
+    const savedRace =
+        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+
+    if (savedRace) {
+        document.getElementById("hostStatus").textContent =
+            `Race ready for ${savedRace.timeLimit} seconds.`;
+        document.getElementById("roomCodeDisplay").innerHTML =
+            `ROOM CODE <strong>${savedRace.roomCode}</strong>`;
+    }
+
+}
+
+
+/* =====================================================
+   PLAY
+===================================================== */
+
+function showPlay() {
+
+    const mainContent =
+        document.getElementById("mainContent");
+
+    const race =
+        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+
+    mainContent.innerHTML = `
+
+        <h1>PLAY</h1>
+
+        <div class="info-card game-lobby">
+
+            <h2>🐦 FLAP RACE</h2>
+
+            <p>
+                Fly through the pipes, hit checkpoints, and finish farther than the other racers.
+            </p>
+
+            <p class="game-status">
+                ${race ? "Enter the room code from the host to join." : "No race hosted yet."}
+            </p>
+
+            <label for="roomCode">ROOM CODE</label>
+
+            <input
+                id="roomCode"
+                class="game-input"
+                type="text"
+                maxlength="6"
+                placeholder="ABC123"
+                autocomplete="off"
+                ${race ? "" : "disabled"}
+            >
+
+            <label for="displayName">DISPLAY NAME</label>
+
+            <input
+                id="displayName"
+                class="game-input"
+                type="text"
+                maxlength="18"
+                placeholder="YOUR NAME"
+                autocomplete="nickname"
+                ${race ? "" : "disabled"}
+            >
+
+            <button
+                class="buy-button"
+                onclick="joinFlapRace()"
+                type="button"
+                ${race ? "" : "disabled"}
+            >
+                START FLAP RACE
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+function createFlapRace() {
+
+    const timeLimit =
+        Number(document.getElementById("raceTime").value);
+
+    const roomCode =
+        generateRoomCode();
+
+    localStorage.setItem(
+        "blocketFlapRace",
+        JSON.stringify({
+            timeLimit,
+            roomCode,
+            createdAt: Date.now()
+        })
+    );
+
+    document.getElementById("hostStatus").textContent =
+        `Race ready for ${timeLimit} seconds. Open Play to begin.`;
+
+    document.getElementById("roomCodeDisplay").innerHTML =
+        `ROOM CODE <strong>${roomCode}</strong>`;
+
+}
+
+
+function generateRoomCode() {
+
+    const characters =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    let roomCode = "";
+
+    for (let index = 0; index < 6; index++) {
+        roomCode += characters[
+            Math.floor(Math.random() * characters.length)
+        ];
+    }
+
+    return roomCode;
+
+}
+
+
+function joinFlapRace() {
+
+    const race =
+        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+
+    const roomCode =
+        document.getElementById("roomCode").value.trim().toUpperCase();
+
+    const displayName =
+        document.getElementById("displayName").value.trim();
+
+    if (!race || roomCode !== race.roomCode) {
+        const status =
+            document.querySelector(".game-status");
+
+        status.textContent =
+            "That room code is not valid.";
+
+        return;
+    }
+
+    startFlapRace();
+    if (!displayName) {
+        document.querySelector(".game-status").textContent =
+            "Enter a display name to join the race.";
+        return;
+    }
+
+    startFlapRace(displayName);
+}
+
+
+let flapRace = null;
+
+
+function startFlapRace(displayName = "You") {
+
+    const race =
+        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+
+    if (!race) {
+        showPlay();
+        return;
+    }
+
+    const mainContent =
+        document.getElementById("mainContent");
+
+    mainContent.innerHTML = `
+
+        <div class="flap-race-header">
+            <div>
+                <h1>🐦 FLAP RACE</h1>
+                <p id="flapRaceStatus">SPACE / CLICK TO FLAP</p>
+            </div>
+            <div class="race-timer" id="raceTimer">${race.timeLimit}.0</div>
+        </div>
+
+        <div class="race-scoreboard" id="raceScoreboard"></div>
+
+        <canvas
+            id="flapCanvas"
+            class="flap-canvas"
+            width="900"
+            height="420"
+            aria-label="Flap Race obstacle course"
+        ></canvas>
+
+        <button
+            class="buy-button flap-button"
+            onclick="flapBird()"
+            type="button"
+        >
+            FLAP
+        </button>
+
+    `;
+
+    flapRace = {
+        canvas: document.getElementById("flapCanvas"),
+        context: document.getElementById("flapCanvas").getContext("2d"),
+        timeLimit: race.timeLimit,
+        displayName: sanitizeDisplayName(displayName),
+        startedAt: performance.now(),
+        lastFrame: performance.now(),
+        distance: 0,
+        checkpoint: 0,
+        birdY: 210,
+        birdVelocity: 0,
+        lastPipe: -1,
+        passedPipes: 0,
+        checkpointOrder: 0,
+        bots: [
+            {
+                name: "Sky",
+                distance: 0,
+                speed: 0.93,
+                checkpoint: 0,
+                checkpointPipe: 0,
+                lastPipe: -1,
+                respawnUntil: 0,
+                color: "#e85d75"
+            },
+            {
+                name: "Wing",
+                distance: 0,
+                speed: 0.87,
+                checkpoint: 0,
+                checkpointPipe: 0,
+                lastPipe: -1,
+                respawnUntil: 0,
+                color: "#8b62d9"
+            },
+            {
+                name: "Cloud",
+                distance: 0,
+                speed: 0.8,
+                checkpoint: 0,
+                checkpointPipe: 0,
+                lastPipe: -1,
+                respawnUntil: 0,
+                color: "#e58b36"
+            }
+        ],
+        animation: 0,
+        keyHandler: event => {
+            if (event.code === "Space") {
+                event.preventDefault();
+                flapBird();
+            }
+        },
+        clickHandler: () => flapBird()
+    };
+
+    document.addEventListener("keydown", flapRace.keyHandler);
+    flapRace.canvas.addEventListener("click", flapRace.clickHandler);
+    flapBird();
+    flapRace.animation = requestAnimationFrame(updateFlapRace);
+
+}
+
+
+function sanitizeDisplayName(displayName) {
+
+    return displayName
+        .replace(/[&<>"']/g, character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[character])
+        .slice(0, 18);
+
+}
+
+
+function flapBird() {
+
+    if (!flapRace) return;
+
+    flapRace.birdVelocity = -410;
+
+}
+
+
+function getFlapPipe(pipeIndex) {
+
+    const gapHeight = 142;
+    const center =
+        105 + ((pipeIndex * 83) % 210);
+
+    return {
+        x: 510 + pipeIndex * 250,
+        top: center - gapHeight / 2,
+        bottom: center + gapHeight / 2
+    };
+
+}
+
+
+function updateFlapRace(timestamp) {
+
+    if (!flapRace) return;
+
+    const elapsed =
+        (timestamp - flapRace.startedAt) / 1000;
+    const delta =
+        Math.min((timestamp - flapRace.lastFrame) / 1000, 0.05);
+
+    flapRace.lastFrame = timestamp;
+    flapRace.distance += 190 * delta;
+    flapRace.birdVelocity += 1040 * delta;
+    flapRace.birdY += flapRace.birdVelocity * delta;
+
+    flapRace.bots.forEach(bot => {
+
+        if (timestamp < bot.respawnUntil) {
+            return;
+        }
+
+        bot.distance += 190 * bot.speed * delta;
+
+        const botPipe =
+            Math.floor((bot.distance + 115) / 250);
+
+        if (botPipe <= bot.lastPipe) {
+            return;
+        }
+
+        if (botPipe > 0 && Math.random() < 0.18) {
+            bot.distance = bot.checkpoint;
+            bot.lastPipe = bot.checkpointPipe;
+            bot.respawnUntil = timestamp + 650;
+            return;
+        }
+
+        bot.lastPipe = botPipe;
+
+        if (botPipe > 0 && botPipe % 5 === 0) {
+            bot.checkpoint = bot.distance;
+            bot.checkpointPipe = botPipe;
+        }
+
+    });
+
+    const pipeIndex =
+        Math.floor((flapRace.distance + 115) / 250);
+
+    if (pipeIndex > flapRace.lastPipe) {
+        flapRace.lastPipe = pipeIndex;
+        flapRace.passedPipes = pipeIndex;
+
+        if (pipeIndex > 0 && pipeIndex % 5 === 0) {
+            flapRace.checkpoint = flapRace.distance;
+            flapRace.checkpointOrder++;
+        }
+    }
+
+    const birdScreenX = 145;
+    const birdHitbox = {
+        left: birdScreenX - 16,
+        right: birdScreenX + 16,
+        top: flapRace.birdY - 14,
+        bottom: flapRace.birdY + 14
+    };
+
+    const hitPipe =
+        [pipeIndex - 1, pipeIndex, pipeIndex + 1].some(index => {
+
+            if (index < 0) return false;
+
+            const pipe = getFlapPipe(index);
+            const pipeScreenX = pipe.x - flapRace.distance;
+
+            return pipeScreenX < birdHitbox.right &&
+                pipeScreenX + 58 > birdHitbox.left &&
+                (birdHitbox.top < pipe.top ||
+                    birdHitbox.bottom > pipe.bottom);
+
+        });
+
+    if (hitPipe || flapRace.birdY < 0 || flapRace.birdY > 420) {
+        const status =
+            document.getElementById("flapRaceStatus");
+
+        if (status) {
+            status.textContent =
+                "💥 CRASHED! RETURNING TO CHECKPOINT";
+        }
+
+        flapRace.distance = flapRace.checkpoint;
+        flapRace.birdY = 210;
+        flapRace.birdVelocity = 0;
+        flapRace.lastPipe = Math.floor(flapRace.distance / 250);
+    }
+
+    drawFlapRace();
+
+    document.getElementById("raceTimer").textContent =
+        Math.max(0, flapRace.timeLimit - elapsed).toFixed(1);
+
+    updateFlapScoreboard();
+
+    if (elapsed >= flapRace.timeLimit) {
+        finishFlapRace();
+        return;
+    }
+
+    flapRace.animation = requestAnimationFrame(updateFlapRace);
+
+}
+
+
+function drawFlapRace() {
+
+    const { context, canvas } = flapRace;
+    const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+
+    gradient.addColorStop(0, "#82d8ff");
+    gradient.addColorStop(1, "#e8f9ff");
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    context.fillStyle = "rgba(255, 255, 255, 0.72)";
+    for (let cloud = 0; cloud < 7; cloud++) {
+        const cloudX = (cloud * 170 - flapRace.distance * 0.15) % 1040;
+        context.beginPath();
+        context.arc(cloudX, 55 + (cloud % 3) * 40, 28, 0, Math.PI * 2);
+        context.arc(cloudX + 30, 55 + (cloud % 3) * 40, 22, 0, Math.PI * 2);
+        context.fill();
+    }
+
+    const firstPipe = Math.floor(flapRace.distance / 250) - 1;
+
+    for (let index = firstPipe; index < firstPipe + 6; index++) {
+        if (index < 0) continue;
+
+        const pipe = getFlapPipe(index);
+        const x = pipe.x - flapRace.distance;
+
+        context.fillStyle = index % 5 === 0 ? "#2eae5c" : "#3fbd69";
+        context.fillRect(x, 0, 58, pipe.top);
+        context.fillRect(x, pipe.bottom, 58, 420 - pipe.bottom);
+        context.fillStyle = "#218849";
+        context.fillRect(x - 6, pipe.top - 12, 70, 12);
+        context.fillRect(x - 6, pipe.bottom, 70, 12);
+    }
+
+    context.fillStyle = "#f0c33d";
+    context.beginPath();
+    context.arc(145, flapRace.birdY, 16, 0, Math.PI * 2);
+    context.fill();
+    context.fillStyle = "#2d2140";
+    context.beginPath();
+    context.arc(151, flapRace.birdY - 4, 3, 0, Math.PI * 2);
+    context.fill();
+
+    flapRace.bots.forEach(bot => {
+
+        const botScreenX =
+            145 + bot.distance - flapRace.distance;
+        const botY =
+            210 + Math.sin(bot.distance / 75) * 55;
+
+        if (botScreenX < -30 || botScreenX > canvas.width + 30) {
+            return;
+        }
+
+        if (bot.respawnUntil > performance.now()) {
+            context.fillStyle = "#ffffff";
+            context.font = "bold 11px Arial";
+            context.fillText(
+                `${bot.name} CRASHED`,
+                botScreenX - 28,
+                botY - 20
+            );
+            return;
+        }
+
+        context.fillStyle = bot.color;
+        context.beginPath();
+        context.arc(botScreenX, botY, 13, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = "#ffffff";
+        context.font = "bold 11px Arial";
+        context.fillText(bot.name, botScreenX - 14, botY - 20);
+
+    });
+
+    context.fillStyle = "#4c9b60";
+    context.fillRect(0, 395, 900, 25);
+    context.fillStyle = "#ffffff";
+    context.font = "bold 14px Arial";
+    context.fillText(
+        `CHECKPOINT ${Math.floor(flapRace.checkpoint / 250)}`,
+        18,
+        385
+    );
+
+}
+
+
+function updateFlapScoreboard() {
+
+    const racers = [
+        {
+            name: flapRace.displayName,
+            distance: flapRace.distance,
+            order: 0
+        },
+        ...flapRace.bots.map((bot, index) => ({
+            name: bot.name,
+            distance: bot.distance,
+            order: index + 1
+        }))
+    ].sort((first, second) =>
+        second.distance - first.distance ||
+        first.order - second.order
+    );
+
+    document.getElementById("raceScoreboard").innerHTML =
+        racers.map((racer, index) => `
+            <div class="race-racer ${racer.name === flapRace.displayName ? "player-racer" : ""}">
+                <strong>${index + 1}. ${racer.name}</strong>
+                <span>Pipe ${Math.floor(racer.distance / 250)}</span>
+            </div>
+        `).join("");
+
+}
+
+
+function finishFlapRace() {
+
+    if (!flapRace) return;
+
+    const finishedRace = flapRace;
+
+    stopFlapRace();
+
+    const racers = [
+        { name: finishedRace.displayName, distance: finishedRace.distance, order: 0 },
+        ...finishedRace.bots.map((bot, index) => ({
+            ...bot,
+            order: index + 1
+        }))
+    ].sort((first, second) =>
+        second.distance - first.distance ||
+        first.order - second.order
+    );
+
+    const playerPlace =
+        racers.findIndex(racer =>
+            racer.name === finishedRace.displayName
+        );
+
+    const raceRewards = [
+        300,
+        200,
+        125,
+        75
+    ];
+
+    const raceReward =
+        raceRewards[playerPlace] || 0;
+
+    coins += raceReward;
+    updateCoins();
+
+    const results = racers.map((racer, index) => `
+        <div class="race-result-row">
+            <strong>${index + 1}. ${racer.name}</strong>
+            <span>
+                Pipe ${Math.floor(racer.distance / 250)}
+                ${
+                    racer.name === finishedRace.displayName
+                    ? ` | +${raceReward} coins`
+                    : ""
+                }
+            </span>
+        </div>
+    `).join("");
+
+    const mainContent =
+        document.getElementById("mainContent");
+
+    mainContent.innerHTML = `
+        <h1>🏁 RACE COMPLETE</h1>
+        <div class="info-card race-results">
+            <h2>FINAL DISTANCES</h2>
+            ${results}
+            <p class="race-reward">
+                You earned ${raceReward} coins for place ${playerPlace + 1}.
+            </p>
+            <button class="buy-button" onclick="showPlay()" type="button">
+                RACE AGAIN
+            </button>
+        </div>
+    `;
+
+}
+
+
+function stopFlapRace() {
+
+    if (!flapRace) return;
+
+    cancelAnimationFrame(flapRace.animation);
+    document.removeEventListener("keydown", flapRace.keyHandler);
+
+    if (flapRace.canvas) {
+        flapRace.canvas.removeEventListener(
+            "click",
+            flapRace.clickHandler
+        );
+    }
+
+    flapRace = null;
+
+}
+
+
+/* =====================================================
+   UPDATES
+===================================================== */
+
+function showUpdates() {
+
+    const mainContent =
+        document.getElementById("mainContent");
+
+    mainContent.innerHTML = `
+
+        <h1>UPDATES</h1>
+
+        <p class="updates-intro">
+            See what has been added to Blocket in each version.
+        </p>
+
+        <div class="updates-list">
+
+            <article class="update-card latest-update">
+                <div class="update-heading">
+                    <h2>VERSION 1.5</h2>
+                    <span>Latest</span>
+                </div>
+                <p>Multiplayer race improvements</p>
+                <ul>
+                    <li>Room codes for hosting and joining races</li>
+                    <li>Custom display names in leaderboards</li>
+                    <li>AI birds that can crash and respawn</li>
+                    <li>Placement-based coin rewards</li>
+                </ul>
+            </article>
+
+            <article class="update-card">
+                <div class="update-heading">
+                    <h2>VERSION 1.4</h2>
+                </div>
+                <p>Flap Race added</p>
+                <ul>
+                    <li>Playable obstacle-course racing game</li>
+                    <li>Flap controls with Space, click, and button input</li>
+                    <li>Checkpoints, pipe collisions, and timed races</li>
+                    <li>Live standings and final race results</li>
+                </ul>
+            </article>
+
+            <article class="update-card">
+                <div class="update-heading">
+                    <h2>VERSION 1.3</h2>
+                </div>
+                <p>Collection and pack information</p>
+                <ul>
+                    <li>Undiscovered blocks now appear as ???</li>
+                    <li>Rarity filters and pack sources</li>
+                    <li>Pack contents, costs, opens, and luckiest pulls</li>
+                    <li>New block labels and collection counts</li>
+                </ul>
+            </article>
+
+            <article class="update-card">
+                <div class="update-heading">
+                    <h2>VERSION 1.2</h2>
+                </div>
+                <p>More ways to play</p>
+                <ul>
+                    <li>Host, Play, and Updates tabs</li>
+                    <li>Daily Spin status in Stats</li>
+                    <li>Coin balance shown in Market</li>
+                    <li>Persistent light and dark mode</li>
+                </ul>
+            </article>
+
+            <article class="update-card">
+                <div class="update-heading">
+                    <h2>VERSION 1.1</h2>
+                </div>
+                <p>New themed boxes</p>
+                <ul>
+                    <li>Ocean, food, sports, pirate, and dinosaur boxes</li>
+                    <li>Science, superhero, alien, and bird boxes</li>
+                    <li>New Legendary and Chroma rewards</li>
+                </ul>
+            </article>
+
+            <article class="update-card">
+                <div class="update-heading">
+                    <h2>VERSION 1.0</h2>
+                </div>
+                <p>Blocket launch</p>
+                <ul>
+                    <li>Color and Robot boxes</li>
+                    <li>Collection, Library, Market, and Stats</li>
+                    <li>Pack opening animations and selling</li>
+                    <li>Daily Spin and account system</li>
+                </ul>
+            </article>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
    RANDOM BLOCK
 ===================================================== */
 
 function getRandomBlock(boxType) {
 
     const box = boxes[boxType];
+    const rewards = getBoxRewards(box);
 
     const roll = Math.random() * 100;
 
     if (boxType === "color") {
+
+        if (roll < 1) {
+            return getBlockByRarity(rewards, "Chroma");
+        }
+
+        if (roll < 5) {
+            return getBlockByRarity(rewards, "Legendary");
+        }
+
+        if (roll < 15) {
+            return getBlockByRarity(rewards, "Epic");
+        }
+
+        if (roll < 35) {
+            return getBlockByRarity(rewards, "Rare");
+        }
+
+        if (roll < 60) {
+            return getBlockByRarity(rewards, "Uncommon");
+        }
+
+        return getBlockByRarity(rewards, "Common");
+
+    }
+
+
+    if (
+        boxType === "robot" ||
+        boxType === "science" ||
+        boxType === "school" ||
+        boxType === "ore"
+    ) {
+
+        if (roll < 2) {
+            return getBlockByRarity(box.blocks, "Legendary");
+        }
+
+        if (roll < 10) {
+            return getBlockByRarity(box.blocks, "Epic");
+        }
+
+        if (roll < 25) {
+            return getBlockByRarity(box.blocks, "Rare");
+        }
+
+        if (roll < 50) {
+            return getBlockByRarity(box.blocks, "Uncommon");
+        }
+
+        return getBlockByRarity(box.blocks, "Common");
+
+    }
+
+
+    if (boxType === "ocean") {
 
         if (roll < 1) {
             return getBlockByRarity(box.blocks, "Chroma");
@@ -732,25 +2685,67 @@ function getRandomBlock(boxType) {
     }
 
 
-    if (boxType === "robot") {
+    if (
+        boxType === "breakfast" ||
+        boxType === "lunch" ||
+        boxType === "supper" ||
+        boxType === "sports" ||
+        boxType === "pirate" ||
+        boxType === "dinosaur" ||
+        boxType === "superhero" ||
+        boxType === "alien" ||
+        boxType === "bird" ||
+        boxType === "pet"
+    ) {
 
-        if (roll < 2) {
+        if (roll < 1) {
+            return getBlockByRarity(box.blocks, "Chroma");
+        }
+
+        if (roll < 5) {
             return getBlockByRarity(box.blocks, "Legendary");
         }
 
-        if (roll < 10) {
+        if (roll < 15) {
             return getBlockByRarity(box.blocks, "Epic");
         }
 
-        if (roll < 25) {
+        if (roll < 35) {
             return getBlockByRarity(box.blocks, "Rare");
         }
 
-        if (roll < 50) {
+        if (roll < 60) {
             return getBlockByRarity(box.blocks, "Uncommon");
         }
 
         return getBlockByRarity(box.blocks, "Common");
+
+    }
+
+
+    if (boxType === "background") {
+
+        if (roll < 1) {
+            return getBlockByRarity(rewards, "Chroma");
+        }
+
+        if (roll < 5) {
+            return getBlockByRarity(rewards, "Legendary");
+        }
+
+        if (roll < 15) {
+            return getBlockByRarity(rewards, "Epic");
+        }
+
+        if (roll < 35) {
+            return getBlockByRarity(rewards, "Rare");
+        }
+
+        if (roll < 60) {
+            return getBlockByRarity(rewards, "Uncommon");
+        }
+
+        return getBlockByRarity(rewards, "Common");
 
     }
 
@@ -796,6 +2791,15 @@ function buyBox(boxType) {
 
     boxesOpened++;
 
+    if (!packStats[boxType]) {
+        packStats[boxType] = {
+            opens: 0,
+            luckiestPull: null
+        };
+    }
+
+    packStats[boxType].opens++;
+
     saveGame();
 
     updateCoins();
@@ -812,6 +2816,9 @@ function buyBox(boxType) {
 function startBoxOpening(boxType) {
 
     const box = boxes[boxType];
+    const rewards = getBoxRewards(box);
+
+    currentBoxType = boxType;
 
     const overlay =
         document.createElement("div");
@@ -830,7 +2837,7 @@ function startBoxOpening(boxType) {
                 class="rolling-text"
                 id="rollingText"
             >
-                ${box.blocks[0].name}
+                ${rewards[0].name}
             </div>
 
             <div class="opening-text">
@@ -853,37 +2860,98 @@ function startBoxOpening(boxType) {
     const rollingText =
         document.getElementById("rollingText");
 
-    const rollingBlocks =
-        box.blocks.map(block => block.name);
-
     currentRolling =
         getRandomBlock(boxType);
+
+    setRollingRarity(
+        overlay,
+        currentRolling
+    );
 
     let rollCount = 0;
 
     rollingInterval =
         setInterval(() => {
 
-            const randomName =
-                rollingBlocks[
+            const randomBlock =
+                rewards[
                     Math.floor(
                         Math.random() *
-                        rollingBlocks.length
+                        rewards.length
                     )
                 ];
 
             rollingText.textContent =
-                randomName;
+                randomBlock.name;
+
+            setRollingRarity(
+                overlay,
+                randomBlock
+            );
 
             rollCount++;
 
             if (rollCount >= 25) {
 
-                finishPackOpening();
+                clearInterval(rollingInterval);
+
+                rollingInterval = null;
+
+                rollingText.textContent =
+                    currentRolling.name;
+
+                setRollingRarity(
+                    overlay,
+                    currentRolling
+                );
+
+                setTimeout(
+                    finishPackOpening,
+                    350
+                );
 
             }
 
         }, 100);
+
+}
+
+
+function setRollingRarity(overlay, block) {
+
+    const rarity =
+        block.rarity.toLowerCase();
+
+    overlay.className =
+        `pack-overlay rolling-${rarity}`;
+
+    const rarityColors = {
+        common: "rgba(91, 91, 91, 0.82)",
+        uncommon: "rgba(35, 151, 62, 0.82)",
+        rare: "rgba(38, 111, 190, 0.82)",
+        epic: "rgba(111, 54, 180, 0.82)",
+        legendary: "rgba(207, 157, 0, 0.84)"
+    };
+
+    overlay.style.animation =
+        rarity === "chroma"
+            ? "rollingRainbow 2s linear infinite"
+            : "none";
+
+    overlay.style.background =
+        rarity === "chroma"
+            ? `linear-gradient(
+                120deg,
+                rgba(235, 72, 72, 0.86),
+                rgba(244, 183, 55, 0.86),
+                rgba(57, 181, 91, 0.86),
+                rgba(53, 157, 222, 0.86),
+                rgba(144, 82, 205, 0.86)
+            )`
+            : rarityColors[rarity];
+
+    overlay.style.backgroundSize =
+        rarity === "chroma" ? "300% 300%" : "auto";
 
 }
 
@@ -898,7 +2966,40 @@ function skipPackOpening() {
         return;
     }
 
-    finishPackOpening();
+    if (rollingInterval) {
+
+        clearInterval(rollingInterval);
+
+        rollingInterval = null;
+
+    }
+
+    const overlay =
+        document.querySelector(".pack-overlay");
+
+    const rollingText =
+        document.getElementById("rollingText");
+
+    if (!overlay || !rollingText) {
+
+        finishPackOpening();
+
+        return;
+
+    }
+
+    rollingText.textContent =
+        currentRolling.name;
+
+    setRollingRarity(
+        overlay,
+        currentRolling
+    );
+
+    setTimeout(
+        finishPackOpening,
+        350
+    );
 
 }
 
@@ -920,11 +3021,57 @@ function finishPackOpening() {
     const wonBlock =
         currentRolling;
 
+    const isBackground =
+        boxes[currentBoxType].isBackground;
+
+    const isNew =
+        isBackground
+            ? !backgroundCollection[wonBlock.name]
+            : !collection[wonBlock.name];
+
     currentRolling = null;
 
-    addToCollection(wonBlock);
+    const stats =
+        getPackStats(currentBoxType);
 
-    revealBlock(wonBlock);
+    if (
+        !stats.luckiestPull ||
+        getRarityRank(wonBlock.rarity) >
+            getRarityRank(stats.luckiestPull.rarity)
+    ) {
+        stats.luckiestPull = {
+            name: wonBlock.name,
+            rarity: wonBlock.rarity
+        };
+    }
+
+    packStats[currentBoxType] = stats;
+    currentBoxType = null;
+
+    if (isBackground) {
+        addToBackgroundCollection(wonBlock);
+    } else {
+        addToCollection(wonBlock);
+    }
+
+    revealBlock(wonBlock, isNew);
+
+}
+
+
+function addToBackgroundCollection(background) {
+
+    if (backgroundCollection[background.name]) {
+        backgroundCollection[background.name].amount++;
+    } else {
+        backgroundCollection[background.name] = {
+            name: background.name,
+            rarity: background.rarity,
+            amount: 1
+        };
+    }
+
+    saveGame();
 
 }
 
@@ -1132,7 +3279,7 @@ function dailySpin() {
    REVEAL BLOCK
 ===================================================== */
 
-function revealBlock(block) {
+function revealBlock(block, isNew) {
 
     const overlay =
         document.querySelector(".pack-overlay");
@@ -1141,11 +3288,19 @@ function revealBlock(block) {
 
     overlay.innerHTML = `
 
-        <div class="pack-reveal">
+            <div
+                class="pack-reveal ${block.rarity.toLowerCase()}"
+            >
 
             <div class="you-got">
                 YOU GOT!
             </div>
+
+            ${
+                isNew
+                ? '<div class="new-block">NEW</div>'
+                : ''
+            }
 
             <div class="revealed-block">
                 ${block.name}
@@ -1696,6 +3851,8 @@ supabaseClient.auth.onAuthStateChange(
 /* =====================================================
    STARTUP
 ===================================================== */
+
+updateTheme();
 
 updateEquipped();
 

@@ -23,6 +23,13 @@
 
             <div
                 class="menu-item"
+                onclick="openTab('backgrounds')"
+            >
+                Backgrounds
+            </div>
+
+            <div
+                class="menu-item"
                 onclick="openTab('market')"
             >
                 Market
@@ -108,6 +115,7 @@
                 Collect Blocks, open Boxes,
                 and build your collection.
             </p>
+
         </div>
     </main>
 
@@ -152,7 +160,6 @@
     <!-- Supabase must load before script.js -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- script.js is one folder above Blocket -->
-    <script src="../script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

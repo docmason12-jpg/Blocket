@@ -259,6 +259,12 @@ button:disabled {
     font-size: 12px;
 }
 
+.equipped-background-label {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
 
 /* =====================================================
    CARDS
@@ -306,11 +312,27 @@ button:disabled {
     margin-top: 29px;
 }
 
+.market-balance {
+    width: fit-content;
+    margin-top: 18px;
+    padding: 11px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    background: var(--panel-soft);
+    box-shadow: var(--shadow);
+    font-size: 17px;
+}
+
 .pack-card,
 .daily-card {
     position: relative;
     overflow: hidden;
     padding: 27px;
+}
+
+.pack-card {
+    cursor: pointer;
 }
 
 .pack-card::before,
@@ -481,6 +503,24 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
     margin-top: 28px;
 }
 
+.collection-tools {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.collection-tools select {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    color: var(--text);
+    background: var(--panel-soft);
+}
+
 .collection-block {
     padding: 22px;
     text-align: center;
@@ -496,6 +536,17 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
     margin: 14px 0;
     color: var(--muted);
     font-size: 17px;
+}
+
+.collection-pack {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.undiscovered .collection-block-name {
+    color: var(--muted);
+    letter-spacing: 3px;
 }
 
 .empty-collection {
@@ -573,6 +624,288 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
     margin-top: 22px;
     padding: 27px;
     line-height: 1.75;
+}
+
+.game-lobby {
+    max-width: 620px;
+}
+
+.game-lobby label {
+    display: block;
+    margin: 22px 0 7px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.game-select {
+    display: block;
+    width: 100%;
+    max-width: 260px;
+    margin-bottom: 20px;
+    padding: 11px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    background: var(--panel-soft);
+}
+
+.game-input {
+    display: block;
+    width: 100%;
+    max-width: 260px;
+    margin-bottom: 20px;
+    padding: 11px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    color: var(--text);
+    background: var(--panel-soft);
+    text-transform: uppercase;
+}
+
+.game-input:focus {
+    border-color: var(--purple-light);
+    box-shadow: 0 0 0 4px rgba(133, 92, 227, 0.12);
+}
+
+.room-code-display {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.room-code-display strong {
+    display: block;
+    margin-top: 5px;
+    color: var(--purple);
+    font-size: 30px;
+    letter-spacing: 5px;
+}
+
+.game-status {
+    color: var(--muted);
+}
+
+.flap-race-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.flap-race-header h1 {
+    margin-bottom: 5px;
+}
+
+.flap-race-header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.race-timer {
+    min-width: 82px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    background: var(--panel-soft);
+    font-size: 22px;
+    text-align: center;
+}
+
+.race-scoreboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 20px 0 12px;
+}
+
+.race-racer {
+    padding: 9px 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-soft);
+    font-size: 13px;
+}
+
+.race-racer strong,
+.race-racer span {
+    display: block;
+}
+
+.race-racer span {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.player-racer {
+    border-color: var(--purple-light);
+}
+
+.flap-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.flap-button {
+    display: block;
+    width: min(220px, 100%);
+    margin: 16px auto 0;
+}
+
+.race-results {
+    max-width: 620px;
+}
+
+.race-result-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.race-result-row span {
+    color: var(--muted);
+}
+
+.race-reward {
+    color: var(--purple);
+    font-weight: 900;
+}
+
+.updates-intro {
+    color: var(--muted);
+}
+
+.updates-list {
+    display: grid;
+    gap: 14px;
+    max-width: 760px;
+    margin-top: 24px;
+}
+
+.update-card {
+    padding: 21px 24px;
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--purple);
+    border-radius: 14px;
+    background: var(--panel-soft);
+    box-shadow: var(--shadow);
+}
+
+.latest-update {
+    border-left-color: #2f9d4b;
+}
+
+.update-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.update-heading h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: 20px;
+}
+
+.update-heading span {
+    padding: 5px 9px;
+    border-radius: 999px;
+    color: #1f6729;
+    background: #bdeebf;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.update-card > p {
+    margin: 8px 0;
+    color: var(--purple);
+    font-weight: 900;
+}
+
+.update-card ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.back-button {
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text);
+    background: var(--panel-soft);
+}
+
+.back-button:hover {
+    border-color: var(--purple-light);
+    color: var(--purple);
+}
+
+.pack-summary {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(180px, 1fr)
+    );
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.pack-summary > div {
+    padding: 17px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-soft);
+}
+
+.pack-summary span,
+.pack-summary strong {
+    display: block;
+}
+
+.pack-summary span {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.pack-summary strong {
+    margin-top: 7px;
+    color: var(--text);
+}
+
+.pack-contents {
+    margin-top: 22px;
+}
+
+.pack-info-list {
+    display: grid;
+    gap: 8px;
+}
+
+.pack-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    background: var(--panel);
 }
 
 
@@ -657,6 +990,41 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
 .pack-overlay {
     display: flex;
     z-index: 1000;
+    transition: background 0.18s ease;
+}
+
+.pack-overlay.rolling-common {
+    background: rgba(91, 91, 91, 0.82);
+}
+
+.pack-overlay.rolling-uncommon {
+    background: rgba(35, 151, 62, 0.82);
+}
+
+.pack-overlay.rolling-rare {
+    background: rgba(38, 111, 190, 0.82);
+}
+
+.pack-overlay.rolling-epic {
+    background: rgba(111, 54, 180, 0.82);
+}
+
+.pack-overlay.rolling-legendary {
+    background: rgba(207, 157, 0, 0.84);
+}
+
+.pack-overlay.rolling-chroma {
+    background:
+        linear-gradient(
+            120deg,
+            rgba(235, 72, 72, 0.86),
+            rgba(244, 183, 55, 0.86),
+            rgba(57, 181, 91, 0.86),
+            rgba(53, 157, 222, 0.86),
+            rgba(144, 82, 205, 0.86)
+        );
+    background-size: 300% 300%;
+    animation: rollingRainbow 2s linear infinite;
 }
 
 .pack-opening,
@@ -670,6 +1038,12 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
     text-align: center;
     box-shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
     animation: revealWindow 0.35s ease-out;
+}
+
+.pack-opening {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
 .opening-box-name {
@@ -693,6 +1067,14 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
 .you-got {
     margin-bottom: 8px;
     font-size: 30px;
+}
+
+.new-block {
+    margin-bottom: 8px;
+    color: #2f9d4b;
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 1px;
 }
 
 .revealed-block {
@@ -1069,6 +1451,10 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
         border-radius: 21px;
     }
 
+    .race-scoreboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .player-info {
         justify-content: center;
         flex-wrap: wrap;
@@ -1082,6 +1468,15 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
 
     .main-content {
         padding: 19px;
+    }
+
+    .flap-race-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .race-timer {
+        width: 100%;
     }
 
     .market-grid,
@@ -1904,4 +2299,14 @@ body.dark-mode .market-coins {
     margin-bottom: 0;
     color: #d94c62;
     font-size: 13px;
+}
+
+@keyframes rollingRainbow {
+    from {
+        background-position: 0% 50%;
+    }
+
+    to {
+        background-position: 100% 50%;
+    }
 }
