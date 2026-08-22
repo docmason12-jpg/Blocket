@@ -1,12 +1,32 @@
+/* =====================================================
+   BLOCKET
+   SUPABASE + GAME SYSTEM
+===================================================== */
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL = "https://whakyhbtqwfvicicnttu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_gKxzj3EC0h2FeLLST2JflA_QGBdSRbD";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+/* =========================
+   GAME DATA
+========================= */
+
 let coins =
     Number(localStorage.getItem("blocketCoins")) || 1000;
-
 
 let collection =
     JSON.parse(
         localStorage.getItem("blocketCollection")
     ) || {};
-
 
 let boxesOpened =
     Number(
@@ -17,18 +37,19 @@ let boxesOpened =
     ) ||
     0;
 
-
 let lastDailySpin =
-    localStorage.getItem(
-        "blocketDailySpin"
-    ) || "";
-
+    localStorage.getItem("blocketDailySpin") || "";
 
 let equippedBlock =
-    localStorage.getItem(
-        "blocketEquippedBlock"
-    ) || "Block";
+    localStorage.getItem("blocketEquippedBlock") || "Block";
 
+let currentRolling = null;
+let rollingInterval = null;
+
+
+/* =========================
+   BOXES
+========================= */
 
 const boxes = {
 
@@ -62,7 +83,6 @@ const boxes = {
 
     },
 
-
     robot: {
 
         name: "ROBOT BOX",
@@ -89,31 +109,25 @@ const boxes = {
 };
 
 
+/* =========================
+   SELL VALUES
+========================= */
+
 const sellValues = {
 
     Common: 5,
-
     Uncommon: 10,
-
     Rare: 25,
-
     Epic: 50,
-
     Legendary: 100,
-
     Chroma: 500
 
 };
 
 
-let currentRolling = null;
-
-let rollingInterval = null;
-
-
-/* =========================
-   SAVING
-========================= */
+/* =====================================================
+   LOCAL SAVING
+===================================================== */
 
 function saveGame() {
 
@@ -150,21 +164,18 @@ function saveGame() {
 }
 
 
-/* =========================
+/* =====================================================
    COINS
-========================= */
+===================================================== */
 
 function updateCoins() {
 
     const coinAmount =
-        document.getElementById(
-            "coinAmount"
-        );
+        document.getElementById("coinAmount");
 
     if (coinAmount) {
 
-        coinAmount.textContent =
-            coins;
+        coinAmount.textContent = coins;
 
     }
 
@@ -173,19 +184,16 @@ function updateCoins() {
 }
 
 
-/* =========================
+/* =====================================================
    EQUIPPED BLOCK
-========================= */
+===================================================== */
 
 function updateEquipped() {
 
     const equipped =
-        document.querySelector(
-            ".equipped"
-        );
+        document.querySelector(".equipped");
 
     if (!equipped) return;
-
 
     equipped.innerHTML = `
 
@@ -201,21 +209,12 @@ function updateEquipped() {
 function equipBlock(blockName) {
 
     if (!collection[blockName]) {
-
         return;
-
     }
 
+    equippedBlock = blockName;
 
-    equippedBlock =
-        blockName;
-
-
-    localStorage.setItem(
-        "blocketEquippedBlock",
-        equippedBlock
-    );
-
+    saveGame();
 
     updateEquipped();
 
@@ -224,15 +223,13 @@ function equipBlock(blockName) {
 }
 
 
-/* =========================
+/* =====================================================
    DAILY SPIN
-========================= */
+===================================================== */
 
 function getToday() {
 
-    const now =
-        new Date();
-
+    const now = new Date();
 
     return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
@@ -246,72 +243,52 @@ function canDailySpin() {
 }
 
 
-/* =========================
+/* =====================================================
    TABS
-========================= */
+===================================================== */
 
 function openTab(tab) {
 
     if (tab === "collection") {
-
         showCollection();
-
     }
-
 
     if (tab === "market") {
-
         showMarket();
-
     }
-
 
     if (tab === "library") {
-
         showLibrary();
-
     }
-
 
     if (tab === "stats") {
-
         showStats();
-
     }
 
-
     if (tab === "info") {
-
         showInfo();
-
     }
 
 }
 
 
-/* =========================
+/* =====================================================
    MARKET
-========================= */
+===================================================== */
 
 function showMarket() {
 
     const mainContent =
-        document.getElementById(
-            "mainContent"
-        );
-
+        document.getElementById("mainContent");
 
     const dailyAvailable =
         canDailySpin();
-
 
     mainContent.innerHTML = `
 
         <h1>MARKET</h1>
 
-
         <div class="market-grid">
-
 
             <div class="pack-card">
 
@@ -392,98 +369,66 @@ function showMarket() {
 }
 
 
-/* =========================
+/* =====================================================
    STATS
-========================= */
+===================================================== */
 
 function showStats() {
 
     const mainContent =
-        document.getElementById(
-            "mainContent"
-        );
-
+        document.getElementById("mainContent");
 
     let totalBlocks = 0;
 
+    Object.values(collection).forEach(block => {
 
-    Object.values(collection)
-        .forEach(block => {
+        totalBlocks += block.amount;
 
-            totalBlocks +=
-                block.amount;
-
-        });
-
+    });
 
     const uniqueBlocks =
         Object.keys(collection).length;
 
-
     const allBlocks =
         Object.values(boxes)
-        .flatMap(
-            box => box.blocks
-        );
+            .flatMap(box => box.blocks);
 
-
-    let rarestBlock =
-        "None";
-
+    let rarestBlock = "None";
 
     if (collection["Rainbow Block"]) {
 
-        rarestBlock =
-            "Rainbow Block";
+        rarestBlock = "Rainbow Block";
 
-    }
+    } else if (collection["Mega Titan"]) {
 
-    else if (collection["Mega Titan"]) {
+        rarestBlock = "Mega Titan";
 
-        rarestBlock =
-            "Mega Titan";
+    } else if (collection["Brown Block"]) {
 
-    }
+        rarestBlock = "Brown Block";
 
-    else if (collection["Brown Block"]) {
+    } else if (collection["Titan"]) {
 
-        rarestBlock =
-            "Brown Block";
+        rarestBlock = "Titan";
 
-    }
-
-    else if (collection["Titan"]) {
+    } else if (uniqueBlocks > 0) {
 
         rarestBlock =
-            "Titan";
+            Object.keys(collection)[0];
 
     }
-
-    else if (uniqueBlocks > 0) {
-
-        rarestBlock =
-            Object.keys(
-                collection
-            )[0];
-
-    }
-
 
     mainContent.innerHTML = `
 
         <h1>STATS</h1>
 
-
         <div class="stats-grid">
-
 
             <div class="stat-card">
 
                 <h2>🪙 COINS</h2>
 
-                <p>
-                    ${coins}
-                </p>
+                <p>${coins}</p>
 
             </div>
 
@@ -492,9 +437,7 @@ function showStats() {
 
                 <h2>📦 BOXES OPENED</h2>
 
-                <p>
-                    ${boxesOpened}
-                </p>
+                <p>${boxesOpened}</p>
 
             </div>
 
@@ -503,9 +446,7 @@ function showStats() {
 
                 <h2>🧱 TOTAL BLOCKS</h2>
 
-                <p>
-                    ${totalBlocks}
-                </p>
+                <p>${totalBlocks}</p>
 
             </div>
 
@@ -514,9 +455,7 @@ function showStats() {
 
                 <h2>📚 UNIQUE BLOCKS</h2>
 
-                <p>
-                    ${uniqueBlocks}/${allBlocks.length}
-                </p>
+                <p>${uniqueBlocks}/${allBlocks.length}</p>
 
             </div>
 
@@ -525,12 +464,9 @@ function showStats() {
 
                 <h2>⭐ RAREST BLOCK</h2>
 
-                <p>
-                    ${rarestBlock}
-                </p>
+                <p>${rarestBlock}</p>
 
             </div>
-
 
         </div>
 
@@ -539,36 +475,25 @@ function showStats() {
 }
 
 
-/* =========================
+/* =====================================================
    LIBRARY
-========================= */
+===================================================== */
 
 function showLibrary() {
 
     const mainContent =
-        document.getElementById(
-            "mainContent"
-        );
-
+        document.getElementById("mainContent");
 
     const allBlocks =
         Object.values(boxes)
-        .flatMap(
-            box => box.blocks
-        );
+            .flatMap(box => box.blocks);
 
-
-    let blocksHTML =
-        "";
-
+    let blocksHTML = "";
 
     allBlocks.forEach(block => {
 
         const sellValue =
-            sellValues[
-                block.rarity
-            ];
-
+            sellValues[block.rarity];
 
         blocksHTML += `
 
@@ -579,15 +504,16 @@ function showLibrary() {
                 </div>
 
                 <div
-                    class="library-rarity
-                    ${block.rarity.toLowerCase()}"
+                    class="library-rarity ${block.rarity.toLowerCase()}"
                 >
                     ${block.rarity}
                 </div>
 
                 <div class="library-sell">
+
                     Sell Value:
                     ${sellValue} 🪙
+
                 </div>
 
             </div>
@@ -595,7 +521,6 @@ function showLibrary() {
         `;
 
     });
-
 
     mainContent.innerHTML = `
 
@@ -616,128 +541,92 @@ function showLibrary() {
 }
 
 
-/* =========================
+/* =====================================================
    COLLECTION
-========================= */
+===================================================== */
 
 function showCollection() {
 
     const mainContent =
-        document.getElementById(
-            "mainContent"
-        );
+        document.getElementById("mainContent");
 
-
-    let blocksHTML =
-        "";
-
+    let blocksHTML = "";
 
     const ownedBlocks =
-        Object.keys(
-            collection
-        );
-
+        Object.keys(collection);
 
     if (ownedBlocks.length === 0) {
 
         blocksHTML = `
 
             <p class="empty-collection">
-
-                You haven't collected
-                any Blocks yet!
-
+                You haven't collected any Blocks yet!
             </p>
 
         `;
 
-    }
+    } else {
 
-    else {
+        ownedBlocks.forEach(blockName => {
 
-        ownedBlocks.forEach(
-            blockName => {
+            const block =
+                collection[blockName];
 
-                const block =
-                    collection[
-                        blockName
-                    ];
+            const sellValue =
+                sellValues[block.rarity];
 
+            const isEquipped =
+                equippedBlock === block.name;
 
-                const sellValue =
-                    sellValues[
-                        block.rarity
-                    ];
+            blocksHTML += `
 
+                <div class="collection-block">
 
-                const isEquipped =
-                    equippedBlock ===
-                    block.name;
-
-
-                blocksHTML += `
-
-                    <div class="collection-block">
-
-                        <div class="collection-block-name">
-
-                            ${block.name}
-
-                        </div>
-
-
-                        <div
-                            class="collection-rarity
-                            ${block.rarity.toLowerCase()}"
-                        >
-
-                            ${block.rarity}
-
-                        </div>
-
-
-                        <div class="collection-count">
-
-                            x${block.amount}
-
-                        </div>
-
-
-                        <button
-                            class="equip-button"
-                            onclick="equipBlock('${block.name}')"
-                            ${isEquipped ? "disabled" : ""}
-                        >
-
-                            ${
-                                isEquipped
-                                ? "EQUIPPED"
-                                : "EQUIP"
-                            }
-
-                        </button>
-
-
-                        <button
-                            class="sell-button"
-                            onclick="sellBlock('${block.name}')"
-                        >
-
-                            SELL
-                            +${sellValue} 🪙
-
-                        </button>
-
-
+                    <div class="collection-block-name">
+                        ${block.name}
                     </div>
 
-                `;
+                    <div
+                        class="collection-rarity ${block.rarity.toLowerCase()}"
+                    >
+                        ${block.rarity}
+                    </div>
 
-            }
-        );
+                    <div class="collection-count">
+                        x${block.amount}
+                    </div>
+
+                    <button
+                        class="equip-button"
+                        onclick="equipBlock('${block.name}')"
+                        ${isEquipped ? "disabled" : ""}
+                    >
+
+                        ${
+                            isEquipped
+                            ? "EQUIPPED"
+                            : "EQUIP"
+                        }
+
+                    </button>
+
+                    <button
+                        class="sell-button"
+                        onclick="sellBlock('${block.name}')"
+                    >
+
+                        SELL
+                        +${sellValue} 🪙
+
+                    </button>
+
+                </div>
+
+            `;
+
+        });
 
     }
-
 
     mainContent.innerHTML = `
 
@@ -754,44 +643,34 @@ function showCollection() {
 }
 
 
-/* =========================
+/* =====================================================
    INFO
-========================= */
+===================================================== */
 
 function showInfo() {
 
     const mainContent =
-        document.getElementById(
-            "mainContent"
-        );
-
+        document.getElementById("mainContent");
 
     mainContent.innerHTML = `
 
         <h1>INFO</h1>
 
-
         <div class="info-card">
 
-            <h2>
-                ABOUT BLOCKET
-            </h2>
+            <h2>ABOUT BLOCKET</h2>
 
             <p>
                 Welcome to Blocket!
             </p>
 
             <p>
-                Collect Blocks,
-                open Boxes,
+                Collect Blocks, open Boxes,
                 discover rare Blocks,
                 and build your collection.
             </p>
 
-
-            <h2>
-                RARITIES
-            </h2>
+            <h2>RARITIES</h2>
 
             <p>
                 Common →
@@ -802,10 +681,7 @@ function showInfo() {
                 Chroma
             </p>
 
-
-            <h2>
-                BOXES
-            </h2>
+            <h2>BOXES</h2>
 
             <p>
                 Open different Boxes
@@ -819,76 +695,39 @@ function showInfo() {
 }
 
 
-/* =========================
+/* =====================================================
    RANDOM BLOCK
-========================= */
+===================================================== */
 
 function getRandomBlock(boxType) {
 
-    const box =
-        boxes[boxType];
+    const box = boxes[boxType];
 
-
-    const roll =
-        Math.random() * 100;
-
+    const roll = Math.random() * 100;
 
     if (boxType === "color") {
 
         if (roll < 1) {
-
-            return getBlockByRarity(
-                box.blocks,
-                "Chroma"
-            );
-
+            return getBlockByRarity(box.blocks, "Chroma");
         }
-
 
         if (roll < 5) {
-
-            return getBlockByRarity(
-                box.blocks,
-                "Legendary"
-            );
-
+            return getBlockByRarity(box.blocks, "Legendary");
         }
-
 
         if (roll < 15) {
-
-            return getBlockByRarity(
-                box.blocks,
-                "Epic"
-            );
-
+            return getBlockByRarity(box.blocks, "Epic");
         }
-
 
         if (roll < 35) {
-
-            return getBlockByRarity(
-                box.blocks,
-                "Rare"
-            );
-
+            return getBlockByRarity(box.blocks, "Rare");
         }
-
 
         if (roll < 60) {
-
-            return getBlockByRarity(
-                box.blocks,
-                "Uncommon"
-            );
-
+            return getBlockByRarity(box.blocks, "Uncommon");
         }
 
-
-        return getBlockByRarity(
-            box.blocks,
-            "Common"
-        );
+        return getBlockByRarity(box.blocks, "Common");
 
     }
 
@@ -896,66 +735,34 @@ function getRandomBlock(boxType) {
     if (boxType === "robot") {
 
         if (roll < 2) {
-
-            return getBlockByRarity(
-                box.blocks,
-                "Legendary"
-            );
-
+            return getBlockByRarity(box.blocks, "Legendary");
         }
-
 
         if (roll < 10) {
-
-            return getBlockByRarity(
-                box.blocks,
-                "Epic"
-            );
-
+            return getBlockByRarity(box.blocks, "Epic");
         }
-
 
         if (roll < 25) {
-
-            return getBlockByRarity(
-                box.blocks,
-                "Rare"
-            );
-
+            return getBlockByRarity(box.blocks, "Rare");
         }
-
 
         if (roll < 50) {
-
-            return getBlockByRarity(
-                box.blocks,
-                "Uncommon"
-            );
-
+            return getBlockByRarity(box.blocks, "Uncommon");
         }
 
-
-        return getBlockByRarity(
-            box.blocks,
-            "Common"
-        );
+        return getBlockByRarity(box.blocks, "Common");
 
     }
 
 }
 
 
-function getBlockByRarity(
-    blocks,
-    rarity
-) {
+function getBlockByRarity(blocks, rarity) {
 
     const possibleBlocks =
-        blocks.filter(
-            block =>
-                block.rarity === rarity
+        blocks.filter(block =>
+            block.rarity === rarity
         );
-
 
     return possibleBlocks[
         Math.floor(
@@ -967,15 +774,13 @@ function getBlockByRarity(
 }
 
 
-/* =========================
+/* =====================================================
    BUY BOX
-========================= */
+===================================================== */
 
 function buyBox(boxType) {
 
-    const box =
-        boxes[boxType];
-
+    const box = boxes[boxType];
 
     if (coins < box.price) {
 
@@ -987,116 +792,74 @@ function buyBox(boxType) {
 
     }
 
-
-    coins -=
-        box.price;
-
+    coins -= box.price;
 
     boxesOpened++;
-
 
     saveGame();
 
     updateCoins();
 
-    startBoxOpening(
-        boxType
-    );
+    startBoxOpening(boxType);
 
 }
 
 
-/* =========================
+/* =====================================================
    BOX OPENING
-========================= */
+===================================================== */
 
-function startBoxOpening(
-    boxType
-) {
+function startBoxOpening(boxType) {
 
-    const box =
-        boxes[boxType];
-
+    const box = boxes[boxType];
 
     const overlay =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
-
-    overlay.className =
-        "pack-overlay";
-
+    overlay.className = "pack-overlay";
 
     overlay.innerHTML = `
 
         <div class="pack-opening">
 
             <div class="opening-box-name">
-
                 ${box.name}
-
             </div>
-
 
             <div
                 class="rolling-text"
                 id="rollingText"
             >
-
                 ${box.blocks[0].name}
-
             </div>
-
 
             <div class="opening-text">
-
-                OPENING
-                ${box.name}...
-
+                OPENING ${box.name}...
             </div>
-
 
             <button
                 class="skip-button"
                 onclick="skipPackOpening()"
             >
-
                 SKIP
-
             </button>
 
         </div>
 
     `;
 
-
-    document.body.appendChild(
-        overlay
-    );
-
+    document.body.appendChild(overlay);
 
     const rollingText =
-        document.getElementById(
-            "rollingText"
-        );
-
+        document.getElementById("rollingText");
 
     const rollingBlocks =
-        box.blocks.map(
-            block =>
-                block.name
-        );
-
+        box.blocks.map(block => block.name);
 
     currentRolling =
-        getRandomBlock(
-            boxType
-        );
-
+        getRandomBlock(boxType);
 
     let rollCount = 0;
-
 
     rollingInterval =
         setInterval(() => {
@@ -1109,13 +872,10 @@ function startBoxOpening(
                     )
                 ];
 
-
             rollingText.textContent =
                 randomName;
 
-
             rollCount++;
-
 
             if (rollCount >= 25) {
 
@@ -1128,18 +888,15 @@ function startBoxOpening(
 }
 
 
-/* =========================
-   SKIP
-========================= */
+/* =====================================================
+   SKIP OPENING
+===================================================== */
 
 function skipPackOpening() {
 
     if (!currentRolling) {
-
         return;
-
     }
-
 
     finishPackOpening();
 
@@ -1150,137 +907,86 @@ function finishPackOpening() {
 
     if (rollingInterval) {
 
-        clearInterval(
-            rollingInterval
-        );
+        clearInterval(rollingInterval);
 
-        rollingInterval =
-            null;
+        rollingInterval = null;
 
     }
-
 
     if (!currentRolling) {
-
         return;
-
     }
-
 
     const wonBlock =
         currentRolling;
 
+    currentRolling = null;
 
-    currentRolling =
-        null;
+    addToCollection(wonBlock);
 
-
-    addToCollection(
-        wonBlock
-    );
-
-
-    revealBlock(
-        wonBlock
-    );
+    revealBlock(wonBlock);
 
 }
 
 
-/* =========================
-   ADD COLLECTION
-========================= */
+/* =====================================================
+   ADD TO COLLECTION
+===================================================== */
 
-function addToCollection(
-    block
-) {
+function addToCollection(block) {
 
     if (collection[block.name]) {
 
-        collection[
-            block.name
-        ].amount++;
+        collection[block.name].amount++;
 
-    }
+    } else {
 
-    else {
+        collection[block.name] = {
 
-        collection[
-            block.name
-        ] = {
-
-            name:
-                block.name,
-
-            rarity:
-                block.rarity,
-
-            amount:
-                1
+            name: block.name,
+            rarity: block.rarity,
+            amount: 1
 
         };
 
     }
-
 
     saveGame();
 
 }
 
 
-/* =========================
+/* =====================================================
    SELL
-========================= */
+===================================================== */
 
-function sellBlock(
-    blockName
-) {
+function sellBlock(blockName) {
 
     const block =
-        collection[
-            blockName
-        ];
-
+        collection[blockName];
 
     if (!block) {
-
         return;
-
     }
 
-
     const sellValue =
-        sellValues[
-            block.rarity
-        ];
-
+        sellValues[block.rarity];
 
     block.amount--;
 
-
-    coins +=
-        sellValue;
-
+    coins += sellValue;
 
     if (block.amount <= 0) {
 
-        if (
-            equippedBlock ===
-            blockName
-        ) {
+        if (equippedBlock === blockName) {
 
-            equippedBlock =
-                "Block";
+            equippedBlock = "Block";
 
         }
 
-
-        delete collection[
-            blockName
-        ];
+        delete collection[blockName];
 
     }
-
 
     saveGame();
 
@@ -1293,28 +999,20 @@ function sellBlock(
 }
 
 
-/* =========================
+/* =====================================================
    DAILY SPIN
-========================= */
+===================================================== */
 
 function dailySpin() {
 
     if (!canDailySpin()) {
-
         return;
-
     }
 
-
     const overlay =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
-
-    overlay.className =
-        "spin-overlay";
-
+    overlay.className = "spin-overlay";
 
     overlay.innerHTML = `
 
@@ -1323,7 +1021,6 @@ function dailySpin() {
             <h1>
                 🎡 DAILY SPIN
             </h1>
-
 
             <div
                 class="wheel"
@@ -1336,34 +1033,23 @@ function dailySpin() {
 
             </div>
 
-
             <div
                 class="spin-result"
                 id="spinResult"
             >
-
                 SPINNING...
-
             </div>
 
         </div>
 
     `;
 
-
-    document.body.appendChild(
-        overlay
-    );
-
+    document.body.appendChild(overlay);
 
     const wheel =
-        document.getElementById(
-            "dailyWheel"
-        );
-
+        document.getElementById("dailyWheel");
 
     const rewards = [
-
         500,
         750,
         1000,
@@ -1371,9 +1057,7 @@ function dailySpin() {
         1500,
         1750,
         2000
-
     ];
-
 
     const winningReward =
         rewards[
@@ -1383,13 +1067,11 @@ function dailySpin() {
             )
         ];
 
-
     const rotations =
         5 +
         Math.floor(
             Math.random() * 3
         );
-
 
     wheel.style.transform =
         `rotate(${
@@ -1397,21 +1079,16 @@ function dailySpin() {
             Math.random() * 360
         }deg)`;
 
-
     setTimeout(() => {
 
-        coins +=
-            winningReward;
-
+        coins += winningReward;
 
         lastDailySpin =
             getToday();
 
-
         saveGame();
 
         updateCoins();
-
 
         document.getElementById(
             "spinResult"
@@ -1425,92 +1102,66 @@ function dailySpin() {
 
         `;
 
-
         const closeButton =
-            document.createElement(
-                "button"
-            );
-
+            document.createElement("button");
 
         closeButton.className =
             "close-spin";
 
-
         closeButton.textContent =
             "CONTINUE";
 
+        closeButton.onclick = () => {
 
-        closeButton.onclick =
-            () => {
+            overlay.remove();
 
-                overlay.remove();
+            showMarket();
 
-                showMarket();
-
-            };
-
+        };
 
         document.querySelector(
             ".spin-window"
-        ).appendChild(
-            closeButton
-        );
-
+        ).appendChild(closeButton);
 
     }, 3000);
 
 }
 
 
-/* =========================
-   REVEAL
-========================= */
+/* =====================================================
+   REVEAL BLOCK
+===================================================== */
 
-function revealBlock(
-    block
-) {
+function revealBlock(block) {
 
     const overlay =
-        document.querySelector(
-            ".pack-overlay"
-        );
+        document.querySelector(".pack-overlay");
 
+    if (!overlay) return;
 
     overlay.innerHTML = `
 
         <div class="pack-reveal">
 
             <div class="you-got">
-
                 YOU GOT!
-
             </div>
-
 
             <div class="revealed-block">
-
                 ${block.name}
-
             </div>
-
 
             <div
-                class="rarity
-                ${block.rarity.toLowerCase()}"
+                class="rarity ${block.rarity.toLowerCase()}"
             >
-
                 ${block.rarity}
-
             </div>
-
 
             <button
                 class="close-pack"
                 onclick="closePack()"
             >
-
                 CONTINUE
-
             </button>
 
         </div>
@@ -1520,71 +1171,73 @@ function revealBlock(
 }
 
 
-/* =========================
-   CLOSE PACK
-========================= */
+/* =====================================================
+   CLOSE BOX
+===================================================== */
 
 function closePack() {
 
     const overlay =
-        document.querySelector(
-            ".pack-overlay"
-        );
-
+        document.querySelector(".pack-overlay");
 
     if (overlay) {
-
         overlay.remove();
-
     }
 
 }
 
 
 /* =====================================================
-   ACCOUNT UI
+   ACCOUNT POPUP
 ===================================================== */
 
 function openAccount() {
 
-    document.getElementById(
-        "accountOverlay"
-    ).style.display =
-        "flex";
+    const overlay =
+        document.getElementById("accountOverlay");
+
+    if (!overlay) return;
+
+    overlay.style.display = "flex";
+
+    checkCurrentUser();
 
 }
 
 
 function closeAccount() {
 
-    document.getElementById(
-        "accountOverlay"
-    ).style.display =
-        "none";
+    const overlay =
+        document.getElementById("accountOverlay");
+
+    if (!overlay) return;
+
+    overlay.style.display = "none";
 
 }
 
 
+/* =====================================================
+   LOGIN SCREEN
+===================================================== */
+
 function showLogin() {
 
     const content =
-        document.getElementById(
-            "accountContent"
-        );
+        document.getElementById("accountContent");
 
+    if (!content) return;
 
     content.innerHTML = `
 
         <h2>LOG IN</h2>
 
-
         <input
-            id="loginUsername"
+            id="loginEmail"
             class="account-input"
-            type="text"
-            placeholder="Username"
+            type="email"
+            placeholder="Email"
         >
-
 
         <input
             id="loginPassword"
@@ -1593,29 +1246,24 @@ function showLogin() {
             placeholder="Password"
         >
 
-
         <button
             class="account-main-button"
             onclick="login()"
         >
-
             LOG IN
-
         </button>
 
+        <p id="loginMessage"></p>
 
         <p>
             Don't have an account?
         </p>
 
-
         <button
             class="account-link-button"
             onclick="showSignup()"
         >
-
             SIGN UP
-
         </button>
 
     `;
@@ -1623,18 +1271,27 @@ function showLogin() {
 }
 
 
+/* =====================================================
+   SIGNUP SCREEN
+===================================================== */
+
 function showSignup() {
 
     const content =
-        document.getElementById(
-            "accountContent"
-        );
+        document.getElementById("accountContent");
 
+    if (!content) return;
 
     content.innerHTML = `
 
-        <h2>SIGN UP</h2>
+        <h2>CREATE ACCOUNT</h2>
 
+        <input
+            id="signupEmail"
+            class="account-input"
+            type="email"
+            placeholder="Email"
+        >
 
         <input
             id="signupUsername"
@@ -1643,7 +1300,6 @@ function showSignup() {
             placeholder="Username"
         >
 
-
         <input
             id="signupPassword"
             class="account-input"
@@ -1651,29 +1307,24 @@ function showSignup() {
             placeholder="Password"
         >
 
-
         <button
             class="account-main-button"
             onclick="signup()"
         >
-
             CREATE ACCOUNT
-
         </button>
 
+        <p id="signupMessage"></p>
 
         <p>
             Already have an account?
         </p>
 
-
         <button
             class="account-link-button"
             onclick="showLogin()"
         >
-
             LOG IN
-
         </button>
 
     `;
@@ -1681,10 +1332,411 @@ function showSignup() {
 }
 
 
-/* =========================
+/* =====================================================
+   SIGN UP
+===================================================== */
+
+async function signup() {
+
+    const emailInput =
+        document.getElementById("signupEmail");
+
+    const usernameInput =
+        document.getElementById("signupUsername");
+
+    const passwordInput =
+        document.getElementById("signupPassword");
+
+    const message =
+        document.getElementById("signupMessage");
+
+
+    if (
+        !emailInput ||
+        !usernameInput ||
+        !passwordInput ||
+        !message
+    ) {
+
+        console.error(
+            "SIGNUP ERROR: Signup inputs were not found."
+        );
+
+        return;
+
+    }
+
+
+    const email =
+        emailInput.value.trim();
+
+    const username =
+        usernameInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+
+    if (!email || !username || !password) {
+
+        message.textContent =
+            "Please fill in everything!";
+
+        return;
+
+    }
+
+
+    if (username.length < 3) {
+
+        message.textContent =
+            "Username must be at least 3 characters.";
+
+        return;
+
+    }
+
+
+    if (password.length < 6) {
+
+        message.textContent =
+            "Password must be at least 6 characters.";
+
+        return;
+
+    }
+
+
+    message.textContent =
+        "Creating account...";
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+        emailRedirectTo: "https://docmason12-jpg.github.io/Blocket/",
+        data: {
+            username: username
+        }
+    }
+});
+
+
+        if (error) {
+
+            console.error(
+                "SIGNUP ERROR:",
+                error
+            );
+
+            message.textContent =
+                error.message;
+
+            return;
+
+        }
+
+
+        console.log(
+            "ACCOUNT CREATED:",
+            data
+        );
+
+
+        if (
+            data.user &&
+            data.session
+        ) {
+
+            message.textContent =
+                "🎉 Account created and logged in!";
+
+            setTimeout(() => {
+
+                showAccountLoggedIn(
+                    data.user
+                );
+
+            }, 800);
+
+        } else {
+
+            message.textContent =
+                "🎉 Account created! Check your email to confirm your account.";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "SIGNUP ERROR:",
+            error
+        );
+
+        message.textContent =
+            "Something went wrong. Check the Console.";
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+async function login() {
+
+    const emailInput =
+        document.getElementById("loginEmail");
+
+    const passwordInput =
+        document.getElementById("loginPassword");
+
+    const message =
+        document.getElementById("loginMessage");
+
+
+    if (
+        !emailInput ||
+        !passwordInput ||
+        !message
+    ) {
+
+        console.error(
+            "LOGIN ERROR: Login inputs were not found."
+        );
+
+        return;
+
+    }
+
+
+    const email =
+        emailInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+
+    if (!email || !password) {
+
+        message.textContent =
+            "Please enter your email and password.";
+
+        return;
+
+    }
+
+
+    message.textContent =
+        "Logging in...";
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.signInWithPassword({
+
+                email: email,
+
+                password: password
+
+            });
+
+
+        if (error) {
+
+            console.error(
+                "LOGIN ERROR:",
+                error
+            );
+
+            message.textContent =
+                error.message;
+
+            return;
+
+        }
+
+
+        console.log(
+            "LOGGED IN:",
+            data
+        );
+
+
+        showAccountLoggedIn(
+            data.user
+        );
+
+    } catch (error) {
+
+        console.error(
+            "LOGIN ERROR:",
+            error
+        );
+
+        message.textContent =
+            "Something went wrong.";
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGGED-IN ACCOUNT
+===================================================== */
+
+function showAccountLoggedIn(user) {
+
+    const content =
+        document.getElementById("accountContent");
+
+    if (!content) return;
+
+
+    const username =
+        user?.user_metadata?.username ||
+        "Player";
+
+
+    content.innerHTML = `
+
+        <h2>WELCOME!</h2>
+
+        <p>
+            👤 ${username}
+        </p>
+
+        <p>
+            ${user.email}
+        </p>
+
+        <button
+            class="account-main-button"
+            onclick="logout()"
+        >
+            LOG OUT
+        </button>
+
+    `;
+
+}
+
+
+/* =====================================================
+   CHECK CURRENT USER
+===================================================== */
+
+async function checkCurrentUser() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.getUser();
+
+
+        if (error || !data.user) {
+
+            return;
+
+        }
+
+
+        showAccountLoggedIn(
+            data.user
+        );
+
+    } catch (error) {
+
+        console.error(
+            "ACCOUNT CHECK ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logout() {
+
+    const {
+        error
+    } =
+        await supabaseClient.auth.signOut();
+
+
+    if (error) {
+
+        console.error(
+            "LOGOUT ERROR:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    showLogin();
+
+}
+
+
+/* =====================================================
+   SUPABASE AUTH LISTENER
+===================================================== */
+
+supabaseClient.auth.onAuthStateChange(
+    (event, session) => {
+
+        console.log(
+            "BLOCKET AUTH:",
+            event
+        );
+
+        if (session?.user) {
+
+            console.log(
+                "CURRENT USER:",
+                session.user
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
    STARTUP
-========================= */
+===================================================== */
 
 updateEquipped();
 
 updateCoins();
+
+console.log(
+    "BLOCKET SUPABASE CONNECTED:",
+    supabaseClient
+);
