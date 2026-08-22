@@ -1226,8 +1226,6 @@ function showLogin() {
     const content =
         document.getElementById("accountContent");
 
-    if (!content) return;
-
     content.innerHTML = `
 
         <h2>LOG IN</h2>
@@ -1267,7 +1265,6 @@ function showLogin() {
         </button>
 
     `;
-
 }
 
 
