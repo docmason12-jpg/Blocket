@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Blocket</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-menu">
+            <div
+                class="menu-item"
+                onclick="openTab('collection')"
+            >
+                Collection
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('backgrounds')"
+            >
+                Backgrounds
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('market')"
+            >
+                Market
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('library')"
+            >
+                Library
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('stats')"
+            >
+                Stats
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('info')"
+            >
+                Info
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('host')"
+            >
+                Host
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('play')"
+            >
+                Play
+            </div>
+
+            <div
+                class="menu-item"
+                onclick="openTab('updates')"
+            >
+                Updates
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="player-info">
+            <button
+                class="theme-button"
+                id="themeButton"
+                onclick="toggleTheme()"
+                aria-label="Toggle theme"
+                type="button"
+            >
+                🌙
+            </button>
+
+            <button
+                class="account-button"
+                onclick="openAccount()"
+                type="button"
+            >
+                ACCOUNT
+            </button>
+
+            <div class="equipped">
+                <div>Equipped</div>
+                <div>Block</div>
+            </div>
+        </div>
+
+        <div
+            class="main-content"
+            id="mainContent"
+        >
+            <h1>Welcome to Blocket!</h1>
+
+            <p>
+                Collect Blocks, open Boxes,
+                and build your collection.
+            </p>
+
+        </div>
+    </main>
+
+    <div
+        id="accountOverlay"
+        class="account-overlay"
+    >
+        <div class="account-window">
+            <button
+                class="account-close"
+                onclick="closeAccount()"
+                aria-label="Close account"
+                type="button"
+            >
+                ×
+            </button>
+
+            <h1>BLOCKET</h1>
+
+            <div id="accountContent">
+                <h2>ACCOUNT</h2>
+
+                <button
+                    class="account-main-button"
+                    onclick="showLogin()"
+                    type="button"
+                >
+                    LOG IN
+                </button>
+
+                <button
+                    class="account-main-button"
+                    onclick="showSignup()"
+                    type="button"
+                >
+                    SIGN UP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script.js?v=1"></script>
+</body>
+</html>
