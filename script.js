@@ -1505,21 +1505,10 @@ async function login() {
     const message =
         document.getElementById("loginMessage");
 
-
-    if (
-        !emailInput ||
-        !passwordInput ||
-        !message
-    ) {
-
-        console.error(
-            "LOGIN ERROR: Login inputs were not found."
-        );
-
+    if (!emailInput || !passwordInput) {
+        console.error("LOGIN ERROR: Login inputs were not found.");
         return;
-
     }
-
 
     const email =
         emailInput.value.trim();
@@ -1527,62 +1516,26 @@ async function login() {
     const password =
         passwordInput.value;
 
-
     if (!email || !password) {
 
         message.textContent =
-            "Please enter your email and password.";
+            "Please enter your email and password!";
 
         return;
-
     }
-
 
     message.textContent =
         "Logging in...";
 
+    const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
 
-    try {
+            email: email,
+            password: password
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.auth.signInWithPassword({
+        });
 
-                email: email,
-
-                password: password
-
-            });
-
-
-        if (error) {
-
-            console.error(
-                "LOGIN ERROR:",
-                error
-            );
-
-            message.textContent =
-                error.message;
-
-            return;
-
-        }
-
-
-        console.log(
-            "LOGGED IN:",
-            data
-        );
-
-
-        showAccountLoggedIn(
-            data.user
-        );
-
-    } catch (error) {
+    if (error) {
 
         console.error(
             "LOGIN ERROR:",
@@ -1590,12 +1543,25 @@ async function login() {
         );
 
         message.textContent =
-            "Something went wrong.";
+            error.message;
 
+        return;
     }
 
-}
+    console.log(
+        "LOGGED IN:",
+        data
+    );
 
+    message.textContent =
+        "🎉 Logged in!";
+
+    setTimeout(() => {
+
+        closeAccount();
+
+    }, 1000);
+}
 
 /* =====================================================
    LOGGED-IN ACCOUNT
