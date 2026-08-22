@@ -1861,14 +1861,13 @@ function showHost() {
 
     `;
 
-    const savedRace =
-        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+    const savedRace = getHostedRace();
 
     if (savedRace) {
         document.getElementById("hostStatus").textContent =
             `Race ready for ${savedRace.timeLimit} seconds.`;
         document.getElementById("roomCodeDisplay").innerHTML =
-            `ROOM CODE <strong>${savedRace.roomCode}</strong>`;
+            `ROOM CODE <strong>${savedRace.roomCode}</strong><br><a href="${getRaceShareUrl(savedRace)}">${getRaceShareUrl(savedRace)}</a>`;
     }
 
 }
@@ -1883,8 +1882,7 @@ function showPlay() {
     const mainContent =
         document.getElementById("mainContent");
 
-    const race =
-        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+    const race = getHostedRace();
 
     mainContent.innerHTML = `
 
@@ -1960,10 +1958,56 @@ function createFlapRace() {
     );
 
     document.getElementById("hostStatus").textContent =
-        `Race ready for ${timeLimit} seconds. Open Play to begin.`;
+        `Race ready for ${timeLimit} seconds. Share this link to invite players:`;
 
     document.getElementById("roomCodeDisplay").innerHTML =
-        `ROOM CODE <strong>${roomCode}</strong>`;
+        `ROOM CODE <strong>${roomCode}</strong><br><a href="${getRaceShareUrl({ roomCode, timeLimit })}">${getRaceShareUrl({ roomCode, timeLimit })}</a>`;
+
+}
+
+
+function getRaceShareUrl(race) {
+
+    const shareUrl =
+        new URL(window.location.href);
+
+    shareUrl.searchParams.set(
+        "room",
+        race.roomCode
+    );
+
+    shareUrl.searchParams.set(
+        "time",
+        race.timeLimit
+    );
+
+    return shareUrl.href;
+
+}
+
+
+function getHostedRace() {
+
+    const savedRace =
+        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+
+    const url =
+        new URL(window.location.href);
+
+    const roomCode =
+        url.searchParams.get("room")?.toUpperCase();
+
+    const timeLimit =
+        Number(url.searchParams.get("time"));
+
+    if (roomCode && [30, 60, 90].includes(timeLimit)) {
+        return {
+            roomCode,
+            timeLimit
+        };
+    }
+
+    return savedRace;
 
 }
 
@@ -1988,8 +2032,7 @@ function generateRoomCode() {
 
 function joinFlapRace() {
 
-    const race =
-        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+    const race = getHostedRace();
 
     const roomCode =
         document.getElementById("roomCode").value.trim().toUpperCase();
@@ -2007,7 +2050,6 @@ function joinFlapRace() {
         return;
     }
 
-    startFlapRace();
     if (!displayName) {
         document.querySelector(".game-status").textContent =
             "Enter a display name to join the race.";
@@ -2023,8 +2065,7 @@ let flapRace = null;
 
 function startFlapRace(displayName = "You") {
 
-    const race =
-        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+    const race = getHostedRace();
 
     if (!race) {
         showPlay();
