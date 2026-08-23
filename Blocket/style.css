@@ -512,6 +512,19 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
     font-size: 13px;
 }
 
+@media (max-width: 600px) {
+    .collection-tools {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .collection-search,
+    .collection-tools select {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
 .collection-tools select {
     padding: 10px 12px;
     border: 1px solid var(--border);
@@ -519,6 +532,36 @@ body.dark-mode .market-grid .pack-card:nth-child(3) h2 {
     outline: none;
     color: var(--text);
     background: var(--panel-soft);
+}
+
+.collection-search {
+    min-width: 190px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    color: var(--text);
+    background: var(--panel-soft);
+}
+
+.collection-search:focus {
+    border-color: var(--purple-light);
+    box-shadow: 0 0 0 4px rgba(133, 92, 227, 0.12);
+}
+
+.collection-box-section {
+    margin-top: 28px;
+}
+
+.collection-box-section h2 {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 17px;
+}
+
+.hidden-section {
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
 }
 
 .collection-block {
@@ -2309,4 +2352,9 @@ body.dark-mode .market-coins {
     to {
         background-position: 100% 50%;
     }
+}
+
+.hidden {
+    color: #ffffff;
+    background: #6f35a8;
 }

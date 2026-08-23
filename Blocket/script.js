@@ -52,9 +52,29 @@ let collection =
         localStorage.getItem("blocketCollection")
     ) || {};
 
+const hiddenBlocks = [
+    {
+        name: "Time Watch",
+        rarity: "Hidden",
+        packName: "SECRET DISCOVERY",
+        searchable: true
+    },
+    {
+        name: "Eternal",
+        rarity: "Hidden",
+        packName: "ORE BOX",
+        searchable: false
+    }
+];
+
 let backgroundCollection =
     JSON.parse(
         localStorage.getItem("blocketBackgroundCollection")
+    ) || {};
+
+let titleCollection =
+    JSON.parse(
+        localStorage.getItem("blocketTitleCollection")
     ) || {};
 
 let boxesOpened =
@@ -79,6 +99,9 @@ let equippedBlock =
 
 let equippedBackground =
     localStorage.getItem("blocketEquippedBackground") || "Default";
+
+let equippedTitle =
+    localStorage.getItem("blocketEquippedTitle") || "";
 
 let isDarkMode =
     localStorage.getItem("blocketTheme") === "dark";
@@ -491,6 +514,31 @@ const boxes = {
 
     },
 
+    space: {
+
+        name: "SPACE PACK",
+
+        price: 35,
+
+        blocks: [
+
+            { name: "Earth", rarity: "Common" },
+            { name: "Mars", rarity: "Common" },
+
+            { name: "Venus", rarity: "Uncommon" },
+
+            { name: "Neptune", rarity: "Rare" },
+
+            { name: "Saturn", rarity: "Epic" },
+
+            { name: "Jupiter", rarity: "Legendary" },
+
+            { name: "The Sun", rarity: "Chroma" }
+
+            ]
+
+    },
+
     background: {
 
         name: "BACKGROUND BOX",
@@ -516,6 +564,58 @@ const boxes = {
 
         ]
 
+    },
+
+    title: {
+
+        name: "TITLE BOX",
+
+        price: 35,
+
+        isTitle: true,
+
+        titles: [
+
+            { name: "Rookie", rarity: "Common" },
+            { name: "Explorer", rarity: "Common" },
+
+            { name: "Collector", rarity: "Uncommon" },
+
+            { name: "Pro", rarity: "Rare" },
+
+            { name: "Expert", rarity: "Epic" },
+
+            { name: "Master", rarity: "Legendary" },
+
+            { name: "Legend", rarity: "Chroma" }
+
+        ]
+
+    },
+
+    insect: {
+
+        name: "INSECT BOX",
+
+        price: 35,
+
+        blocks: [
+
+            { name: "Ant", rarity: "Common" },
+            { name: "Fly", rarity: "Common" },
+
+            { name: "Ladybug", rarity: "Uncommon" },
+
+            { name: "Bee", rarity: "Rare" },
+
+            { name: "Praying Mantis", rarity: "Epic" },
+
+            { name: "Butterfly", rarity: "Legendary" },
+
+            { name: "Queen Bee", rarity: "Chroma" }
+
+        ]
+
     }
 
 };
@@ -532,7 +632,8 @@ const sellValues = {
     Rare: 25,
     Epic: 50,
     Legendary: 100,
-    Chroma: 500
+    Chroma: 500,
+    Hidden: 1000
 
 };
 
@@ -556,6 +657,11 @@ function saveGame() {
     localStorage.setItem(
         "blocketBackgroundCollection",
         JSON.stringify(backgroundCollection)
+    );
+
+    localStorage.setItem(
+        "blocketTitleCollection",
+        JSON.stringify(titleCollection)
     );
 
     localStorage.setItem(
@@ -586,6 +692,11 @@ function saveGame() {
     localStorage.setItem(
         "blocketEquippedBackground",
         equippedBackground
+    );
+
+    localStorage.setItem(
+        "blocketEquippedTitle",
+        equippedTitle
     );
 
 }
@@ -676,9 +787,60 @@ function equipBackground(backgroundName) {
 }
 
 
+function equipTitle(titleName) {
+
+    if (!titleCollection[titleName]) return;
+
+    equippedTitle = titleName;
+    saveGame();
+    showTitles();
+    updateEquipped();
+
+}
+
+
 function getBoxRewards(box) {
 
-    return box.isBackground ? box.backgrounds : box.blocks;
+    if (box.isBackground) return box.backgrounds;
+    if (box.isTitle) return box.titles;
+    return box.blocks;
+
+}
+
+
+function showTitles() {
+
+    const mainContent = document.getElementById("mainContent");
+    const titles = boxes.title.titles;
+
+    mainContent.innerHTML = `
+        <h1>TITLES</h1>
+        <div class="collection-grid">
+            ${titles.map(title => {
+                const owned = titleCollection[title.name];
+                const equipped = equippedTitle === title.name;
+
+                return `
+                    <div class="collection-block ${owned ? "" : "undiscovered"}">
+                        <div class="collection-block-name">
+                            ${owned ? title.name : "???"}
+                        </div>
+                        <div class="collection-rarity ${title.rarity.toLowerCase()}">
+                            ${title.rarity}
+                        </div>
+                        <div class="collection-count">
+                            ${owned ? `x${owned.amount}` : "Not discovered"}
+                        </div>
+                        ${owned ? `
+                            <button class="equip-button" onclick='equipTitle(${JSON.stringify(title.name)})' ${equipped ? "disabled" : ""}>
+                                ${equipped ? "EQUIPPED" : "EQUIP"}
+                            </button>
+                        ` : ""}
+                    </div>
+                `;
+            }).join("")}
+        </div>
+    `;
 
 }
 
@@ -751,6 +913,10 @@ function updateEquipped() {
 
         <div>${equippedBlock}</div>
 
+        <div class="equipped-background-label">Title</div>
+
+        <div>${equippedTitle || "None"}</div>
+
         <div class="equipped-background-label">Background</div>
 
         <div>${equippedBackground}</div>
@@ -813,6 +979,10 @@ function openTab(tab) {
 
     if (tab === "backgrounds") {
         showBackgrounds();
+    }
+
+    if (tab === "titles") {
+        showTitles();
     }
 
     if (tab === "market") {
@@ -1222,6 +1392,28 @@ function showMarket() {
 
             <div class="pack-card">
 
+                <h2>🚀 SPACE PACK</h2>
+
+                <p>
+                    Contains planets and stars from space!
+                </p>
+
+                <p class="pack-price">
+                    35 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('space')"
+                >
+                    BUY PACK
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
                 <h2>🖼️ BACKGROUND BOX</h2>
 
                 <p>
@@ -1235,6 +1427,50 @@ function showMarket() {
                 <button
                     class="buy-button"
                     onclick="buyBox('background')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🏷️ TITLE BOX</h2>
+
+                <p>
+                    Contains titles to display beside your name!
+                </p>
+
+                <p class="pack-price">
+                    35 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('title')"
+                >
+                    BUY BOX
+                </button>
+
+            </div>
+
+
+            <div class="pack-card">
+
+                <h2>🐜 INSECT BOX</h2>
+
+                <p>
+                    Contains tiny but mighty insect Blocks!
+                </p>
+
+                <p class="pack-price">
+                    35 COINS
+                </p>
+
+                <button
+                    class="buy-button"
+                    onclick="buyBox('insect')"
                 >
                     BUY BOX
                 </button>
@@ -1306,7 +1542,8 @@ function getRarityRank(rarity) {
         "Rare",
         "Epic",
         "Legendary",
-        "Chroma"
+        "Chroma",
+        "Hidden"
     ].indexOf(rarity);
 
 }
@@ -1421,8 +1658,13 @@ function showStats() {
 
     const allBlocks =
         Object.values(boxes)
-            .filter(box => !box.isBackground)
-            .flatMap(box => box.blocks);
+            .filter(box => !box.isBackground && !box.isTitle)
+            .flatMap(box => box.blocks)
+            .concat(
+                hiddenBlocks.filter(block =>
+                    collection[block.name]
+                )
+            );
 
     let rarestBlock = "None";
 
@@ -1489,6 +1731,26 @@ function showStats() {
     } else if (collection["Unicorn"]) {
 
         rarestBlock = "Unicorn";
+
+    } else if (collection["The Sun"]) {
+
+        rarestBlock = "The Sun";
+
+    } else if (collection["Eternal"]) {
+
+        rarestBlock = "Eternal";
+
+    } else if (collection["Jupiter"]) {
+
+        rarestBlock = "Jupiter";
+
+    } else if (collection["Queen Bee"]) {
+
+        rarestBlock = "Queen Bee";
+
+    } else if (collection["Butterfly"]) {
+
+        rarestBlock = "Butterfly";
 
     } else if (collection["Ruby"]) {
 
@@ -1586,15 +1848,15 @@ function showLibrary() {
 
     const allBlocks =
         Object.values(boxes)
-            .filter(box => !box.isBackground)
+            .filter(box => !box.isBackground && !box.isTitle)
             .flatMap(box => box.blocks);
 
     let blocksHTML = "";
 
     allBlocks.forEach(block => {
 
-        const sellValue =
-            sellValues[block.rarity];
+const sellValue =
+    Number(sellValues[ownedBlock.rarity]) || 0;
 
         blocksHTML += `
 
@@ -1646,31 +1908,15 @@ function showLibrary() {
    COLLECTION
 ===================================================== */
 
-function showCollection(rarityFilter = "All") {
+function showCollection(rarityFilter = "All", searchQuery = "") {
 
     const mainContent =
         document.getElementById("mainContent");
 
-    const allBlocks =
-        Object.entries(boxes)
-            .filter(([, box]) => !box.isBackground)
-            .flatMap(([boxType, box]) =>
-            box.blocks.map(block => ({
-                ...block,
-                packName: box.name,
-                boxType
-            }))
-        );
+    const normalizedSearch =
+        searchQuery.trim().toLowerCase();
 
-    const filteredBlocks =
-        rarityFilter === "All"
-            ? allBlocks
-            : allBlocks.filter(block =>
-                block.rarity === rarityFilter
-            );
-
-    const blocksHTML =
-        filteredBlocks.map(block => {
+    const renderBlock = block => {
 
             const ownedBlock =
                 collection[block.name];
@@ -1731,13 +1977,13 @@ function showCollection(rarityFilter = "All") {
                         x${ownedBlock.amount}
                     </div>
 
-                    <button
-                        class="equip-button"
-                        onclick='equipBlock(${JSON.stringify(block.name)})'
-                        ${isEquipped ? "disabled" : ""}
-                    >
-                        ${isEquipped ? "EQUIPPED" : "EQUIP"}
-                    </button>
+<button
+    class="sell-button"
+    type="button"
+    onclick='sellBlock(${JSON.stringify(block.name)})'
+>
+    SELL +${sellValue} 🪙
+</button>
 
                     <button
                         class="sell-button"
@@ -1750,7 +1996,84 @@ function showCollection(rarityFilter = "All") {
 
             `;
 
-        }).join("");
+        };
+
+    const boxSections =
+        Object.entries(boxes)
+            .filter(([, box]) => !box.isBackground && !box.isTitle)
+            .map(([boxType, box]) => {
+
+                const matchingBlocks =
+                    box.blocks.filter(block =>
+                        (rarityFilter === "All" ||
+                            block.rarity === rarityFilter) &&
+                        (!normalizedSearch ||
+                            block.name.toLowerCase().includes(normalizedSearch))
+                    );
+
+                if (matchingBlocks.length === 0) return "";
+
+                return `
+                    <section class="collection-box-section">
+                        <h2>${box.name}</h2>
+                        <div class="collection-grid">
+                            ${matchingBlocks.map(renderBlock).join("")}
+                        </div>
+                    </section>
+                `;
+            }).join("");
+
+    const hiddenMatches =
+        hiddenBlocks.filter(block =>
+            (collection[block.name] ||
+                (block.searchable &&
+                    normalizedSearch === block.name.toLowerCase())) &&
+            (rarityFilter === "All" || block.rarity === rarityFilter)
+        );
+
+    const hiddenSection =
+        hiddenMatches.length > 0
+            ? `
+                <section class="collection-box-section hidden-section">
+                    <h2>MISC</h2>
+                    <div class="collection-grid">
+                        ${hiddenMatches.map(block => collection[block.name]
+                            ? renderBlock(block)
+                            : `
+                                <div class="collection-block undiscovered hidden-discovery-card">
+                                    <div class="collection-block-name">${block.name}</div>
+                                    <div class="collection-rarity hidden">${block.rarity}</div>
+                                    <div class="collection-pack">From: ${block.packName}</div>
+                                    <button
+                                        class="equip-button"
+                                        onclick='collectHiddenBlock(${JSON.stringify(block.name)})'
+                                    >
+                                        COLLECT
+                                    </button>
+                                </div>
+                            `
+                        ).join("")}
+                    </div>
+                </section>
+            `
+            : "";
+
+    const rarityOptions = [
+        "Common",
+        "Uncommon",
+        "Rare",
+        "Epic",
+        "Legendary",
+        "Chroma"
+    ];
+
+    if (
+        normalizedSearch === "time watch" ||
+        collection["Time Watch"] ||
+        collection["Eternal"]
+    ) {
+        rarityOptions.push("Hidden");
+    }
 
     mainContent.innerHTML = `
 
@@ -1760,21 +2083,23 @@ function showCollection(rarityFilter = "All") {
 
             <label for="rarityFilter">FILTER BY RARITY</label>
 
+            <input
+                id="collectionSearch"
+                class="collection-search"
+                type="search"
+                value="${searchQuery.replace(/"/g, "&quot;")}"
+                placeholder="SEARCH BLOCKS"
+                oninput="filterCollection(this.value)"
+            >
+
             <select
                 id="rarityFilter"
-                onchange="showCollection(this.value)"
+                onchange="showCollection(this.value, document.getElementById('collectionSearch').value)"
             >
                 <option value="All" ${rarityFilter === "All" ? "selected" : ""}>
                     All Rarities
                 </option>
-                ${[
-                    "Common",
-                    "Uncommon",
-                    "Rare",
-                    "Epic",
-                    "Legendary",
-                    "Chroma"
-                ].map(rarity => `
+                ${rarityOptions.map(rarity => `
                     <option
                         value="${rarity}"
                         ${rarityFilter === rarity ? "selected" : ""}
@@ -1786,11 +2111,62 @@ function showCollection(rarityFilter = "All") {
 
         </div>
 
-        <div class="collection-grid">
-            ${blocksHTML}
+        <div id="collectionResults">
+            ${boxSections}
+            ${hiddenSection}
         </div>
 
     `;
+
+}
+
+
+function filterCollection(searchQuery) {
+
+    const searchInput =
+        document.getElementById("collectionSearch");
+
+    const rarityFilter =
+        document.getElementById("rarityFilter").value;
+
+    const cursorPosition =
+        searchInput.selectionStart;
+
+    showCollection(
+        rarityFilter,
+        searchQuery
+    );
+
+    const updatedSearchInput =
+        document.getElementById("collectionSearch");
+
+    updatedSearchInput.focus();
+    updatedSearchInput.setSelectionRange(
+        cursorPosition,
+        cursorPosition
+    );
+
+}
+
+
+function collectHiddenBlock(blockName) {
+
+    const hiddenBlock =
+        hiddenBlocks.find(block => block.name === blockName);
+
+    if (!hiddenBlock || collection[blockName]) return;
+
+    collection[blockName] = {
+        name: hiddenBlock.name,
+        rarity: hiddenBlock.rarity,
+        amount: 1
+    };
+
+    saveGame();
+
+    filterCollection(
+        document.getElementById("collectionSearch").value
+    );
 
 }
 
@@ -1848,13 +2224,443 @@ function showInfo() {
 
 
 /* =====================================================
-   HOST
+   HOST + PLAY + MULTIPLAYER FLAP RACE
 ===================================================== */
+
+let flapRace = null;
+
+let flapRaceChannel = null;
+let flapRaceRoomCode = null;
+let flapRaceRoomIsHost = false;
+let flapRaceRoomDisplayName = "";
+let flapRaceRoomTimeLimit = 60;
+let flapRaceRoomStarted = false;
+
+let flapClientId =
+    sessionStorage.getItem("blocketFlapClientId");
+
+if (!flapClientId) {
+    flapClientId =
+        window.crypto?.randomUUID
+            ? window.crypto.randomUUID()
+            : `player-${Date.now()}-${Math.random()
+                .toString(36)
+                .slice(2)}`;
+
+    sessionStorage.setItem(
+        "blocketFlapClientId",
+        flapClientId
+    );
+}
+
+
+/* =========================
+   REALTIME AVAILABILITY
+========================= */
+
+function canUseRealtime() {
+
+    return (
+        navigator.onLine &&
+        typeof supabaseClient?.channel === "function"
+    );
+
+}
+
+
+/* =========================
+   ROOM CHANNEL
+========================= */
+
+async function connectFlapRaceRoom(
+    roomCode,
+    displayName,
+    isHost,
+    timeLimit
+) {
+
+    if (!canUseRealtime()) {
+        return false;
+    }
+
+    await disconnectFlapRaceRoom();
+
+    flapRaceRoomCode = roomCode;
+    flapRaceRoomDisplayName =
+        sanitizeDisplayName(displayName || "Player");
+
+    flapRaceRoomIsHost = isHost;
+    flapRaceRoomTimeLimit = timeLimit;
+    flapRaceRoomStarted = false;
+
+    const channelName =
+        `blocket-flap-race:${roomCode}`;
+
+    flapRaceChannel =
+        supabaseClient.channel(
+            channelName,
+            {
+                config: {
+                    presence: {
+                        key: flapClientId
+                    },
+
+                    broadcast: {
+                        self: false
+                    }
+                }
+            }
+        );
+
+    flapRaceChannel
+
+        .on(
+            "presence",
+            {
+                event: "sync"
+            },
+            () => {
+
+                renderRoomPlayers();
+
+            }
+        )
+
+        .on(
+            "presence",
+            {
+                event: "join"
+            },
+            () => {
+
+                renderRoomPlayers();
+
+            }
+        )
+
+        .on(
+            "presence",
+            {
+                event: "leave"
+            },
+            ({ key }) => {
+
+                if (flapRace) {
+
+                    delete flapRace.remoteRacers[key];
+
+                }
+
+                renderRoomPlayers();
+
+            }
+        )
+
+        .on(
+            "broadcast",
+            {
+                event: "race_start"
+            },
+            payload => {
+
+                if (
+                    flapRaceRoomIsHost ||
+                    flapRaceRoomStarted
+                ) {
+                    return;
+                }
+
+                const startPayload =
+                    payload.payload || {};
+
+                flapRaceRoomStarted = true;
+
+                const countdown =
+                    Number(
+                        startPayload.countdown || 2000
+                    );
+
+                setTimeout(() => {
+
+                    startFlapRace(
+                        flapRaceRoomDisplayName,
+                        true,
+                        false
+                    );
+
+                }, countdown);
+
+            }
+        )
+
+        .on(
+            "broadcast",
+            {
+                event: "player_state"
+            },
+            payload => {
+
+                if (!flapRace) {
+                    return;
+                }
+
+                const state =
+                    payload.payload;
+
+                if (!state || state.id === flapClientId) {
+                    return;
+                }
+
+                flapRace.remoteRacers[state.id] = {
+                    id: state.id,
+                    name: sanitizeDisplayName(
+                        state.name || "Player"
+                    ),
+                    title: sanitizeDisplayName(
+                        state.title || ""
+                    ),
+                    distance:
+                        Number(state.distance) || 0,
+                    checkpoint:
+                        Number(state.checkpoint) || 0,
+                    birdY:
+                        Number(state.birdY) || 210,
+                    color:
+                        state.color || "#8b62d9",
+                    crashed:
+                        Boolean(state.crashed),
+                    lastSeen:
+                        performance.now()
+                };
+
+            }
+        )
+
+        .on(
+            "broadcast",
+            {
+                event: "race_end"
+            },
+            payload => {
+
+                if (!flapRace) {
+                    return;
+                }
+
+                showMultiplayerRaceResults(
+                    payload.payload
+                );
+
+            }
+        );
+
+    return new Promise(resolve => {
+
+        const timeout =
+            setTimeout(() => {
+
+                resolve(false);
+
+            }, 8000);
+
+        flapRaceChannel.subscribe(
+            async status => {
+
+                if (status === "SUBSCRIBED") {
+
+                    clearTimeout(timeout);
+
+                    try {
+
+                        await flapRaceChannel.track({
+                            id: flapClientId,
+                            name:
+                                flapRaceRoomDisplayName,
+                            title:
+                                equippedTitle || "",
+                            host:
+                                isHost,
+                            online_at:
+                                new Date().toISOString()
+                        });
+
+                        resolve(true);
+
+                    } catch (error) {
+
+                        console.error(
+                            "PRESENCE ERROR:",
+                            error
+                        );
+
+                        resolve(false);
+
+                    }
+
+                }
+
+                if (
+                    status === "CHANNEL_ERROR" ||
+                    status === "TIMED_OUT"
+                ) {
+
+                    clearTimeout(timeout);
+
+                    console.error(
+                        "REALTIME ROOM ERROR:",
+                        status
+                    );
+
+                    resolve(false);
+
+                }
+
+            }
+        );
+
+    });
+
+}
+
+
+/* =========================
+   DISCONNECT ROOM
+========================= */
+
+async function disconnectFlapRaceRoom() {
+
+    if (!flapRaceChannel) {
+        return;
+    }
+
+    try {
+
+        await flapRaceChannel.untrack();
+
+    } catch {}
+
+    try {
+
+        if (
+            typeof supabaseClient.removeChannel ===
+            "function"
+        ) {
+
+            await supabaseClient.removeChannel(
+                flapRaceChannel
+            );
+
+        }
+
+    } catch {}
+
+    flapRaceChannel = null;
+    flapRaceRoomCode = null;
+    flapRaceRoomStarted = false;
+
+}
+
+
+/* =========================
+   ROOM PLAYERS
+========================= */
+
+function getRoomPlayers() {
+
+    if (!flapRaceChannel) {
+        return [];
+    }
+
+    const presence =
+        flapRaceChannel.presenceState();
+
+    return Object.entries(presence)
+        .flatMap(([key, entries]) =>
+            entries.map(entry => ({
+                id: key,
+                name:
+                    sanitizeDisplayName(
+                        entry.name || "Player"
+                    ),
+                title:
+                    sanitizeDisplayName(
+                        entry.title || ""
+                    ),
+                host:
+                    Boolean(entry.host)
+            }))
+        );
+
+}
+
+
+/* =========================
+   HOST LOBBY
+========================= */
+
+function renderHostLobby() {
+
+    const status =
+        document.getElementById("hostStatus");
+
+    const players =
+        document.getElementById("hostPlayers");
+
+    const startButton =
+        document.getElementById("startHostedRaceButton");
+
+    if (!players) {
+        return;
+    }
+
+    const roomPlayers =
+        getRoomPlayers();
+
+    players.innerHTML =
+        roomPlayers.length
+            ? roomPlayers.map(player => `
+                <div class="race-racer">
+                    <strong>
+                        ${player.host ? "👑 " : ""}
+                        ${player.name}
+                    </strong>
+                    <span>
+                        ${player.host ? "HOST" : "PLAYER"}
+                    </span>
+                </div>
+            `).join("")
+            : "<p>No players connected yet.</p>";
+
+    if (status) {
+
+        status.textContent =
+            `${roomPlayers.length} player${
+                roomPlayers.length === 1 ? "" : "s"
+            } in room.`;
+
+    }
+
+    if (startButton) {
+
+        startButton.disabled =
+            flapRaceRoomStarted;
+
+    }
+
+}
+
+
+/* =========================
+   HOST SCREEN
+========================= */
 
 function showHost() {
 
     const mainContent =
         document.getElementById("mainContent");
+
+    const race =
+        getHostedRace();
 
     mainContent.innerHTML = `
 
@@ -1865,15 +2671,41 @@ function showHost() {
             <h2>🐦 FLAP RACE</h2>
 
             <p>
-                Host a race through a long obstacle course.
+                Create a room and race with other Blocket players.
             </p>
 
-            <label for="raceTime">RACE TIME</label>
+            <label for="hostDisplayName">
+                DISPLAY NAME
+            </label>
 
-            <select id="raceTime" class="game-select">
-                <option value="30">30 seconds</option>
-                <option value="60" selected>60 seconds</option>
-                <option value="90">90 seconds</option>
+            <input
+                id="hostDisplayName"
+                class="game-input"
+                type="text"
+                maxlength="18"
+                placeholder="YOUR NAME"
+                autocomplete="nickname"
+            >
+
+            <label for="raceTime">
+                RACE TIME
+            </label>
+
+            <select
+                id="raceTime"
+                class="game-select"
+            >
+                <option value="30">
+                    30 seconds
+                </option>
+
+                <option value="60" selected>
+                    60 seconds
+                </option>
+
+                <option value="90">
+                    90 seconds
+                </option>
             </select>
 
             <button
@@ -1884,96 +2716,101 @@ function showHost() {
                 CREATE FLAP RACE
             </button>
 
-            <p id="hostStatus" class="game-status"></p>
-            <div id="roomCodeDisplay" class="room-code-display"></div>
+            <p
+                id="hostStatus"
+                class="game-status"
+            ></p>
 
-        </div>
+            <div
+                id="roomCodeDisplay"
+                class="room-code-display"
+            ></div>
 
-    `;
-
-    const savedRace = getHostedRace();
-
-    if (savedRace) {
-        document.getElementById("hostStatus").textContent =
-            `Race ready for ${savedRace.timeLimit} seconds.`;
-        document.getElementById("roomCodeDisplay").innerHTML =
-            `ROOM CODE <strong>${savedRace.roomCode}</strong><br><a href="${getRaceShareUrl(savedRace)}">${getRaceShareUrl(savedRace)}</a>`;
-    }
-
-}
-
-
-/* =====================================================
-   PLAY
-===================================================== */
-
-function showPlay() {
-
-    const mainContent =
-        document.getElementById("mainContent");
-
-    const race = getHostedRace();
-
-    mainContent.innerHTML = `
-
-        <h1>PLAY</h1>
-
-        <div class="info-card game-lobby">
-
-            <h2>🐦 FLAP RACE</h2>
-
-            <p>
-                Fly through the pipes, hit checkpoints, and finish farther than the other racers.
-            </p>
-
-            <p class="game-status">
-                ${race ? "Enter the room code from the host to join." : "No race hosted yet."}
-            </p>
-
-            <label for="roomCode">ROOM CODE</label>
-
-            <input
-                id="roomCode"
-                class="game-input"
-                type="text"
-                maxlength="6"
-                placeholder="ABC123"
-                autocomplete="off"
-                ${race ? "" : "disabled"}
-            >
-
-            <label for="displayName">DISPLAY NAME</label>
-
-            <input
-                id="displayName"
-                class="game-input"
-                type="text"
-                maxlength="18"
-                placeholder="YOUR NAME"
-                autocomplete="nickname"
-                ${race ? "" : "disabled"}
-            >
+            <div
+                id="hostPlayers"
+                class="race-scoreboard"
+            ></div>
 
             <button
+                id="startHostedRaceButton"
                 class="buy-button"
-                onclick="joinFlapRace()"
+                onclick="startHostedFlapRace()"
                 type="button"
-                ${race ? "" : "disabled"}
+                style="display:none;"
             >
-                START FLAP RACE
+                START RACE
             </button>
 
         </div>
 
     `;
 
+    if (race) {
+
+        document.getElementById(
+            "roomCodeDisplay"
+        ).innerHTML = `
+            ROOM CODE
+            <strong>${race.roomCode}</strong>
+            <br>
+            <a
+                href="${getRaceShareUrl(race)}"
+            >
+                ${getRaceShareUrl(race)}
+            </a>
+        `;
+
+        document.getElementById(
+            "hostDisplayName"
+        ).value =
+            sessionStorage.getItem(
+                "blocketFlapDisplayName"
+            ) || "";
+
+        document.getElementById(
+            "raceTime"
+        ).value =
+            race.timeLimit;
+
+    }
+
 }
 
 
-function createFlapRace() {
+/* =========================
+   CREATE ROOM
+========================= */
+
+async function createFlapRace() {
+
+    const displayName =
+        document
+            .getElementById("hostDisplayName")
+            .value
+            .trim();
 
     const timeLimit =
-        Number(document.getElementById("raceTime").value);
+        Number(
+            document
+                .getElementById("raceTime")
+                .value
+        );
+
+    if (!displayName) {
+
+        document.getElementById(
+            "hostStatus"
+        ).textContent =
+            "Enter a display name first.";
+
+        return;
+
+    }
+
+    sessionStorage.setItem(
+        "blocketFlapDisplayName",
+        displayName
+    );
 
     const roomCode =
         generateRoomCode();
@@ -1987,14 +2824,303 @@ function createFlapRace() {
         })
     );
 
-    document.getElementById("hostStatus").textContent =
-        `Race ready for ${timeLimit} seconds. Share this link to invite players:`;
+    const connected =
+        await connectFlapRaceRoom(
+            roomCode,
+            displayName,
+            true,
+            timeLimit
+        );
 
-    document.getElementById("roomCodeDisplay").innerHTML =
-        `ROOM CODE <strong>${roomCode}</strong><br><a href="${getRaceShareUrl({ roomCode, timeLimit })}">${getRaceShareUrl({ roomCode, timeLimit })}</a>`;
+    const status =
+        document.getElementById(
+            "hostStatus"
+        );
+
+    const roomDisplay =
+        document.getElementById(
+            "roomCodeDisplay"
+        );
+
+    const startButton =
+        document.getElementById(
+            "startHostedRaceButton"
+        );
+
+    if (!connected) {
+
+        status.textContent =
+            "Room created. Multiplayer is unavailable right now, so you can still play with AI offline.";
+
+        roomDisplay.innerHTML = `
+            ROOM CODE
+            <strong>${roomCode}</strong>
+        `;
+
+        startButton.style.display =
+            "block";
+
+        startButton.textContent =
+            "START OFFLINE RACE";
+
+        return;
+
+    }
+
+    status.textContent =
+        "Room created! Share the link or room code.";
+
+    roomDisplay.innerHTML = `
+        ROOM CODE
+        <strong>${roomCode}</strong>
+        <br>
+        <a href="${getRaceShareUrl({
+            roomCode,
+            timeLimit
+        })}">
+            ${getRaceShareUrl({
+                roomCode,
+                timeLimit
+            })}
+        </a>
+    `;
+
+    startButton.style.display =
+        "block";
+
+    startButton.textContent =
+        "START RACE";
+
+    renderHostLobby();
 
 }
 
+
+/* =========================
+   START HOSTED RACE
+========================= */
+
+async function startHostedFlapRace() {
+
+    const displayName =
+        document
+            .getElementById("hostDisplayName")
+            ?.value
+            .trim() ||
+        sessionStorage.getItem(
+            "blocketFlapDisplayName"
+        ) ||
+        "Host";
+
+    const race =
+        getHostedRace();
+
+    if (!race) {
+        return;
+    }
+
+    flapRaceRoomStarted = true;
+
+    const countdown =
+        2000;
+
+    if (
+        flapRaceChannel &&
+        flapRaceChannel.send
+    ) {
+
+        await flapRaceChannel.send({
+
+            type: "broadcast",
+
+            event: "race_start",
+
+            payload: {
+                countdown,
+                timeLimit:
+                    race.timeLimit
+            }
+
+        });
+
+    }
+
+    startFlapRace(
+        displayName,
+        Boolean(flapRaceChannel),
+        true
+    );
+
+}
+
+
+/* =========================
+   PLAY SCREEN
+========================= */
+
+function showPlay() {
+
+    const mainContent =
+        document.getElementById("mainContent");
+
+    const race =
+        getHostedRace();
+
+    mainContent.innerHTML = `
+
+        <h1>PLAY</h1>
+
+        <div class="info-card game-lobby">
+
+            <h2>🐦 FLAP RACE</h2>
+
+            <p>
+                Join a room and race through the obstacle course.
+            </p>
+
+            <label for="roomCode">
+                ROOM CODE
+            </label>
+
+            <input
+                id="roomCode"
+                class="game-input"
+                type="text"
+                maxlength="6"
+                placeholder="ABC123"
+                autocomplete="off"
+            >
+
+            <label for="displayName">
+                DISPLAY NAME
+            </label>
+
+            <input
+                id="displayName"
+                class="game-input"
+                type="text"
+                maxlength="18"
+                placeholder="YOUR NAME"
+                autocomplete="nickname"
+            >
+
+            <button
+                class="buy-button"
+                onclick="joinFlapRace()"
+                type="button"
+            >
+                JOIN FLAP RACE
+            </button>
+
+            <p
+                id="playStatus"
+                class="game-status"
+            >
+                Enter the room code from the host.
+            </p>
+
+        </div>
+
+    `;
+
+    if (race) {
+
+        document.getElementById(
+            "roomCode"
+        ).value =
+            race.roomCode;
+
+    }
+
+    document.getElementById(
+        "displayName"
+    ).value =
+        sessionStorage.getItem(
+            "blocketFlapDisplayName"
+        ) || "";
+
+}
+
+
+/* =========================
+   JOIN ROOM
+========================= */
+
+async function joinFlapRace() {
+
+    const roomCode =
+        document
+            .getElementById("roomCode")
+            .value
+            .trim()
+            .toUpperCase();
+
+    const displayName =
+        document
+            .getElementById("displayName")
+            .value
+            .trim();
+
+    const status =
+        document.getElementById(
+            "playStatus"
+        );
+
+    if (!roomCode) {
+
+        status.textContent =
+            "Enter a room code.";
+
+        return;
+
+    }
+
+    if (!displayName) {
+
+        status.textContent =
+            "Enter a display name.";
+
+        return;
+
+    }
+
+    const race =
+        getHostedRace();
+
+    const timeLimit =
+        race?.timeLimit || 60;
+
+    sessionStorage.setItem(
+        "blocketFlapDisplayName",
+        displayName
+    );
+
+    const connected =
+        await connectFlapRaceRoom(
+            roomCode,
+            displayName,
+            false,
+            timeLimit
+        );
+
+    if (!connected) {
+
+        status.textContent =
+            "Could not connect to that room. Check your internet connection and the room code.";
+
+        return;
+
+    }
+
+    status.textContent =
+        "✅ Joined the room! Waiting for the host to start the race...";
+
+}
+
+
+/* =========================
+   ROOM CODE
+========================= */
 
 function getRaceShareUrl(race) {
 
@@ -2019,22 +3145,37 @@ function getRaceShareUrl(race) {
 function getHostedRace() {
 
     const savedRace =
-        JSON.parse(localStorage.getItem("blocketFlapRace") || "null");
+        JSON.parse(
+            localStorage.getItem(
+                "blocketFlapRace"
+            ) || "null"
+        );
 
     const url =
-        new URL(window.location.href);
+        new URL(
+            window.location.href
+        );
 
     const roomCode =
-        url.searchParams.get("room")?.toUpperCase();
+        url.searchParams
+            .get("room")
+            ?.toUpperCase();
 
     const timeLimit =
-        Number(url.searchParams.get("time"));
+        Number(
+            url.searchParams.get("time")
+        );
 
-    if (roomCode && [30, 60, 90].includes(timeLimit)) {
+    if (
+        roomCode &&
+        [30, 60, 90].includes(timeLimit)
+    ) {
+
         return {
             roomCode,
             timeLimit
         };
+
     }
 
     return savedRace;
@@ -2049,10 +3190,20 @@ function generateRoomCode() {
 
     let roomCode = "";
 
-    for (let index = 0; index < 6; index++) {
-        roomCode += characters[
-            Math.floor(Math.random() * characters.length)
-        ];
+    for (
+        let index = 0;
+        index < 6;
+        index++
+    ) {
+
+        roomCode +=
+            characters[
+                Math.floor(
+                    Math.random() *
+                    characters.length
+                )
+            ];
+
     }
 
     return roomCode;
@@ -2060,62 +3211,68 @@ function generateRoomCode() {
 }
 
 
-function joinFlapRace() {
+/* =====================================================
+   FLAP RACE
+===================================================== */
 
-    const race = getHostedRace();
+function startFlapRace(
+    displayName = "You",
+    onlineMode = false,
+    isHost = false
+) {
 
-    const roomCode =
-        document.getElementById("roomCode").value.trim().toUpperCase();
-
-    const displayName =
-        document.getElementById("displayName").value.trim();
-
-    if (!race || roomCode !== race.roomCode) {
-        const status =
-            document.querySelector(".game-status");
-
-        status.textContent =
-            "That room code is not valid.";
-
-        return;
-    }
-
-    if (!displayName) {
-        document.querySelector(".game-status").textContent =
-            "Enter a display name to join the race.";
-        return;
-    }
-
-    startFlapRace(displayName);
-}
-
-
-let flapRace = null;
-
-
-function startFlapRace(displayName = "You") {
-
-    const race = getHostedRace();
+    const race =
+        getHostedRace();
 
     if (!race) {
+
         showPlay();
+
         return;
+
     }
 
     const mainContent =
-        document.getElementById("mainContent");
+        document.getElementById(
+            "mainContent"
+        );
+
+    const safeDisplayName =
+        sanitizeDisplayName(
+            displayName
+        );
 
     mainContent.innerHTML = `
 
         <div class="flap-race-header">
+
             <div>
-                <h1>🐦 FLAP RACE</h1>
-                <p id="flapRaceStatus">SPACE / CLICK TO FLAP</p>
+
+                <h1>
+                    🐦 FLAP RACE
+                </h1>
+
+                <p id="flapRaceStatus">
+                    ${onlineMode
+                        ? "GET READY..."
+                        : "SPACE / CLICK TO FLAP"}
+                </p>
+
             </div>
-            <div class="race-timer" id="raceTimer">${race.timeLimit}.0</div>
+
+            <div
+                class="race-timer"
+                id="raceTimer"
+            >
+                ${race.timeLimit}.0
+            </div>
+
         </div>
 
-        <div class="race-scoreboard" id="raceScoreboard"></div>
+        <div
+            class="race-scoreboard"
+            id="raceScoreboard"
+        ></div>
 
         <canvas
             id="flapCanvas"
@@ -2136,303 +3293,1072 @@ function startFlapRace(displayName = "You") {
     `;
 
     flapRace = {
-        canvas: document.getElementById("flapCanvas"),
-        context: document.getElementById("flapCanvas").getContext("2d"),
-        timeLimit: race.timeLimit,
-        displayName: sanitizeDisplayName(displayName),
-        startedAt: performance.now(),
-        lastFrame: performance.now(),
+
+        canvas:
+            document.getElementById(
+                "flapCanvas"
+            ),
+
+        context:
+            document
+                .getElementById("flapCanvas")
+                .getContext("2d"),
+
+        timeLimit:
+            race.timeLimit,
+
+        displayName:
+            safeDisplayName,
+
+        raceName:
+            getDisplayedRaceName(
+                safeDisplayName
+            ),
+
+        startedAt:
+            performance.now(),
+
+        lastFrame:
+            performance.now(),
+
         distance: 0,
+
         checkpoint: 0,
+
         birdY: 210,
+
         birdVelocity: 0,
+
         lastPipe: -1,
+
         passedPipes: 0,
+
         checkpointOrder: 0,
-        bots: [
-            {
-                name: "Sky",
-                distance: 0,
-                speed: 0.93,
-                checkpoint: 0,
-                checkpointPipe: 0,
-                lastPipe: -1,
-                respawnUntil: 0,
-                color: "#e85d75"
+
+        online:
+            onlineMode,
+
+        isHost:
+            isHost,
+
+        roomCode:
+            race.roomCode,
+
+        remoteRacers: {},
+
+        lastBroadcast:
+            0,
+
+        color:
+            isHost
+                ? "#e85d75"
+                : "#8b62d9",
+
+        bots:
+            onlineMode
+                ? []
+                : [
+                    {
+                        name: "Sky",
+                        distance: 0,
+                        speed: 0.93,
+                        checkpoint: 0,
+                        checkpointPipe: 0,
+                        lastPipe: -1,
+                        respawnUntil: 0,
+                        color: "#e85d75"
+                    },
+
+                    {
+                        name: "Wing",
+                        distance: 0,
+                        speed: 0.87,
+                        checkpoint: 0,
+                        checkpointPipe: 0,
+                        lastPipe: -1,
+                        respawnUntil: 0,
+                        color: "#8b62d9"
+                    },
+
+                    {
+                        name: "Cloud",
+                        distance: 0,
+                        speed: 0.8,
+                        checkpoint: 0,
+                        checkpointPipe: 0,
+                        lastPipe: -1,
+                        respawnUntil: 0,
+                        color: "#e58b36"
+                    }
+                ],
+
+        animation:
+            null,
+
+        keyHandler:
+            event => {
+
+                if (
+                    event.code === "Space"
+                ) {
+
+                    event.preventDefault();
+
+                    flapBird();
+
+                }
+
             },
-            {
-                name: "Wing",
-                distance: 0,
-                speed: 0.87,
-                checkpoint: 0,
-                checkpointPipe: 0,
-                lastPipe: -1,
-                respawnUntil: 0,
-                color: "#8b62d9"
-            },
-            {
-                name: "Cloud",
-                distance: 0,
-                speed: 0.8,
-                checkpoint: 0,
-                checkpointPipe: 0,
-                lastPipe: -1,
-                respawnUntil: 0,
-                color: "#e58b36"
-            }
-        ],
-        animation: 0,
-        keyHandler: event => {
-            if (event.code === "Space") {
-                event.preventDefault();
-                flapBird();
-            }
-        },
-        clickHandler: () => flapBird()
+
+        clickHandler:
+            () => flapBird()
+
     };
 
-    document.addEventListener("keydown", flapRace.keyHandler);
-    flapRace.canvas.addEventListener("click", flapRace.clickHandler);
-    flapBird();
-    flapRace.animation = requestAnimationFrame(updateFlapRace);
+    document.addEventListener(
+        "keydown",
+        flapRace.keyHandler
+    );
+
+    flapRace.canvas.addEventListener(
+        "click",
+        flapRace.clickHandler
+    );
+
+    setRaceCountdown(() => {
+
+        if (!flapRace) {
+            return;
+        }
+
+        const status =
+            document.getElementById(
+                "flapRaceStatus"
+            );
+
+        if (status) {
+
+            status.textContent =
+                "SPACE / CLICK TO FLAP";
+
+        }
+
+        flapBird();
+
+        flapRace.animation =
+            requestAnimationFrame(
+                updateFlapRace
+            );
+
+    });
 
 }
 
 
-function sanitizeDisplayName(displayName) {
+/* =========================
+   COUNTDOWN
+========================= */
 
-    return displayName
-        .replace(/[&<>"']/g, character => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#039;"
-        })[character])
+function setRaceCountdown(callback) {
+
+    let seconds = 3;
+
+    const status =
+        document.getElementById(
+            "flapRaceStatus"
+        );
+
+    if (!status) {
+
+        callback();
+
+        return;
+
+    }
+
+    status.textContent =
+        `STARTING IN ${seconds}...`;
+
+    const timer =
+        setInterval(() => {
+
+            seconds--;
+
+            if (seconds <= 0) {
+
+                clearInterval(timer);
+
+                callback();
+
+                return;
+
+            }
+
+            status.textContent =
+                `STARTING IN ${seconds}...`;
+
+        }, 500);
+
+}
+
+
+/* =========================
+   DISPLAY NAME
+========================= */
+
+function sanitizeDisplayName(
+    displayName
+) {
+
+    return String(displayName || "")
+        .replace(
+            /[&<>"']/g,
+            character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            })[character]
+        )
         .slice(0, 18);
 
 }
 
 
+function getDisplayedRaceName(
+    displayName
+) {
+
+    const safeName =
+        sanitizeDisplayName(
+            displayName
+        );
+
+    return equippedTitle
+        ? `${sanitizeDisplayName(
+            equippedTitle
+        )} ${safeName}`
+        : safeName;
+
+}
+
+
+/* =========================
+   FLAP
+========================= */
+
 function flapBird() {
 
-    if (!flapRace) return;
-
-    flapRace.birdVelocity = -410;
-
-}
-
-
-function getFlapPipe(pipeIndex) {
-
-    const gapHeight = 142;
-    const center =
-        105 + ((pipeIndex * 83) % 210);
-
-    return {
-        x: 510 + pipeIndex * 250,
-        top: center - gapHeight / 2,
-        bottom: center + gapHeight / 2
-    };
-
-}
-
-
-function updateFlapRace(timestamp) {
-
-    if (!flapRace) return;
-
-    const elapsed =
-        (timestamp - flapRace.startedAt) / 1000;
-    const delta =
-        Math.min((timestamp - flapRace.lastFrame) / 1000, 0.05);
-
-    flapRace.lastFrame = timestamp;
-    flapRace.distance += 190 * delta;
-    flapRace.birdVelocity += 1040 * delta;
-    flapRace.birdY += flapRace.birdVelocity * delta;
-
-    flapRace.bots.forEach(bot => {
-
-        if (timestamp < bot.respawnUntil) {
-            return;
-        }
-
-        bot.distance += 190 * bot.speed * delta;
-
-        const botPipe =
-            Math.floor((bot.distance + 115) / 250);
-
-        if (botPipe <= bot.lastPipe) {
-            return;
-        }
-
-        if (botPipe > 0 && Math.random() < 0.18) {
-            bot.distance = bot.checkpoint;
-            bot.lastPipe = bot.checkpointPipe;
-            bot.respawnUntil = timestamp + 650;
-            return;
-        }
-
-        bot.lastPipe = botPipe;
-
-        if (botPipe > 0 && botPipe % 5 === 0) {
-            bot.checkpoint = bot.distance;
-            bot.checkpointPipe = botPipe;
-        }
-
-    });
-
-    const pipeIndex =
-        Math.floor((flapRace.distance + 115) / 250);
-
-    if (pipeIndex > flapRace.lastPipe) {
-        flapRace.lastPipe = pipeIndex;
-        flapRace.passedPipes = pipeIndex;
-
-        if (pipeIndex > 0 && pipeIndex % 5 === 0) {
-            flapRace.checkpoint = flapRace.distance;
-            flapRace.checkpointOrder++;
-        }
-    }
-
-    const birdScreenX = 145;
-    const birdHitbox = {
-        left: birdScreenX - 16,
-        right: birdScreenX + 16,
-        top: flapRace.birdY - 14,
-        bottom: flapRace.birdY + 14
-    };
-
-    const hitPipe =
-        [pipeIndex - 1, pipeIndex, pipeIndex + 1].some(index => {
-
-            if (index < 0) return false;
-
-            const pipe = getFlapPipe(index);
-            const pipeScreenX = pipe.x - flapRace.distance;
-
-            return pipeScreenX < birdHitbox.right &&
-                pipeScreenX + 58 > birdHitbox.left &&
-                (birdHitbox.top < pipe.top ||
-                    birdHitbox.bottom > pipe.bottom);
-
-        });
-
-    if (hitPipe || flapRace.birdY < 0 || flapRace.birdY > 420) {
-        const status =
-            document.getElementById("flapRaceStatus");
-
-        if (status) {
-            status.textContent =
-                "💥 CRASHED! RETURNING TO CHECKPOINT";
-        }
-
-        flapRace.distance = flapRace.checkpoint;
-        flapRace.birdY = 210;
-        flapRace.birdVelocity = 0;
-        flapRace.lastPipe = Math.floor(flapRace.distance / 250);
-    }
-
-    drawFlapRace();
-
-    document.getElementById("raceTimer").textContent =
-        Math.max(0, flapRace.timeLimit - elapsed).toFixed(1);
-
-    updateFlapScoreboard();
-
-    if (elapsed >= flapRace.timeLimit) {
-        finishFlapRace();
+    if (!flapRace) {
         return;
     }
 
-    flapRace.animation = requestAnimationFrame(updateFlapRace);
+    flapRace.birdVelocity =
+        -410;
 
 }
 
 
+/* =========================
+   PIPE
+========================= */
+
+function getFlapPipe(
+    pipeIndex
+) {
+
+    const gapHeight = 142;
+
+    const center =
+        105 +
+        ((pipeIndex * 83) % 210);
+
+    return {
+
+        x:
+            510 +
+            pipeIndex * 250,
+
+        top:
+            center -
+            gapHeight / 2,
+
+        bottom:
+            center +
+            gapHeight / 2
+
+    };
+
+}
+
+
+/* =========================
+   SEND PLAYER STATE
+========================= */
+
+async function broadcastFlapRaceState() {
+
+    if (
+        !flapRace ||
+        !flapRace.online ||
+        !flapRaceChannel
+    ) {
+        return;
+    }
+
+    const now =
+        performance.now();
+
+    if (
+        now -
+        flapRace.lastBroadcast <
+        100
+    ) {
+        return;
+    }
+
+    flapRace.lastBroadcast =
+        now;
+
+    try {
+
+        await flapRaceChannel.send({
+
+            type:
+                "broadcast",
+
+            event:
+                "player_state",
+
+            payload: {
+
+                id:
+                    flapClientId,
+
+                name:
+                    flapRace.raceName,
+
+                title:
+                    equippedTitle || "",
+
+                distance:
+                    flapRace.distance,
+
+                checkpoint:
+                    flapRace.checkpoint,
+
+                birdY:
+                    flapRace.birdY,
+
+                crashed:
+                    Boolean(
+                        flapRace.crashed
+                    ),
+
+                color:
+                    flapRace.color
+
+            }
+
+        });
+
+    } catch (error) {
+
+        console.warn(
+            "RACE STATE SEND FAILED:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================
+   UPDATE RACE
+========================= */
+
+function updateFlapRace(
+    timestamp
+) {
+
+    if (!flapRace) {
+        return;
+    }
+
+    const elapsed =
+        (
+            timestamp -
+            flapRace.startedAt
+        ) / 1000;
+
+    const delta =
+        Math.min(
+            (
+                timestamp -
+                flapRace.lastFrame
+            ) / 1000,
+            0.05
+        );
+
+    flapRace.lastFrame =
+        timestamp;
+
+    flapRace.distance +=
+        190 * delta;
+
+    flapRace.birdVelocity +=
+        1040 * delta;
+
+    flapRace.birdY +=
+        flapRace.birdVelocity *
+        delta;
+
+    /* =========================
+       OFFLINE AI
+    ========================= */
+
+    flapRace.bots.forEach(
+        bot => {
+
+            if (
+                timestamp <
+                bot.respawnUntil
+            ) {
+                return;
+            }
+
+            bot.distance +=
+                190 *
+                bot.speed *
+                delta;
+
+            const botPipe =
+                Math.floor(
+                    (
+                        bot.distance +
+                        115
+                    ) / 250
+                );
+
+            if (
+                botPipe <=
+                bot.lastPipe
+            ) {
+                return;
+            }
+
+            if (
+                botPipe > 0 &&
+                Math.random() <
+                0.18
+            ) {
+
+                bot.distance =
+                    bot.checkpoint;
+
+                bot.lastPipe =
+                    bot.checkpointPipe;
+
+                bot.respawnUntil =
+                    timestamp +
+                    650;
+
+                return;
+
+            }
+
+            bot.lastPipe =
+                botPipe;
+
+            if (
+                botPipe > 0 &&
+                botPipe % 5 === 0
+            ) {
+
+                bot.checkpoint =
+                    bot.distance;
+
+                bot.checkpointPipe =
+                    botPipe;
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       PLAYER CHECKPOINT
+    ========================= */
+
+    const pipeIndex =
+        Math.floor(
+            (
+                flapRace.distance +
+                115
+            ) / 250
+        );
+
+    if (
+        pipeIndex >
+        flapRace.lastPipe
+    ) {
+
+        flapRace.lastPipe =
+            pipeIndex;
+
+        flapRace.passedPipes =
+            pipeIndex;
+
+        if (
+            pipeIndex > 0 &&
+            pipeIndex % 5 === 0
+        ) {
+
+            flapRace.checkpoint =
+                flapRace.distance;
+
+            flapRace.checkpointOrder++;
+
+        }
+
+    }
+
+
+    /* =========================
+       COLLISION
+    ========================= */
+
+    const birdScreenX = 145;
+
+    const birdHitbox = {
+
+        left:
+            birdScreenX - 16,
+
+        right:
+            birdScreenX + 16,
+
+        top:
+            flapRace.birdY - 14,
+
+        bottom:
+            flapRace.birdY + 14
+
+    };
+
+    const hitPipe =
+        [
+            pipeIndex - 1,
+            pipeIndex,
+            pipeIndex + 1
+        ].some(index => {
+
+            if (index < 0) {
+                return false;
+            }
+
+            const pipe =
+                getFlapPipe(index);
+
+            const pipeScreenX =
+                pipe.x -
+                flapRace.distance;
+
+            return (
+                pipeScreenX <
+                birdHitbox.right &&
+
+                pipeScreenX +
+                58 >
+                birdHitbox.left &&
+
+                (
+                    birdHitbox.top <
+                    pipe.top ||
+
+                    birdHitbox.bottom >
+                    pipe.bottom
+                )
+            );
+
+        });
+
+
+    if (
+        hitPipe ||
+        flapRace.birdY < 0 ||
+        flapRace.birdY > 420
+    ) {
+
+        const status =
+            document.getElementById(
+                "flapRaceStatus"
+            );
+
+        if (status) {
+
+            status.textContent =
+                "💥 CRASHED! RETURNING TO CHECKPOINT";
+
+        }
+
+        flapRace.distance =
+            flapRace.checkpoint;
+
+        flapRace.birdY =
+            210;
+
+        flapRace.birdVelocity =
+            0;
+
+        flapRace.lastPipe =
+            Math.floor(
+                flapRace.distance /
+                250
+            );
+
+        flapRace.crashed =
+            true;
+
+    } else {
+
+        flapRace.crashed =
+            false;
+
+    }
+
+
+    /* =========================
+       ONLINE STATE
+    ========================= */
+
+    broadcastFlapRaceState();
+
+
+    /* =========================
+       DRAW
+    ========================= */
+
+    drawFlapRace();
+
+    updateFlapScoreboard();
+
+
+    const timer =
+        document.getElementById(
+            "raceTimer"
+        );
+
+    if (timer) {
+
+        timer.textContent =
+            Math.max(
+                0,
+                flapRace.timeLimit -
+                elapsed
+            ).toFixed(1);
+
+    }
+
+
+    /* =========================
+       END
+    ========================= */
+
+    if (
+        elapsed >=
+        flapRace.timeLimit
+    ) {
+
+        finishFlapRace();
+
+        return;
+
+    }
+
+    flapRace.animation =
+        requestAnimationFrame(
+            updateFlapRace
+        );
+
+}
+
+
+/* =========================
+   DRAW
+========================= */
+
 function drawFlapRace() {
 
-    const { context, canvas } = flapRace;
-    const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+    const {
+        context,
+        canvas
+    } = flapRace;
 
-    gradient.addColorStop(0, "#82d8ff");
-    gradient.addColorStop(1, "#e8f9ff");
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    const gradient =
+        context.createLinearGradient(
+            0,
+            0,
+            0,
+            canvas.height
+        );
 
-    context.fillStyle = "rgba(255, 255, 255, 0.72)";
-    for (let cloud = 0; cloud < 7; cloud++) {
-        const cloudX = (cloud * 170 - flapRace.distance * 0.15) % 1040;
+    gradient.addColorStop(
+        0,
+        "#82d8ff"
+    );
+
+    gradient.addColorStop(
+        1,
+        "#e8f9ff"
+    );
+
+    context.fillStyle =
+        gradient;
+
+    context.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* CLOUDS */
+
+    context.fillStyle =
+        "rgba(255,255,255,0.72)";
+
+    for (
+        let cloud = 0;
+        cloud < 7;
+        cloud++
+    ) {
+
+        const cloudX =
+            (
+                cloud * 170 -
+                flapRace.distance *
+                0.15
+            ) % 1040;
+
         context.beginPath();
-        context.arc(cloudX, 55 + (cloud % 3) * 40, 28, 0, Math.PI * 2);
-        context.arc(cloudX + 30, 55 + (cloud % 3) * 40, 22, 0, Math.PI * 2);
+
+        context.arc(
+            cloudX,
+            55 +
+                (cloud % 3) *
+                40,
+            28,
+            0,
+            Math.PI * 2
+        );
+
+        context.arc(
+            cloudX + 30,
+            55 +
+                (cloud % 3) *
+                40,
+            22,
+            0,
+            Math.PI * 2
+        );
+
         context.fill();
+
     }
 
-    const firstPipe = Math.floor(flapRace.distance / 250) - 1;
 
-    for (let index = firstPipe; index < firstPipe + 6; index++) {
-        if (index < 0) continue;
+    /* PIPES */
 
-        const pipe = getFlapPipe(index);
-        const x = pipe.x - flapRace.distance;
+    const firstPipe =
+        Math.floor(
+            flapRace.distance /
+            250
+        ) - 1;
 
-        context.fillStyle = index % 5 === 0 ? "#2eae5c" : "#3fbd69";
-        context.fillRect(x, 0, 58, pipe.top);
-        context.fillRect(x, pipe.bottom, 58, 420 - pipe.bottom);
-        context.fillStyle = "#218849";
-        context.fillRect(x - 6, pipe.top - 12, 70, 12);
-        context.fillRect(x - 6, pipe.bottom, 70, 12);
-    }
+    for (
+        let index = firstPipe;
+        index < firstPipe + 6;
+        index++
+    ) {
 
-    context.fillStyle = "#f0c33d";
-    context.beginPath();
-    context.arc(145, flapRace.birdY, 16, 0, Math.PI * 2);
-    context.fill();
-    context.fillStyle = "#2d2140";
-    context.beginPath();
-    context.arc(151, flapRace.birdY - 4, 3, 0, Math.PI * 2);
-    context.fill();
-
-    flapRace.bots.forEach(bot => {
-
-        const botScreenX =
-            145 + bot.distance - flapRace.distance;
-        const botY =
-            210 + Math.sin(bot.distance / 75) * 55;
-
-        if (botScreenX < -30 || botScreenX > canvas.width + 30) {
-            return;
+        if (index < 0) {
+            continue;
         }
 
-        if (bot.respawnUntil > performance.now()) {
-            context.fillStyle = "#ffffff";
-            context.font = "bold 11px Arial";
+        const pipe =
+            getFlapPipe(index);
+
+        const x =
+            pipe.x -
+            flapRace.distance;
+
+        context.fillStyle =
+            index % 5 === 0
+                ? "#2eae5c"
+                : "#3fbd69";
+
+        context.fillRect(
+            x,
+            0,
+            58,
+            pipe.top
+        );
+
+        context.fillRect(
+            x,
+            pipe.bottom,
+            58,
+            420 -
+            pipe.bottom
+        );
+
+        context.fillStyle =
+            "#218849";
+
+        context.fillRect(
+            x - 6,
+            pipe.top - 12,
+            70,
+            12
+        );
+
+        context.fillRect(
+            x - 6,
+            pipe.bottom,
+            70,
+            12
+        );
+
+    }
+
+
+    /* REMOTE PLAYERS */
+
+    if (flapRace.online) {
+
+        Object.values(
+            flapRace.remoteRacers
+        ).forEach(
+            racer => {
+
+                if (
+                    performance.now() -
+                    racer.lastSeen >
+                    2500
+                ) {
+                    return;
+                }
+
+                const racerScreenX =
+                    145 +
+                    racer.distance -
+                    flapRace.distance;
+
+                const racerY =
+                    racer.birdY;
+
+                if (
+                    racerScreenX <
+                    -40 ||
+                    racerScreenX >
+                    canvas.width + 40
+                ) {
+                    return;
+                }
+
+                context.fillStyle =
+                    racer.color;
+
+                context.beginPath();
+
+                context.arc(
+                    racerScreenX,
+                    racerY,
+                    13,
+                    0,
+                    Math.PI * 2
+                );
+
+                context.fill();
+
+                context.fillStyle =
+                    "#ffffff";
+
+                context.font =
+                    "bold 11px Arial";
+
+                context.fillText(
+                    racer.name,
+                    racerScreenX - 18,
+                    racerY - 20
+                );
+
+                if (racer.title) {
+
+                    context.fillStyle =
+                        "#2d2140";
+
+                    context.font =
+                        "10px Arial";
+
+                    context.fillText(
+                        racer.title,
+                        racerScreenX - 18,
+                        racerY + 26
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* OFFLINE AI */
+
+    flapRace.bots.forEach(
+        bot => {
+
+            const botScreenX =
+                145 +
+                bot.distance -
+                flapRace.distance;
+
+            const botY =
+                210 +
+                Math.sin(
+                    bot.distance /
+                    75
+                ) *
+                55;
+
+            if (
+                botScreenX <
+                -30 ||
+                botScreenX >
+                canvas.width + 30
+            ) {
+
+                return;
+
+            }
+
+            if (
+                bot.respawnUntil >
+                performance.now()
+            ) {
+
+                context.fillStyle =
+                    "#ffffff";
+
+                context.font =
+                    "bold 11px Arial";
+
+                context.fillText(
+                    `${bot.name} CRASHED`,
+                    botScreenX - 28,
+                    botY - 20
+                );
+
+                return;
+
+            }
+
+            context.fillStyle =
+                bot.color;
+
+            context.beginPath();
+
+            context.arc(
+                botScreenX,
+                botY,
+                13,
+                0,
+                Math.PI * 2
+            );
+
+            context.fill();
+
+            context.fillStyle =
+                "#ffffff";
+
+            context.font =
+                "bold 11px Arial";
+
             context.fillText(
-                `${bot.name} CRASHED`,
-                botScreenX - 28,
+                bot.name,
+                botScreenX - 14,
                 botY - 20
             );
-            return;
+
         }
+    );
 
-        context.fillStyle = bot.color;
-        context.beginPath();
-        context.arc(botScreenX, botY, 13, 0, Math.PI * 2);
-        context.fill();
-        context.fillStyle = "#ffffff";
-        context.font = "bold 11px Arial";
-        context.fillText(bot.name, botScreenX - 14, botY - 20);
 
-    });
+    /* LOCAL PLAYER */
 
-    context.fillStyle = "#4c9b60";
-    context.fillRect(0, 395, 900, 25);
-    context.fillStyle = "#ffffff";
-    context.font = "bold 14px Arial";
+    context.fillStyle =
+        "#f0c33d";
+
+    context.beginPath();
+
+    context.arc(
+        145,
+        flapRace.birdY,
+        16,
+        0,
+        Math.PI * 2
+    );
+
+    context.fill();
+
+    context.fillStyle =
+        "#2d2140";
+
+    context.beginPath();
+
+    context.arc(
+        151,
+        flapRace.birdY - 4,
+        3,
+        0,
+        Math.PI * 2
+    );
+
+    context.fill();
+
+
+    /* GROUND */
+
+    context.fillStyle =
+        "#4c9b60";
+
+    context.fillRect(
+        0,
+        395,
+        900,
+        25
+    );
+
+    context.fillStyle =
+        "#ffffff";
+
+    context.font =
+        "bold 14px Arial";
+
     context.fillText(
-        `CHECKPOINT ${Math.floor(flapRace.checkpoint / 250)}`,
+        `CHECKPOINT ${
+            Math.floor(
+                flapRace.checkpoint /
+                250
+            )
+        }`,
         18,
         385
     );
@@ -2440,124 +4366,549 @@ function drawFlapRace() {
 }
 
 
+/* =========================
+   SCOREBOARD
+========================= */
+
 function updateFlapScoreboard() {
 
+    if (!flapRace) {
+        return;
+    }
+
     const racers = [
+
         {
-            name: flapRace.displayName,
-            distance: flapRace.distance,
-            order: 0
+            id:
+                flapClientId,
+
+            name:
+                flapRace.raceName,
+
+            distance:
+                flapRace.distance,
+
+            order:
+                0
         },
-        ...flapRace.bots.map((bot, index) => ({
-            name: bot.name,
-            distance: bot.distance,
-            order: index + 1
-        }))
-    ].sort((first, second) =>
-        second.distance - first.distance ||
-        first.order - second.order
+
+        ...Object.values(
+            flapRace.remoteRacers
+        ).map(
+            (racer, index) => ({
+
+                id:
+                    racer.id,
+
+                name:
+                    racer.title
+                        ? `${racer.title} ${racer.name}`
+                        : racer.name,
+
+                distance:
+                    racer.distance,
+
+                order:
+                    index + 1
+
+            })
+        ),
+
+        ...flapRace.bots.map(
+            (bot, index) => ({
+
+                id:
+                    `bot-${index}`,
+
+                name:
+                    bot.name,
+
+                distance:
+                    bot.distance,
+
+                order:
+                    index + 100
+
+            })
+        )
+
+    ].sort(
+        (first, second) =>
+            second.distance -
+            first.distance ||
+            first.order -
+            second.order
     );
 
-    document.getElementById("raceScoreboard").innerHTML =
-        racers.map((racer, index) => `
-            <div class="race-racer ${racer.name === flapRace.displayName ? "player-racer" : ""}">
-                <strong>${index + 1}. ${racer.name}</strong>
-                <span>Pipe ${Math.floor(racer.distance / 250)}</span>
+
+    document.getElementById(
+        "raceScoreboard"
+    ).innerHTML = racers.map(
+        (racer, index) => `
+
+            <div
+                class="race-racer ${
+                    racer.id === flapClientId
+                        ? "player-racer"
+                        : ""
+                }"
+            >
+
+                <strong>
+                    ${index + 1}.
+                    ${racer.name}
+                </strong>
+
+                <span>
+                    Pipe ${
+                        Math.floor(
+                            racer.distance /
+                            250
+                        )
+                    }
+                </span>
+
             </div>
-        `).join("");
+
+        `
+    ).join("");
 
 }
 
 
-function finishFlapRace() {
+/* =========================
+   FINISH
+========================= */
 
-    if (!flapRace) return;
+async function finishFlapRace() {
 
-    const finishedRace = flapRace;
+    if (!flapRace) {
+        return;
+    }
+
+    const finishedRace =
+        flapRace;
+
+    if (
+        finishedRace.online &&
+        !finishedRace.isHost
+    ) {
+
+        stopFlapRace();
+
+        const mainContent =
+            document.getElementById(
+                "mainContent"
+            );
+
+        mainContent.innerHTML = `
+            <h1>🏁 RACE COMPLETE</h1>
+
+            <div class="info-card race-results">
+
+                <h2>WAITING FOR HOST</h2>
+
+                <p>
+                    Final results are being calculated...
+                </p>
+
+            </div>
+        `;
+
+        return;
+
+    }
+
 
     stopFlapRace();
 
+
     const racers = [
-        { name: finishedRace.displayName, distance: finishedRace.distance, order: 0 },
-        ...finishedRace.bots.map((bot, index) => ({
-            ...bot,
-            order: index + 1
-        }))
-    ].sort((first, second) =>
-        second.distance - first.distance ||
-        first.order - second.order
+
+        {
+            id:
+                flapClientId,
+
+            name:
+                finishedRace.raceName,
+
+            distance:
+                finishedRace.distance,
+
+            order:
+                0
+
+        },
+
+        ...Object.values(
+            finishedRace.remoteRacers
+        ).map(
+            (racer, index) => ({
+
+                id:
+                    racer.id,
+
+                name:
+                    racer.title
+                        ? `${racer.title} ${racer.name}`
+                        : racer.name,
+
+                distance:
+                    racer.distance,
+
+                order:
+                    index + 1
+
+            })
+        ),
+
+        ...finishedRace.bots.map(
+            (bot, index) => ({
+
+                id:
+                    `bot-${index}`,
+
+                name:
+                    bot.name,
+
+                distance:
+                    bot.distance,
+
+                order:
+                    index + 100
+
+            })
+        )
+
+    ].sort(
+        (first, second) =>
+            second.distance -
+            first.distance ||
+            first.order -
+            second.order
     );
 
-    const playerPlace =
-        racers.findIndex(racer =>
-            racer.name === finishedRace.displayName
-        );
 
-    const raceRewards = [
+    const rewards = [
         300,
         200,
         125,
         75
     ];
 
-    const raceReward =
-        raceRewards[playerPlace] || 0;
 
-    coins += raceReward;
+    const results =
+        racers.map(
+            (racer, index) => ({
+
+                id:
+                    racer.id,
+
+                name:
+                    racer.name,
+
+                distance:
+                    racer.distance,
+
+                place:
+                    index + 1,
+
+                reward:
+                    rewards[index] || 0
+
+            })
+        );
+
+
+    if (
+        finishedRace.online &&
+        finishedRace.isHost &&
+        flapRaceChannel
+    ) {
+
+        try {
+
+            await flapRaceChannel.send({
+
+                type:
+                    "broadcast",
+
+                event:
+                    "race_end",
+
+                payload: {
+
+                    results
+
+                }
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "RACE END SEND FAILED:",
+                error
+            );
+
+        }
+
+    }
+
+
+    const playerResult =
+        results.find(
+            result =>
+                result.id ===
+                flapClientId
+        );
+
+
+    const raceReward =
+        playerResult?.reward ||
+        0;
+
+    coins +=
+        raceReward;
+
     updateCoins();
 
-    const results = racers.map((racer, index) => `
-        <div class="race-result-row">
-            <strong>${index + 1}. ${racer.name}</strong>
-            <span>
-                Pipe ${Math.floor(racer.distance / 250)}
-                ${
-                    racer.name === finishedRace.displayName
-                    ? ` | +${raceReward} coins`
-                    : ""
-                }
-            </span>
-        </div>
-    `).join("");
+
+    showRaceResults(
+        results,
+        raceReward
+    );
+
+}
+
+
+/* =========================
+   REMOTE RESULTS
+========================= */
+
+function showMultiplayerRaceResults(
+    payload
+) {
+
+    if (!flapRace) {
+        return;
+    }
+
+    const results =
+        payload?.results;
+
+    if (!Array.isArray(results)) {
+        return;
+    }
+
+    const raceReward =
+        results.find(
+            result =>
+                result.id ===
+                flapClientId
+        )?.reward || 0;
+
+    stopFlapRace();
+
+    coins +=
+        raceReward;
+
+    updateCoins();
+
+    showRaceResults(
+        results,
+        raceReward
+    );
+
+}
+
+
+/* =========================
+   RESULTS UI
+========================= */
+
+function showRaceResults(
+    results,
+    raceReward
+) {
+
+    const rows =
+        results.map(
+            result => `
+
+                <div
+                    class="race-result-row"
+                >
+
+                    <strong>
+                        ${result.place}.
+                        ${result.name}
+                    </strong>
+
+                    <span>
+                        Pipe ${
+                            Math.floor(
+                                result.distance /
+                                250
+                            )
+                        }
+
+                        ${
+                            result.reward > 0
+                                ? ` | +${result.reward} coins`
+                                : ""
+                        }
+                    </span>
+
+                </div>
+
+            `
+        ).join("");
+
+
+    const playerPlace =
+        results.find(
+            result =>
+                result.id ===
+                flapClientId
+        )?.place || 0;
+
 
     const mainContent =
-        document.getElementById("mainContent");
+        document.getElementById(
+            "mainContent"
+        );
+
 
     mainContent.innerHTML = `
-        <h1>🏁 RACE COMPLETE</h1>
-        <div class="info-card race-results">
-            <h2>FINAL DISTANCES</h2>
-            ${results}
+
+        <h1>
+            🏁 RACE COMPLETE
+        </h1>
+
+        <div
+            class="info-card race-results"
+        >
+
+            <h2>
+                FINAL DISTANCES
+            </h2>
+
+            ${rows}
+
             <p class="race-reward">
-                You earned ${raceReward} coins for place ${playerPlace + 1}.
+                You placed ${
+                    playerPlace
+                } and earned
+                ${raceReward} coins.
             </p>
-            <button class="buy-button" onclick="showPlay()" type="button">
+
+            <button
+                class="buy-button"
+                onclick="showPlay()"
+                type="button"
+            >
                 RACE AGAIN
             </button>
+
         </div>
+
     `;
 
 }
 
 
+/* =========================
+   STOP RACE
+========================= */
+
 function stopFlapRace() {
 
-    if (!flapRace) return;
+    if (!flapRace) {
+        return;
+    }
 
-    cancelAnimationFrame(flapRace.animation);
-    document.removeEventListener("keydown", flapRace.keyHandler);
+    if (
+        flapRace.animation !== null
+    ) {
+
+        cancelAnimationFrame(
+            flapRace.animation
+        );
+
+    }
+
+    document.removeEventListener(
+        "keydown",
+        flapRace.keyHandler
+    );
+
 
     if (flapRace.canvas) {
+
         flapRace.canvas.removeEventListener(
             "click",
             flapRace.clickHandler
         );
+
     }
+
 
     flapRace = null;
 
 }
 
+
+/* =========================
+   OFFLINE / ONLINE CHANGE
+========================= */
+
+window.addEventListener(
+    "offline",
+    () => {
+
+        if (!flapRace) {
+            return;
+        }
+
+        const status =
+            document.getElementById(
+                "flapRaceStatus"
+            );
+
+        if (status) {
+
+            status.textContent =
+                "📴 Connection lost — continuing locally.";
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "online",
+    () => {
+
+        if (!flapRace) {
+            return;
+        }
+
+        const status =
+            document.getElementById(
+                "flapRaceStatus"
+            );
+
+        if (status) {
+
+            status.textContent =
+                "🌐 Connection restored.";
+
+        }
+
+    }
+);
 
 /* =====================================================
    UPDATES
@@ -2576,12 +4927,73 @@ function showUpdates() {
             See what has been added to Blocket in each version.
         </p>
 
-        <div class="updates-list">
+<article class="update-card latest-update">
+    <div class="update-heading">
+        <h2>VERSION 2.0</h2>
+        <span>Latest</span>
+    </div>
+    <p>Multiplayer update</p>
+    <ul>
+        <li>Added real multiplayer Flap Race rooms with room codes</li>
+        <li>Players can join races and see other players racing in real time</li>
+        <li>Improved multiplayer race syncing and player connections</li>
+    </ul>
+</article>
+
+        <article class="update-card latest-update">
+    <div class="update-heading">
+        <h2>VERSION 1.9</h2>
+    </div>
+    <p>New Insect Box and insect collection</p>
+    <ul>
+        <li>Added the new Insect Box</li>
+        <li>Added 7 new insect blocks, including Queen Bee as a Chroma</li>
+        <li>Added new insect-themed designs and effects</li>
+    </ul>
+</article>
 
             <article class="update-card latest-update">
                 <div class="update-heading">
+                    <h2>VERSION 1.8</h2>
+                </div>
+                <p>Collection organization and discovery</p>
+                <ul>
+                    <li>Collection blocks are organized by the box they came from</li>
+                    <li>Added block name search and rarity filtering</li>
+                    <li>Improved collection discovery and organization</li>
+                </ul>
+            </article>
+
+            <article class="update-card">
+                <div class="update-heading">
+                    <h2>VERSION 1.7</h2>
+                </div>
+                <p>Titles and player identity</p>
+                <ul>
+                    <li>Added Title Box with Rookie, Explorer, Collector, Pro, Expert, Master, and Legend</li>
+                    <li>Added a dedicated Titles tab with title collection and equip controls</li>
+                    <li>Equipped titles now display beside player names in Flap Race</li>
+                    <li>Titles are saved separately from blocks and backgrounds</li>
+                </ul>
+            </article>
+
+            <article class="update-card">
+                <div class="update-heading">
+                    <h2>VERSION 1.6</h2>
+                </div>
+                <p>Content, customization, and sharing</p>
+                <ul>
+                    <li>Added School, Pet, Ore, Bird, Superhero, and Alien boxes</li>
+                    <li>Added Background Box with equipable Forest, Ocean, Night, Volcano, Storm, Fire, and Rainbow themes</li>
+                    <li>Added background collection storage and a dedicated Backgrounds tab</li>
+                    <li>Added Flap Race room codes, shareable GitHub links, display names, AI crashes, and race coin rewards</li>
+                    <li>Fixed GitHub Pages script loading and added safe offline account fallback</li>
+                </ul>
+            </article>
+
+            <article class="update-card">
+                <div class="update-heading">
                     <h2>VERSION 1.5</h2>
-                    <span>Latest</span>
                 </div>
                 <p>Multiplayer race improvements</p>
                 <ul>
@@ -2671,6 +5083,19 @@ function getRandomBlock(boxType) {
 
     const box = boxes[boxType];
     const rewards = getBoxRewards(box);
+
+    const now = new Date();
+
+    if (
+        boxType === "ore" &&
+        now.getHours() === 11 &&
+        now.getMinutes() === 11 &&
+        Math.random() < 0.5
+    ) {
+        return hiddenBlocks.find(block =>
+            block.name === "Eternal"
+        );
+    }
 
     const roll = Math.random() * 100;
 
@@ -2766,7 +5191,9 @@ function getRandomBlock(boxType) {
         boxType === "superhero" ||
         boxType === "alien" ||
         boxType === "bird" ||
-        boxType === "pet"
+        boxType === "pet" ||
+        boxType === "space" ||
+        boxType === "insect"
     ) {
 
         if (roll < 1) {
@@ -2794,7 +5221,10 @@ function getRandomBlock(boxType) {
     }
 
 
-    if (boxType === "background") {
+    if (
+        boxType === "background" ||
+        boxType === "title"
+    ) {
 
         if (roll < 1) {
             return getBlockByRarity(rewards, "Chroma");
@@ -3095,10 +5525,15 @@ function finishPackOpening() {
     const isBackground =
         boxes[currentBoxType].isBackground;
 
+    const isTitle =
+        boxes[currentBoxType].isTitle;
+
     const isNew =
         isBackground
             ? !backgroundCollection[wonBlock.name]
-            : !collection[wonBlock.name];
+            : isTitle
+                ? !titleCollection[wonBlock.name]
+                : !collection[wonBlock.name];
 
     currentRolling = null;
 
@@ -3121,6 +5556,8 @@ function finishPackOpening() {
 
     if (isBackground) {
         addToBackgroundCollection(wonBlock);
+    } else if (isTitle) {
+        addToTitleCollection(wonBlock);
     } else {
         addToCollection(wonBlock);
     }
@@ -3138,6 +5575,23 @@ function addToBackgroundCollection(background) {
         backgroundCollection[background.name] = {
             name: background.name,
             rarity: background.rarity,
+            amount: 1
+        };
+    }
+
+    saveGame();
+
+}
+
+
+function addToTitleCollection(title) {
+
+    if (titleCollection[title.name]) {
+        titleCollection[title.name].amount++;
+    } else {
+        titleCollection[title.name] = {
+            name: title.name,
+            rarity: title.rarity,
             amount: 1
         };
     }
@@ -3180,38 +5634,58 @@ function addToCollection(block) {
 
 function sellBlock(blockName) {
 
-    const block =
-        collection[blockName];
+    if (!blockName) {
+        return;
+    }
+
+    const block = collection[blockName];
 
     if (!block) {
+        console.warn("SELL FAILED: Block not found:", blockName);
         return;
     }
 
     const sellValue =
-        sellValues[block.rarity];
+        Number(sellValues[block.rarity]) || 0;
 
-    block.amount--;
+    if (sellValue <= 0) {
+        console.warn(
+            "SELL FAILED: No sell value for rarity:",
+            block.rarity
+        );
+        return;
+    }
 
+    if (block.amount <= 0) {
+        return;
+    }
+
+    // Remove one copy
+    block.amount -= 1;
+
+    // Give coins
     coins += sellValue;
 
+    // If that was the last copy, remove the block
     if (block.amount <= 0) {
 
         if (equippedBlock === blockName) {
-
             equippedBlock = "Block";
-
         }
 
         delete collection[blockName];
-
     }
 
+    // Save everything
     saveGame();
 
+    // Update coin display
     updateCoins();
 
+    // Refresh equipped display
     updateEquipped();
 
+    // Refresh collection
     showCollection();
 
 }
