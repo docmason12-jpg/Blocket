@@ -1,6 +1,6 @@
 // ============================================================
 // BLOCKET
-// FULL JAVASCRIPT
+// FULL SCRIPT
 // ============================================================
 
 
@@ -17,13 +17,11 @@ const SUPABASE_KEY =
 let supabaseClient = null;
 
 if (window.supabase) {
-
     supabaseClient =
         window.supabase.createClient(
             SUPABASE_URL,
             SUPABASE_KEY
         );
-
 }
 
 
@@ -32,7 +30,6 @@ if (window.supabase) {
 // ============================================================
 
 let currentUser = null;
-
 let isGuest = false;
 
 let currentTab = "market";
@@ -57,22 +54,16 @@ let soloSession = {
 };
 
 let gameState = {
-
     coins: 100,
-
     inventory: [],
-
     equipped: null,
-
     questionsAnswered: 0,
-
     correctAnswers: 0
-
 };
 
 
 // ============================================================
-// SAVE
+// SAVE SYSTEM
 // ============================================================
 
 function getSaveKey() {
@@ -82,24 +73,17 @@ function getSaveKey() {
     }
 
     return `blocket_save_${currentUser.id}`;
-
 }
 
 
 function resetGuestState() {
 
     gameState = {
-
         coins: 100,
-
         inventory: [],
-
         equipped: null,
-
         questionsAnswered: 0,
-
         correctAnswers: 0
-
     };
 
 }
@@ -115,8 +99,7 @@ function saveGame() {
         return;
     }
 
-    const key =
-        getSaveKey();
+    const key = getSaveKey();
 
     if (!key) {
         return;
@@ -126,9 +109,7 @@ function saveGame() {
 
         localStorage.setItem(
             key,
-            JSON.stringify(
-                gameState
-            )
+            JSON.stringify(gameState)
         );
 
     } catch (error) {
@@ -139,7 +120,6 @@ function saveGame() {
         );
 
     }
-
 }
 
 
@@ -155,8 +135,7 @@ function loadGame() {
         return;
     }
 
-    const key =
-        getSaveKey();
+    const key = getSaveKey();
 
     if (!key) {
         return;
@@ -165,24 +144,16 @@ function loadGame() {
     try {
 
         const saved =
-            localStorage.getItem(
-                key
-            );
+            localStorage.getItem(key);
 
         if (!saved) {
 
             gameState = {
-
                 coins: 100,
-
                 inventory: [],
-
                 equipped: null,
-
                 questionsAnswered: 0,
-
                 correctAnswers: 0
-
             };
 
             return;
@@ -192,35 +163,28 @@ function loadGame() {
             JSON.parse(saved);
 
         gameState = {
-
             coins:
                 Number(
                     parsed.coins ?? 100
                 ),
 
             inventory:
-                Array.isArray(
-                    parsed.inventory
-                )
+                Array.isArray(parsed.inventory)
                     ? parsed.inventory
                     : [],
 
             equipped:
-                parsed.equipped ??
-                null,
+                parsed.equipped ?? null,
 
             questionsAnswered:
                 Number(
-                    parsed.questionsAnswered ??
-                    0
+                    parsed.questionsAnswered ?? 0
                 ),
 
             correctAnswers:
                 Number(
-                    parsed.correctAnswers ??
-                    0
+                    parsed.correctAnswers ?? 0
                 )
-
         };
 
     } catch (error) {
@@ -231,30 +195,22 @@ function loadGame() {
         );
 
         gameState = {
-
             coins: 100,
-
             inventory: [],
-
             equipped: null,
-
             questionsAnswered: 0,
-
             correctAnswers: 0
-
         };
 
     }
-
 }
 
 
 // ============================================================
-// RARITY VALUES
+// RARITIES
 // ============================================================
 
 const rarityOrder = [
-
     "Common",
     "Uncommon",
     "Rare",
@@ -264,30 +220,18 @@ const rarityOrder = [
     "Mythical",
     "OG",
     "Hidden"
-
 ];
 
-
 const rarityValues = {
-
     Common: 5,
-
     Uncommon: 10,
-
     Rare: 25,
-
     Epic: 50,
-
     Legendary: 100,
-
     Chroma: 500,
-
     Mythical: 2500,
-
     OG: 750,
-
     Hidden: 10000
-
 };
 
 
@@ -362,10 +306,10 @@ const packs = {
             },
 
             {
-               name: "Black",
-               rarity: "Chroma",
-               pullRate: 1.99,
-               image: null
+                name: "Black",
+                rarity: "Chroma",
+                pullRate: 1.99,
+                image: null
             },
 
             {
@@ -648,101 +592,118 @@ const packs = {
     // MEDIEVAL PACK
     // ========================================================
 
-"Medieval Pack": {
+    "Medieval Pack": {
 
-    name: "Medieval Pack",
-    price: 40,
-    image: "./Images/dragon.svg",
+        name: "Medieval Pack",
 
-    rewards: [
+        price: 40,
 
-        {
-            name: "Witch",
-            rarity: "Common",
-            pullRate: 10,
-            image: "./Images/witch.svg"
-        },
+        image:
+            "./Images/dragon.svg",
 
-        {
-            name: "Wizard",
-            rarity: "Common",
-            pullRate: 9,
-            image: "./Images/wizard.svg"
-        },
+        rewards: [
 
-        {
-            name: "Elf",
-            rarity: "Common",
-            pullRate: 7,
-            image: "./Images/elf.svg"
-        },
+            {
+                name: "Witch",
+                rarity: "Common",
+                pullRate: 10,
+                image:
+                    "./Images/witch.svg"
+            },
 
-        {
-            name: "Fairy",
-            rarity: "Common",
-            pullRate: 5,
-            image: "./Images/fairy.svg"
-        },
+            {
+                name: "Wizard",
+                rarity: "Common",
+                pullRate: 9,
+                image:
+                    "./Images/wizard.svg"
+            },
 
-        {
-            name: "Slime Monster",
-            rarity: "Common",
-            pullRate: 4,
-            image: "./Images/slimemonster.svg"
-        },
+            {
+                name: "Elf",
+                rarity: "Common",
+                pullRate: 7,
+                image:
+                    "./Images/elf.svg"
+            },
 
-        {
-            name: "Jester",
-            rarity: "Uncommon",
-            pullRate: 25,
-            image: "./Images/jester.svg"
-        },
+            {
+                name: "Fairy",
+                rarity: "Common",
+                pullRate: 5,
+                image:
+                    "./Images/fairy.svg"
+            },
 
-        {
-            name: "Unicorn",
-            rarity: "Rare",
-            pullRate: 20,
-            image: "./Images/unicorn.svg"
-        },
+            {
+                name: "Slime Monster",
+                rarity: "Common",
+                pullRate: 4,
+                image:
+                    "./Images/slimemonster.svg"
+            },
 
-        {
-            name: "Dragon",
-            rarity: "Epic",
-            pullRate: 19,
-            image: "./Images/dragon.svg"
-        },
+            {
+                name: "Jester",
+                rarity: "Uncommon",
+                pullRate: 25,
+                image:
+                    "./Images/jester.svg"
+            },
 
-        {
-            name: "Queen",
-            rarity: "Legendary",
-            pullRate: 0.5,
-            image: "./Images/queen.svg"
-        },
+            {
+                name: "Unicorn",
+                rarity: "Rare",
+                pullRate: 20,
+                image:
+                    "./Images/unicorn.svg"
+            },
 
-        {
-            name: "King",
-            rarity: "Legendary",
-            pullRate: 0.35,
-            image: "./Images/king.svg"
-        },
+            {
+                name: "Dragon",
+                rarity: "Epic",
+                pullRate: 19,
+                image:
+                    "./Images/dragon.svg"
+            },
 
-        {
-            name: "Phantom Queen",
-            rarity: "Chroma",
-            pullRate: 0.1,
-            image: "./Images/static-assets-upload7275842502952922222.webp"
-        },
+            {
+                name: "Queen",
+                rarity: "Legendary",
+                pullRate: 0.5,
+                image:
+                    "./Images/queen.svg"
+            },
 
-        {
-            name: "Phantom King",
-            rarity: "Chroma",
-            pullRate: 0.05,
-            image: "./Images/phathom%20king.webp"
-        }
+            {
+                name: "King",
+                rarity: "Legendary",
+                pullRate: 0.35,
+                image:
+                    "./Images/king.svg"
+            },
 
-    ]
+            {
+                name: "Phantom Queen",
+                rarity: "Chroma",
+                pullRate: 0.1,
+                image:
+                    "./Images/static-assets-upload7275842502952922222.webp"
+            },
 
-},
+            {
+                name: "Phantom King",
+                rarity: "Chroma",
+                pullRate: 0.05,
+                image:
+                    "./Images/phathom%20king.webp"
+            }
+
+        ]
+
+    }
+
+};
 
 
 // ============================================================
@@ -771,7 +732,7 @@ const hiddenBlocks = [
 
 
 // ============================================================
-// NEWS / UPDATE LOGS
+// NEWS
 // ============================================================
 
 const newsItems = [
@@ -798,8 +759,10 @@ const newsItems = [
             "Added Phantom Queen.",
             "Added Phantom King.",
             "Phantom Queen and Phantom King are Chroma."
+
         ]
     },
+
 
     {
         date: "September 20, 2026",
@@ -815,17 +778,19 @@ const newsItems = [
             "Added STOP STUDYING.",
             "Added session statistics.",
             "Correct answers give +2 Coins.",
-            "Added All Correct mode.",
-            "All Correct makes every answer correct."
+            "Added All Correct.",
+            "Every answer in All Correct is correct."
+
         ]
     },
+
 
     {
         date: "September 20, 2026",
         version: "v2.0",
         title: "🎨 Settings & Themes",
         text:
-            "Settings has arrived with free Blocket themes.",
+            "Settings now includes free Blocket themes.",
         details: [
 
             "Added SETTINGS.",
@@ -839,9 +804,28 @@ const newsItems = [
             "Added One Color Blue.",
             "Added One Color Green.",
             "Added One Color Purple.",
-            "Logged-in users can save their selected theme."
+            "Logged-in users can save their theme."
+
         ]
     },
+
+
+    {
+        date: "September 20, 2026",
+        version: "v2.0",
+        title: "🌈 Rarity Changes",
+        text:
+            "The rarest Color Pack rewards have been rebalanced.",
+        details: [
+
+            "Rainbow is now a 0.01% Mythical.",
+            "Black is now a 1.99% Chroma.",
+            "Medieval Legendary Blocks are now much rarer.",
+            "Medieval Phantom Blocks are extremely rare."
+
+        ]
+    },
+
 
     {
         date: "September 19, 2026",
@@ -853,11 +837,13 @@ const newsItems = [
 
             "Added black starting screen.",
             "Added rarity progression.",
-            "Improved final reveal.",
+            "Improved final reward reveal.",
             "Improved Chroma ending.",
             "Improved OG ending."
+
         ]
     },
+
 
     {
         date: "September 17, 2026",
@@ -871,8 +857,10 @@ const newsItems = [
             "Added Block selling.",
             "Added rarity badges.",
             "Improved collection cards."
+
         ]
     },
+
 
     {
         date: "August 20, 2026",
@@ -887,6 +875,7 @@ const newsItems = [
             "Block collection introduced.",
             "Guest mode introduced.",
             "Account system introduced."
+
         ]
     }
 
@@ -1114,7 +1103,8 @@ const soloQuestions = {
     English: [
 
         {
-            question: "Which word is a noun?",
+            question:
+                "Which word is a noun?",
             answers: [
                 "Run",
                 "Blue",
@@ -2005,42 +1995,23 @@ const soloQuestions = {
 // ============================================================
 
 function $(id) {
-
     return document.getElementById(id);
-
 }
 
 
 function getMainContent() {
-
     return $("mainContent");
-
 }
 
 
 function escapeHTML(value) {
 
     return String(value)
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
-        .replaceAll(
-            "'",
-            "&#039;"
-        );
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 
 }
 
@@ -2048,21 +2019,13 @@ function escapeHTML(value) {
 function escapeJSString(value) {
 
     return String(value)
-        .replaceAll(
-            "\\",
-            "\\\\"
-        )
-        .replaceAll(
-            "'",
-            "\\'"
-        );
+        .replaceAll("\\", "\\\\")
+        .replaceAll("'", "\\'");
 
 }
 
 
-function showNotification(
-    message
-) {
+function showNotification(message) {
 
     let notification =
         $("blocketNotification");
@@ -2070,9 +2033,7 @@ function showNotification(
     if (!notification) {
 
         notification =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         notification.id =
             "blocketNotification";
@@ -2125,17 +2086,13 @@ function startBlocket() {
         $("app");
 
     if (startScreen) {
-
         startScreen.style.display =
             "none";
-
     }
 
     if (app) {
-
         app.style.display =
             "flex";
-
     }
 
     updatePlayerInfo();
@@ -2178,17 +2135,13 @@ async function initializeBlocket() {
         $("app");
 
     if (app) {
-
         app.style.display =
             "none";
-
     }
 
     if (startScreen) {
-
         startScreen.style.display =
             "flex";
-
     }
 
     if (!supabaseClient) {
@@ -2300,7 +2253,7 @@ function updatePlayerInfo() {
 
 
 // ============================================================
-// NAVIGATION
+// TABS
 // ============================================================
 
 function openTab(tab) {
@@ -2312,7 +2265,6 @@ function openTab(tab) {
         getMainContent();
 
     if (!content) {
-
         return;
     }
 
@@ -2640,9 +2592,7 @@ function showPackContents(
                     `
 
                     : `
-                        <div
-                            class="mini-block-placeholder"
-                        ></div>
+                        <div class="mini-block-placeholder"></div>
                     `;
 
             rows += `
@@ -2733,9 +2683,7 @@ function animateOpening(
     }
 
     const overlay =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
     overlay.id =
         "openingOverlay";
@@ -2828,8 +2776,6 @@ function animateOpening(
                 targetReward.rarity
         );
 
-    // OG uses the Mythical stage, then gets
-    // its own final reveal.
     if (
         targetReward.rarity ===
         "OG"
@@ -2910,20 +2856,11 @@ function animateOpening(
 
         }
 
-        if (
+        rarityElement.textContent =
             targetReward.rarity ===
-            "OG"
-        ) {
-
-            rarityElement.textContent =
-                "OG!";
-
-        } else {
-
-            rarityElement.textContent =
-                targetReward.rarity;
-
-        }
+                "OG"
+                ? "OG!"
+                : targetReward.rarity;
 
         setTimeout(
             () => {
@@ -2981,7 +2918,7 @@ function getRewardVisual(
 
 
 // ============================================================
-// INVENTORY
+// BLOCK COLLECTION
 // ============================================================
 
 function addRewardToInventory(
@@ -3089,7 +3026,10 @@ function renderBlocks() {
     `;
 
     gameState.inventory.forEach(
-        (block, index) => {
+        (
+            block,
+            index
+        ) => {
 
             const imageHTML =
                 block.image
@@ -3127,7 +3067,9 @@ function renderBlocks() {
                     "
                 >
 
-                    <div class="block-card-image">
+                    <div
+                        class="block-card-image"
+                    >
                         ${imageHTML}
                     </div>
 
@@ -3599,7 +3541,7 @@ function renderSolo() {
                     subject
                 );
 
-            let description = "";
+            let description;
 
             if (
                 subject ===
@@ -3680,12 +3622,12 @@ function renderSolo() {
             <p>
                 Normal subjects give
                 <strong>+2 Coins</strong>
-                for each correct answer.
+                for every correct answer.
             </p>
 
             <p>
                 <strong>All Correct</strong> is special:
-                every single answer is correct.
+                every answer is correct.
             </p>
 
             <p>
@@ -3699,10 +3641,6 @@ function renderSolo() {
 
 }
 
-
-// ============================================================
-// START STUDY
-// ============================================================
 
 function startSolo(
     subject
@@ -3755,10 +3693,6 @@ function startSolo(
 }
 
 
-// ============================================================
-// NEXT QUESTION
-// ============================================================
-
 function nextSoloQuestion() {
 
     if (
@@ -3777,6 +3711,7 @@ function nextSoloQuestion() {
         return;
     }
 
+    // Refill forever
     if (
         currentQuestionPool.length ===
         0
@@ -3946,10 +3881,6 @@ function nextSoloQuestion() {
 }
 
 
-// ============================================================
-// ANSWER
-// ============================================================
-
 function submitSoloAnswer(
     answerIndex
 ) {
@@ -3969,8 +3900,7 @@ function submitSoloAnswer(
     let isCorrect =
         false;
 
-    // ALL CORRECT:
-    // every answer is correct
+    // ALL CORRECT
     if (
         currentSoloSubject ===
         "All Correct"
@@ -4050,10 +3980,6 @@ function submitSoloAnswer(
 
 }
 
-
-// ============================================================
-// STOP STUDY
-// ============================================================
 
 function stopSolo() {
 
@@ -4191,43 +4117,7 @@ function stopSolo() {
 
 
 // ============================================================
-// SHUFFLE
-// ============================================================
-
-function shuffleArray(
-    array
-) {
-
-    for (
-        let i =
-            array.length - 1;
-        i > 0;
-        i--
-    ) {
-
-        const j =
-            Math.floor(
-                Math.random() *
-                (i + 1)
-            );
-
-        [
-            array[i],
-            array[j]
-        ] = [
-            array[j],
-            array[i]
-        ];
-
-    }
-
-    return array;
-
-}
-
-
-// ============================================================
-// SETTINGS / THEMES
+// THEMES
 // ============================================================
 
 const blocketThemes = {
@@ -4610,7 +4500,6 @@ function setTheme(
 
     }
 
-    // Guests don't save themes
     if (
         currentUser &&
         !isGuest
@@ -4951,6 +4840,10 @@ function showLogin() {
 }
 
 
+// ============================================================
+// SIGNUP FORM
+// ============================================================
+
 function showSignup() {
 
     const accountContent =
@@ -5109,7 +5002,7 @@ async function login() {
 
 
 // ============================================================
-// SIGNUP
+// SIGNUP ACTION
 // ============================================================
 
 async function signup() {
@@ -5370,7 +5263,6 @@ function searchBlocks(
         renderBlocks();
 
         return;
-
     }
 
     const content =
@@ -5446,7 +5338,6 @@ function searchBlocks(
             html;
 
         return;
-
     }
 
     html += `
@@ -5592,7 +5483,6 @@ function setupNavigation() {
 
             }
         );
-
 }
 
 
@@ -5636,7 +5526,7 @@ function setupStartButtons() {
 
 
 // ============================================================
-// EXPORT FUNCTIONS
+// WINDOW EXPORTS
 // ============================================================
 
 window.startBlocket =
