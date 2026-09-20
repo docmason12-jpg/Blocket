@@ -362,16 +362,16 @@ const packs = {
             },
 
             {
-                name: "Black",
-                rarity: "Chroma",
-                pullRate: 1.7,
-                image: null
+               name: "Black",
+               rarity: "Chroma",
+               pullRate: 1.99,
+               image: null
             },
 
             {
                 name: "Rainbow",
                 rarity: "Mythical",
-                pullRate: 0.3,
+                pullRate: 0.01,
                 image: null
             }
 
@@ -648,118 +648,101 @@ const packs = {
     // MEDIEVAL PACK
     // ========================================================
 
-    "Medieval Pack": {
+"Medieval Pack": {
 
-        name: "Medieval Pack",
+    name: "Medieval Pack",
+    price: 40,
+    image: "./Images/dragon.svg",
 
-        price: 40,
+    rewards: [
 
-        image:
-            "./Images/dragon.svg",
+        {
+            name: "Witch",
+            rarity: "Common",
+            pullRate: 10,
+            image: "./Images/witch.svg"
+        },
 
-        rewards: [
+        {
+            name: "Wizard",
+            rarity: "Common",
+            pullRate: 9,
+            image: "./Images/wizard.svg"
+        },
 
-            {
-                name: "Witch",
-                rarity: "Common",
-                pullRate: 8,
-                image:
-                    "./Images/witch.svg"
-            },
+        {
+            name: "Elf",
+            rarity: "Common",
+            pullRate: 7,
+            image: "./Images/elf.svg"
+        },
 
-            {
-                name: "Wizard",
-                rarity: "Common",
-                pullRate: 7,
-                image:
-                    "./Images/wizard.svg"
-            },
+        {
+            name: "Fairy",
+            rarity: "Common",
+            pullRate: 5,
+            image: "./Images/fairy.svg"
+        },
 
-            {
-                name: "Elf",
-                rarity: "Common",
-                pullRate: 6,
-                image:
-                    "./Images/elf.svg"
-            },
+        {
+            name: "Slime Monster",
+            rarity: "Common",
+            pullRate: 4,
+            image: "./Images/slimemonster.svg"
+        },
 
-            {
-                name: "Fairy",
-                rarity: "Common",
-                pullRate: 5,
-                image:
-                    "./Images/fairy.svg"
-            },
+        {
+            name: "Jester",
+            rarity: "Uncommon",
+            pullRate: 25,
+            image: "./Images/jester.svg"
+        },
 
-            {
-                name: "Slime Monster",
-                rarity: "Common",
-                pullRate: 4,
-                image:
-                    "./Images/slimemonster.svg"
-            },
+        {
+            name: "Unicorn",
+            rarity: "Rare",
+            pullRate: 20,
+            image: "./Images/unicorn.svg"
+        },
 
-            {
-                name: "Jester",
-                rarity: "Uncommon",
-                pullRate: 25,
-                image:
-                    "./Images/jester.svg"
-            },
+        {
+            name: "Dragon",
+            rarity: "Epic",
+            pullRate: 19,
+            image: "./Images/dragon.svg"
+        },
 
-            {
-                name: "Unicorn",
-                rarity: "Rare",
-                pullRate: 15,
-                image:
-                    "./Images/unicorn.svg"
-            },
+        {
+            name: "Queen",
+            rarity: "Legendary",
+            pullRate: 0.5,
+            image: "./Images/queen.svg"
+        },
 
-            {
-                name: "Dragon",
-                rarity: "Epic",
-                pullRate: 10,
-                image:
-                    "./Images/dragon.svg"
-            },
+        {
+            name: "King",
+            rarity: "Legendary",
+            pullRate: 0.35,
+            image: "./Images/king.svg"
+        },
 
-            {
-                name: "Queen",
-                rarity: "Legendary",
-                pullRate: 10,
-                image:
-                    "./Images/queen.svg"
-            },
+        {
+            name: "Phantom Queen",
+            rarity: "Chroma",
+            pullRate: 0.1,
+            image: "./Images/static-assets-upload7275842502952922222.webp"
+        },
 
-            {
-                name: "King",
-                rarity: "Legendary",
-                pullRate: 9.85,
-                image:
-                    "./Images/king.svg"
-            },
+        {
+            name: "Phantom King",
+            rarity: "Chroma",
+            pullRate: 0.05,
+            image: "./Images/phathom%20king.webp"
+        }
 
-            {
-                name: "Phantom Queen",
-                rarity: "Chroma",
-                pullRate: 0.10,
-                image:
-                    "./Images/static-assets-upload7275842502952922222.webp"
-            },
+    ]
 
-            {
-                name: "Phantom King",
-                rarity: "Chroma",
-                pullRate: 0.05,
-                image:
-                    "./Images/phathom%20king.webp"
-            }
-
-        ]
-
-    }
-
-};
+},
 
 
 // ============================================================
