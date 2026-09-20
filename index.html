@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -12,15 +13,15 @@
 
     <link
         rel="stylesheet"
-        href="./style.css?v=10"
+        href="./style.css?v=20"
     >
 </head>
 
 <body>
 
-    <!-- ================================================= -->
-    <!-- START SCREEN -->
-    <!-- ================================================= -->
+    <!-- =====================================================
+         START SCREEN
+         ===================================================== -->
 
     <div
         id="startScreen"
@@ -52,16 +53,19 @@
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- MAIN APP -->
-    <!-- ================================================= -->
+    <!-- =====================================================
+         MAIN APP
+         ===================================================== -->
 
     <div
         id="app"
         class="app"
+        style="display: none;"
     >
 
-        <!-- SIDEBAR -->
+        <!-- =================================================
+             SIDEBAR
+             ================================================= -->
 
         <aside class="sidebar">
 
@@ -99,12 +103,21 @@
                     SOLO
                 </div>
 
+                <div
+                    class="menu-item"
+                    data-tab="settings"
+                >
+                    SETTINGS
+                </div>
+
             </div>
 
         </aside>
 
 
-        <!-- MAIN AREA -->
+        <!-- =================================================
+             MAIN
+             ================================================= -->
 
         <main class="main">
 
@@ -113,11 +126,12 @@
                 <button
                     class="theme-button"
                     id="themeButton"
-                    onclick="toggleTheme()"
-                    aria-label="Toggle theme"
+                    onclick="openTab('settings')"
+                    aria-label="Open themes"
+                    title="Themes"
                     type="button"
                 >
-                    🌙
+                    🎨
                 </button>
 
                 <button
@@ -138,13 +152,10 @@
             </div>
 
 
-            <!-- PAGE CONTENT -->
-
             <div
                 class="main-content"
                 id="mainContent"
             >
-                <!-- JavaScript puts pages here -->
             </div>
 
         </main>
@@ -152,9 +163,9 @@
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- ACCOUNT -->
-    <!-- ================================================= -->
+    <!-- =====================================================
+         ACCOUNT OVERLAY
+         ===================================================== -->
 
     <div
         id="accountOverlay"
@@ -172,11 +183,15 @@
                 ×
             </button>
 
-            <h1>BLOCKET</h1>
+            <h1>
+                BLOCKET
+            </h1>
 
             <div id="accountContent">
 
-                <h2>ACCOUNT</h2>
+                <h2>
+                    ACCOUNT
+                </h2>
 
                 <button
                     class="account-main-button"
@@ -201,15 +216,21 @@
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- SUPABASE -->
-    <!-- MUST LOAD BEFORE SCRIPT.JS -->
-    <!-- ================================================= -->
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- =====================================================
+         SUPABASE
+         ===================================================== -->
 
     <script
-        src="./script.js?v=10"
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <!-- =====================================================
+         BLOCKET JS
+         ===================================================== -->
+
+    <script
+        src="./script.js?v=20"
     ></script>
 
 </body>

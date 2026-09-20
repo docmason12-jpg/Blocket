@@ -1,10 +1,12 @@
 // ============================================================
-// BLOCKET - FULL SCRIPT
+// BLOCKET
+// FULL JAVASCRIPT
 // ============================================================
 
-// ------------------------------
+
+// ============================================================
 // SUPABASE
-// ------------------------------
+// ============================================================
 
 const SUPABASE_URL =
     "https://whakyhbtqwfvicicnttu.supabase.co";
@@ -15,34 +17,37 @@ const SUPABASE_KEY =
 let supabaseClient = null;
 
 if (window.supabase) {
-    supabaseClient = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+
+    supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
 }
 
-// ------------------------------
-// STATE
-// ------------------------------
+
+// ============================================================
+// GAME STATE
+// ============================================================
 
 let currentUser = null;
+
 let isGuest = false;
 
-let gameState = {
-    coins: 100,
-    inventory: [],
-    equipped: null,
-    questionsAnswered: 0,
-    correctAnswers: 0
-};
-
-let currentPack = null;
 let currentTab = "market";
 
+let currentPack = null;
+
 let currentSoloSubject = null;
+
 let currentQuestion = null;
+
 let currentQuestionPool = [];
+
 let previousQuestion = null;
+
+let currentTheme = "classic";
 
 let soloSession = {
     active: false,
@@ -51,32 +56,79 @@ let soloSession = {
     coinsEarned: 0
 };
 
-// ------------------------------
-// SAVE SYSTEM
-// ------------------------------
+let gameState = {
+
+    coins: 100,
+
+    inventory: [],
+
+    equipped: null,
+
+    questionsAnswered: 0,
+
+    correctAnswers: 0
+
+};
+
+
+// ============================================================
+// SAVE
+// ============================================================
 
 function getSaveKey() {
-    if (!currentUser) return null;
+
+    if (!currentUser) {
+        return null;
+    }
 
     return `blocket_save_${currentUser.id}`;
+
 }
+
+
+function resetGuestState() {
+
+    gameState = {
+
+        coins: 100,
+
+        inventory: [],
+
+        equipped: null,
+
+        questionsAnswered: 0,
+
+        correctAnswers: 0
+
+    };
+
+}
+
 
 function saveGame() {
 
-    // Guests never save
-    if (isGuest || !currentUser) {
+    // Guest progress never saves
+    if (
+        isGuest ||
+        !currentUser
+    ) {
         return;
     }
 
-    const key = getSaveKey();
+    const key =
+        getSaveKey();
 
-    if (!key) return;
+    if (!key) {
+        return;
+    }
 
     try {
 
         localStorage.setItem(
             key,
-            JSON.stringify(gameState)
+            JSON.stringify(
+                gameState
+            )
         );
 
     } catch (error) {
@@ -87,40 +139,50 @@ function saveGame() {
         );
 
     }
+
 }
+
 
 function loadGame() {
 
-    if (isGuest || !currentUser) {
+    if (
+        isGuest ||
+        !currentUser
+    ) {
 
-        gameState = {
-            coins: 100,
-            inventory: [],
-            equipped: null,
-            questionsAnswered: 0,
-            correctAnswers: 0
-        };
+        resetGuestState();
 
         return;
     }
 
-    const key = getSaveKey();
+    const key =
+        getSaveKey();
 
-    if (!key) return;
+    if (!key) {
+        return;
+    }
 
     try {
 
         const saved =
-            localStorage.getItem(key);
+            localStorage.getItem(
+                key
+            );
 
         if (!saved) {
 
             gameState = {
+
                 coins: 100,
+
                 inventory: [],
+
                 equipped: null,
+
                 questionsAnswered: 0,
+
                 correctAnswers: 0
+
             };
 
             return;
@@ -130,27 +192,35 @@ function loadGame() {
             JSON.parse(saved);
 
         gameState = {
-            coins: Number(
-                parsed.coins ?? 100
-            ),
+
+            coins:
+                Number(
+                    parsed.coins ?? 100
+                ),
 
             inventory:
-                Array.isArray(parsed.inventory)
+                Array.isArray(
+                    parsed.inventory
+                )
                     ? parsed.inventory
                     : [],
 
             equipped:
-                parsed.equipped ?? null,
+                parsed.equipped ??
+                null,
 
             questionsAnswered:
                 Number(
-                    parsed.questionsAnswered ?? 0
+                    parsed.questionsAnswered ??
+                    0
                 ),
 
             correctAnswers:
                 Number(
-                    parsed.correctAnswers ?? 0
+                    parsed.correctAnswers ??
+                    0
                 )
+
         };
 
     } catch (error) {
@@ -160,14 +230,31 @@ function loadGame() {
             error
         );
 
+        gameState = {
+
+            coins: 100,
+
+            inventory: [],
+
+            equipped: null,
+
+            questionsAnswered: 0,
+
+            correctAnswers: 0
+
+        };
+
     }
+
 }
 
+
 // ============================================================
-// RARITIES
+// RARITY VALUES
 // ============================================================
 
 const rarityOrder = [
+
     "Common",
     "Uncommon",
     "Rare",
@@ -177,27 +264,39 @@ const rarityOrder = [
     "Mythical",
     "OG",
     "Hidden"
+
 ];
+
 
 const rarityValues = {
 
     Common: 5,
+
     Uncommon: 10,
+
     Rare: 25,
+
     Epic: 50,
+
     Legendary: 100,
+
     Chroma: 500,
+
     Mythical: 2500,
+
     OG: 750,
+
     Hidden: 10000
 
 };
+
 
 // ============================================================
 // PACKS
 // ============================================================
 
 const packs = {
+
 
     // ========================================================
     // COLOR PACK
@@ -206,7 +305,9 @@ const packs = {
     "Color Pack": {
 
         name: "Color Pack",
+
         price: 20,
+
         image: null,
 
         rewards: [
@@ -278,6 +379,7 @@ const packs = {
 
     },
 
+
     // ========================================================
     // BOT PACK
     // ========================================================
@@ -285,8 +387,11 @@ const packs = {
     "Bot Pack": {
 
         name: "Bot Pack",
+
         price: 20,
-        image: "./Images/robot.png.png",
+
+        image:
+            "./Images/robot.png.png",
 
         rewards: [
 
@@ -294,47 +399,54 @@ const packs = {
                 name: "Rusty Bot",
                 rarity: "Common",
                 pullRate: 35,
-                image: "./Images/Rusty-bot.png"
+                image:
+                    "./Images/Rusty-bot.png"
             },
 
             {
                 name: "Lil Bot",
                 rarity: "Common",
                 pullRate: 25,
-                image: "./Images/lil%20bot.png"
+                image:
+                    "./Images/lil%20bot.png"
             },
 
             {
                 name: "Robot",
                 rarity: "Uncommon",
                 pullRate: 18,
-                image: "./Images/robot.png.png"
+                image:
+                    "./Images/robot.png.png"
             },
 
             {
                 name: "Cyber Bot",
                 rarity: "Rare",
                 pullRate: 10,
-                image: "./Images/Cyber-bot.png"
+                image:
+                    "./Images/Cyber-bot.png"
             },
 
             {
                 name: "Titan",
                 rarity: "Epic",
                 pullRate: 6,
-                image: "./Images/Titan.png"
+                image:
+                    "./Images/Titan.png"
             },
 
             {
                 name: "Mega Titan",
                 rarity: "Legendary",
                 pullRate: 6,
-                image: "./Images/Mega%20Titan.png"
+                image:
+                    "./Images/Mega%20Titan.png"
             }
 
         ]
 
     },
+
 
     // ========================================================
     // OG PACK
@@ -343,13 +455,16 @@ const packs = {
     "OG Pack": {
 
         name: "OG Pack",
+
         price: 50,
+
         image: null,
 
         rewards: [
 
             {
-                name: "@Totallynotatheatrekid",
+                name:
+                    "@Totallynotatheatrekid",
                 rarity: "OG",
                 pullRate: 8
             },
@@ -367,7 +482,8 @@ const packs = {
             },
 
             {
-                name: "@LeviPlaysAndEdits",
+                name:
+                    "@LeviPlaysAndEdits",
                 rarity: "OG",
                 pullRate: 5
             },
@@ -415,7 +531,8 @@ const packs = {
             },
 
             {
-                name: "@fortzgeometrydash",
+                name:
+                    "@fortzgeometrydash",
                 rarity: "OG",
                 pullRate: 4
             },
@@ -445,19 +562,22 @@ const packs = {
             },
 
             {
-                name: "@bradleyrauch4881",
+                name:
+                    "@bradleyrauch4881",
                 rarity: "OG",
                 pullRate: 3
             },
 
             {
-                name: "@SfsultamateGamer",
+                name:
+                    "@SfsultamateGamer",
                 rarity: "OG",
                 pullRate: 3
             },
 
             {
-                name: "@ALemonFoxranter",
+                name:
+                    "@ALemonFoxranter",
                 rarity: "OG",
                 pullRate: 3
             },
@@ -487,13 +607,15 @@ const packs = {
             },
 
             {
-                name: "@Cptbabyrabbit-n4x",
+                name:
+                    "@Cptbabyrabbit-n4x",
                 rarity: "OG",
                 pullRate: 1
             },
 
             {
-                name: "@Fat_frog_in_space",
+                name:
+                    "@Fat_frog_in_space",
                 rarity: "OG",
                 pullRate: 1
             },
@@ -505,7 +627,8 @@ const packs = {
             },
 
             {
-                name: "@Sheldon-cooper-explains",
+                name:
+                    "@Sheldon-cooper-explains",
                 rarity: "OG",
                 pullRate: 1
             },
@@ -520,107 +643,124 @@ const packs = {
 
     },
 
+
     // ========================================================
     // MEDIEVAL PACK
     // ========================================================
 
-"Medieval Pack": {
+    "Medieval Pack": {
 
-    name: "Medieval Pack",
-    price: 40,
-    image: "./Images/dragon.svg",
+        name: "Medieval Pack",
 
-    rewards: [
+        price: 40,
 
-        {
-            name: "Witch",
-            rarity: "Common",
-            pullRate: 8,
-            image: "./Images/witch.svg"
-        },
+        image:
+            "./Images/dragon.svg",
 
-        {
-            name: "Wizard",
-            rarity: "Common",
-            pullRate: 7,
-            image: "./Images/wizard.svg"
-        },
+        rewards: [
 
-        {
-            name: "Elf",
-            rarity: "Common",
-            pullRate: 6,
-            image: "./Images/elf.svg"
-        },
+            {
+                name: "Witch",
+                rarity: "Common",
+                pullRate: 8,
+                image:
+                    "./Images/witch.svg"
+            },
 
-        {
-            name: "Fairy",
-            rarity: "Common",
-            pullRate: 5,
-            image: "./Images/fairy.svg"
-        },
+            {
+                name: "Wizard",
+                rarity: "Common",
+                pullRate: 7,
+                image:
+                    "./Images/wizard.svg"
+            },
 
-        {
-            name: "Slime Monster",
-            rarity: "Common",
-            pullRate: 4,
-            image: "./Images/slimemonster.svg"
-        },
+            {
+                name: "Elf",
+                rarity: "Common",
+                pullRate: 6,
+                image:
+                    "./Images/elf.svg"
+            },
 
-        {
-            name: "Jester",
-            rarity: "Uncommon",
-            pullRate: 25,
-            image: "./Images/jester.svg"
-        },
+            {
+                name: "Fairy",
+                rarity: "Common",
+                pullRate: 5,
+                image:
+                    "./Images/fairy.svg"
+            },
 
-        {
-            name: "Unicorn",
-            rarity: "Rare",
-            pullRate: 15,
-            image: "./Images/unicorn.svg"
-        },
+            {
+                name: "Slime Monster",
+                rarity: "Common",
+                pullRate: 4,
+                image:
+                    "./Images/slimemonster.svg"
+            },
 
-        {
-            name: "Dragon",
-            rarity: "Epic",
-            pullRate: 10,
-            image: "./Images/dragon.svg"
-        },
+            {
+                name: "Jester",
+                rarity: "Uncommon",
+                pullRate: 25,
+                image:
+                    "./Images/jester.svg"
+            },
 
-        {
-            name: "Queen",
-            rarity: "Legendary",
-            pullRate: 10,
-            image: "./Images/queen.svg"
-        },
+            {
+                name: "Unicorn",
+                rarity: "Rare",
+                pullRate: 15,
+                image:
+                    "./Images/unicorn.svg"
+            },
 
-        {
-            name: "King",
-            rarity: "Legendary",
-            pullRate: 9.85,
-            image: "./Images/king.svg"
-        },
+            {
+                name: "Dragon",
+                rarity: "Epic",
+                pullRate: 10,
+                image:
+                    "./Images/dragon.svg"
+            },
 
-        {
-            name: "Phantom Queen",
-            rarity: "Chroma",
-            pullRate: 0.10,
-            image: "./Images/static-assets-upload7275842502952922222.webp"
-        },
+            {
+                name: "Queen",
+                rarity: "Legendary",
+                pullRate: 10,
+                image:
+                    "./Images/queen.svg"
+            },
 
-        {
-            name: "Phantom King",
-            rarity: "Chroma",
-            pullRate: 0.05,
-            image: "./Images/phathom%20king.webp"
-        }
+            {
+                name: "King",
+                rarity: "Legendary",
+                pullRate: 9.85,
+                image:
+                    "./Images/king.svg"
+            },
 
-    ]
+            {
+                name: "Phantom Queen",
+                rarity: "Chroma",
+                pullRate: 0.10,
+                image:
+                    "./Images/static-assets-upload7275842502952922222.webp"
+            },
 
-},
+            {
+                name: "Phantom King",
+                rarity: "Chroma",
+                pullRate: 0.05,
+                image:
+                    "./Images/phathom%20king.webp"
+            }
+
+        ]
+
+    }
 
 };
+
 
 // ============================================================
 // HIDDEN BLOCKS
@@ -646,6 +786,7 @@ const hiddenBlocks = [
 
 ];
 
+
 // ============================================================
 // NEWS / UPDATE LOGS
 // ============================================================
@@ -657,8 +798,10 @@ const newsItems = [
         version: "v2.0",
         title: "🏰 Medieval Pack",
         text:
-            "The Medieval Pack has arrived with 12 new Blocks.",
+            "The Medieval Pack has arrived!",
         details: [
+
+            "Added 12 Medieval Blocks.",
             "Added Witch.",
             "Added Wizard.",
             "Added Elf.",
@@ -680,15 +823,40 @@ const newsItems = [
         version: "v2.0",
         title: "📚 Endless Study",
         text:
-            "Study Mode has been upgraded so you can keep answering questions forever.",
+            "Study Mode is now endless.",
         details: [
-            "Added endless Study sessions.",
-            "Added more questions.",
-            "Questions reshuffle after completing the pool.",
+
+            "Added more Study questions.",
+            "Questions continue forever.",
+            "Questions reshuffle after the pool is completed.",
             "Added STOP STUDYING.",
             "Added session statistics.",
             "Correct answers give +2 Coins.",
-            "Added All Correct mode."
+            "Added All Correct mode.",
+            "All Correct makes every answer correct."
+        ]
+    },
+
+    {
+        date: "September 20, 2026",
+        version: "v2.0",
+        title: "🎨 Settings & Themes",
+        text:
+            "Settings has arrived with free Blocket themes.",
+        details: [
+
+            "Added SETTINGS.",
+            "Added Classic Purple.",
+            "Added Ruby Red.",
+            "Added Ocean Blue.",
+            "Added Forest Green.",
+            "Added Golden.",
+            "Added Midnight.",
+            "Added One Color Red.",
+            "Added One Color Blue.",
+            "Added One Color Green.",
+            "Added One Color Purple.",
+            "Logged-in users can save their selected theme."
         ]
     },
 
@@ -697,11 +865,12 @@ const newsItems = [
         version: "v1.9",
         title: "📦 Pack Opening Update",
         text:
-            "Pack opening now has a rarity progression animation.",
+            "Pack opening received a rarity progression animation.",
         details: [
+
             "Added black starting screen.",
             "Added rarity progression.",
-            "Improved reward reveal.",
+            "Improved final reveal.",
             "Improved Chroma ending.",
             "Improved OG ending."
         ]
@@ -712,8 +881,9 @@ const newsItems = [
         version: "v1.8",
         title: "🎨 Collection Update",
         text:
-            "The Blocks collection received several improvements.",
+            "The Blocks collection received equipment and selling.",
         details: [
+
             "Added Block equipment.",
             "Added Block selling.",
             "Added rarity badges.",
@@ -728,6 +898,7 @@ const newsItems = [
         text:
             "The Blocket web project begins.",
         details: [
+
             "Initial Blocket interface created.",
             "Market system introduced.",
             "Block collection introduced.",
@@ -738,11 +909,13 @@ const newsItems = [
 
 ];
 
+
 // ============================================================
 // STUDY QUESTIONS
 // ============================================================
 
 const soloQuestions = {
+
 
     // ========================================================
     // MATH
@@ -752,101 +925,204 @@ const soloQuestions = {
 
         {
             question: "What is 7 + 8?",
-            answers: ["13", "14", "15", "16"],
+            answers: [
+                "13",
+                "14",
+                "15",
+                "16"
+            ],
             correct: 2
         },
 
         {
             question: "What is 9 × 6?",
-            answers: ["42", "54", "56", "64"],
+            answers: [
+                "42",
+                "54",
+                "56",
+                "64"
+            ],
             correct: 1
         },
 
         {
             question: "What is 100 ÷ 4?",
-            answers: ["20", "25", "30", "40"],
+            answers: [
+                "20",
+                "25",
+                "30",
+                "40"
+            ],
             correct: 1
         },
 
         {
             question: "What is 12 - 7?",
-            answers: ["4", "5", "6", "7"],
+            answers: [
+                "4",
+                "5",
+                "6",
+                "7"
+            ],
             correct: 1
         },
 
         {
             question: "What is 6 × 7?",
-            answers: ["36", "42", "48", "49"],
+            answers: [
+                "36",
+                "42",
+                "48",
+                "49"
+            ],
             correct: 1
         },
 
         {
             question: "What is 45 + 27?",
-            answers: ["62", "72", "82", "92"],
+            answers: [
+                "62",
+                "72",
+                "82",
+                "92"
+            ],
             correct: 1
         },
 
         {
             question: "What is 81 ÷ 9?",
-            answers: ["7", "8", "9", "10"],
+            answers: [
+                "7",
+                "8",
+                "9",
+                "10"
+            ],
             correct: 2
         },
 
         {
             question: "What is 15 × 3?",
-            answers: ["30", "45", "50", "60"],
+            answers: [
+                "30",
+                "45",
+                "50",
+                "60"
+            ],
             correct: 1
         },
 
         {
             question: "What is 200 - 75?",
-            answers: ["115", "120", "125", "135"],
+            answers: [
+                "115",
+                "120",
+                "125",
+                "135"
+            ],
             correct: 2
         },
 
         {
             question: "What is half of 50?",
-            answers: ["20", "25", "30", "35"],
+            answers: [
+                "20",
+                "25",
+                "30",
+                "35"
+            ],
             correct: 1
         },
 
         {
             question: "What is 11 × 11?",
-            answers: ["111", "121", "131", "141"],
+            answers: [
+                "111",
+                "121",
+                "131",
+                "141"
+            ],
             correct: 1
         },
 
         {
             question: "What is 64 ÷ 8?",
-            answers: ["6", "7", "8", "9"],
+            answers: [
+                "6",
+                "7",
+                "8",
+                "9"
+            ],
             correct: 2
         },
 
         {
             question: "What is 14 + 19?",
-            answers: ["31", "32", "33", "34"],
+            answers: [
+                "31",
+                "32",
+                "33",
+                "34"
+            ],
             correct: 2
         },
 
         {
             question: "What is 72 ÷ 8?",
-            answers: ["7", "8", "9", "10"],
+            answers: [
+                "7",
+                "8",
+                "9",
+                "10"
+            ],
             correct: 2
         },
 
         {
             question: "What is 13 × 4?",
-            answers: ["42", "48", "52", "56"],
+            answers: [
+                "42",
+                "48",
+                "52",
+                "56"
+            ],
             correct: 2
         },
 
         {
             question: "What is 90 - 37?",
-            answers: ["43", "53", "63", "73"],
+            answers: [
+                "43",
+                "53",
+                "63",
+                "73"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "What is 25 + 25?",
+            answers: [
+                "40",
+                "45",
+                "50",
+                "55"
+            ],
+            correct: 2
+        },
+
+        {
+            question: "What is 7 × 8?",
+            answers: [
+                "54",
+                "56",
+                "58",
+                "64"
+            ],
             correct: 1
         }
 
     ],
+
 
     // ========================================================
     // ENGLISH
@@ -856,18 +1132,30 @@ const soloQuestions = {
 
         {
             question: "Which word is a noun?",
-            answers: ["Run", "Blue", "Dog", "Quickly"],
+            answers: [
+                "Run",
+                "Blue",
+                "Dog",
+                "Quickly"
+            ],
             correct: 2
         },
 
         {
-            question: "Which word means the opposite of 'hot'?",
-            answers: ["Warm", "Cold", "Fast", "Bright"],
+            question:
+                "Which word means the opposite of 'hot'?",
+            answers: [
+                "Warm",
+                "Cold",
+                "Fast",
+                "Bright"
+            ],
             correct: 1
         },
 
         {
-            question: "Which sentence ends with a question mark?",
+            question:
+                "Which sentence ends with a question mark?",
             answers: [
                 "I like pizza.",
                 "That was awesome!",
@@ -878,7 +1166,8 @@ const soloQuestions = {
         },
 
         {
-            question: "Which word is a verb?",
+            question:
+                "Which word is a verb?",
             answers: [
                 "Jump",
                 "Green",
@@ -889,7 +1178,8 @@ const soloQuestions = {
         },
 
         {
-            question: "Which word is spelled correctly?",
+            question:
+                "Which word is spelled correctly?",
             answers: [
                 "Beutiful",
                 "Beautiful",
@@ -900,7 +1190,8 @@ const soloQuestions = {
         },
 
         {
-            question: "Which word is an adjective?",
+            question:
+                "Which word is an adjective?",
             answers: [
                 "Quick",
                 "Run",
@@ -911,7 +1202,8 @@ const soloQuestions = {
         },
 
         {
-            question: "What is the plural of 'mouse'?",
+            question:
+                "What is the plural of 'mouse'?",
             answers: [
                 "Mouses",
                 "Mousees",
@@ -922,7 +1214,8 @@ const soloQuestions = {
         },
 
         {
-            question: "Which sentence uses an exclamation mark?",
+            question:
+                "Which sentence uses an exclamation mark?",
             answers: [
                 "Where are you?",
                 "I love this!",
@@ -933,7 +1226,8 @@ const soloQuestions = {
         },
 
         {
-            question: "Which word means the opposite of 'large'?",
+            question:
+                "Which word means the opposite of 'large'?",
             answers: [
                 "Huge",
                 "Tiny",
@@ -944,7 +1238,8 @@ const soloQuestions = {
         },
 
         {
-            question: "Which word is a pronoun?",
+            question:
+                "Which word is a pronoun?",
             answers: [
                 "Blue",
                 "Run",
@@ -955,7 +1250,8 @@ const soloQuestions = {
         },
 
         {
-            question: "Which word is a conjunction?",
+            question:
+                "Which word is a conjunction?",
             answers: [
                 "And",
                 "Quick",
@@ -966,7 +1262,8 @@ const soloQuestions = {
         },
 
         {
-            question: "Which is the correct spelling?",
+            question:
+                "Which is the correct spelling?",
             answers: [
                 "Because",
                 "Becouse",
@@ -974,9 +1271,34 @@ const soloQuestions = {
                 "Becoz"
             ],
             correct: 0
+        },
+
+        {
+            question:
+                "Which word is an adverb?",
+            answers: [
+                "Quickly",
+                "Blue",
+                "House",
+                "Dog"
+            ],
+            correct: 0
+        },
+
+        {
+            question:
+                "Which sentence is complete?",
+            answers: [
+                "Because the dog.",
+                "Running through.",
+                "The dog ran home.",
+                "After school."
+            ],
+            correct: 2
         }
 
     ],
+
 
     // ========================================================
     // HISTORY
@@ -1126,9 +1448,22 @@ const soloQuestions = {
                 "Mongol Empire"
             ],
             correct: 0
+        },
+
+        {
+            question:
+                "Which ancient people are associated with democracy in Athens?",
+            answers: [
+                "Greeks",
+                "Vikings",
+                "Mongols",
+                "Romans"
+            ],
+            correct: 0
         }
 
     ],
+
 
     // ========================================================
     // SCIENCE
@@ -1137,7 +1472,8 @@ const soloQuestions = {
     Science: [
 
         {
-            question: "What planet do we live on?",
+            question:
+                "What planet do we live on?",
             answers: [
                 "Mars",
                 "Venus",
@@ -1277,9 +1613,22 @@ const soloQuestions = {
                 "150°C"
             ],
             correct: 2
+        },
+
+        {
+            question:
+                "What gas do plants take in during photosynthesis?",
+            answers: [
+                "Oxygen",
+                "Carbon dioxide",
+                "Helium",
+                "Hydrogen"
+            ],
+            correct: 1
         }
 
     ],
+
 
     // ========================================================
     // FUN FACTS
@@ -1429,12 +1778,38 @@ const soloQuestions = {
                 "4"
             ],
             correct: 2
+        },
+
+        {
+            question:
+                "Which animal is known for changing its color?",
+            answers: [
+                "Chameleon",
+                "Horse",
+                "Elephant",
+                "Cow"
+            ],
+            correct: 0
+        },
+
+        {
+            question:
+                "Which animal is famous for black and white stripes?",
+            answers: [
+                "Zebra",
+                "Lion",
+                "Fox",
+                "Bear"
+            ],
+            correct: 0
         }
 
     ],
 
+
     // ========================================================
     // ALL CORRECT
+    // EVERY ANSWER IS CORRECT
     // ========================================================
 
     "All Correct": [
@@ -1447,8 +1822,7 @@ const soloQuestions = {
                 "2",
                 "3",
                 "4"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1459,8 +1833,7 @@ const soloQuestions = {
                 "Blue",
                 "Green",
                 "Purple"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1471,20 +1844,18 @@ const soloQuestions = {
                 "Cat",
                 "Horse",
                 "Fox"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
             question:
-                "Which of these are valid ways to make 4?",
+                "Which of these are ways to make 4?",
             answers: [
                 "2 + 2",
                 "1 + 3",
                 "4",
                 "8 ÷ 2"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1495,8 +1866,7 @@ const soloQuestions = {
                 "Mars",
                 "Venus",
                 "Jupiter"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1507,8 +1877,7 @@ const soloQuestions = {
                 "Apple",
                 "Bread",
                 "Carrot"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1519,8 +1888,7 @@ const soloQuestions = {
                 "Square",
                 "Triangle",
                 "Rectangle"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1531,8 +1899,7 @@ const soloQuestions = {
                 "Liquid Water",
                 "Water Vapor",
                 "Snow"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1543,8 +1910,7 @@ const soloQuestions = {
                 "Moon",
                 "Clouds",
                 "Stars"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1555,8 +1921,7 @@ const soloQuestions = {
                 "Science",
                 "History",
                 "English"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1567,8 +1932,7 @@ const soloQuestions = {
                 "Magazine",
                 "Comic",
                 "Newspaper"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1579,8 +1943,7 @@ const soloQuestions = {
                 "Knight",
                 "Crown",
                 "Sword"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1591,20 +1954,18 @@ const soloQuestions = {
                 "Snow",
                 "Thunder",
                 "Fog"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
             question:
-                "Which of these are colors of the rainbow?",
+                "Which of these are rainbow colors?",
             answers: [
                 "Red",
                 "Green",
                 "Blue",
                 "Yellow"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
@@ -1615,49 +1976,110 @@ const soloQuestions = {
                 "Tower",
                 "Gate",
                 "Crown"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
         },
 
         {
             question:
-                "Which of these are animals that can swim?",
+                "Which of these animals can swim?",
             answers: [
                 "Fish",
                 "Dolphin",
                 "Duck",
                 "Seal"
-            ],
-            correct: [0, 1, 2, 3]
+            ]
+        },
+
+        {
+            question:
+                "Which of these can be used to write?",
+            answers: [
+                "Pencil",
+                "Pen",
+                "Marker",
+                "Crayon"
+            ]
+        },
+
+        {
+            question:
+                "Which of these are shapes with four sides?",
+            answers: [
+                "Square",
+                "Rectangle",
+                "Diamond",
+                "Trapezoid"
+            ]
         }
 
     ]
 
 };
 
+
 // ============================================================
 // DOM HELPERS
 // ============================================================
 
 function $(id) {
+
     return document.getElementById(id);
+
 }
 
+
 function getMainContent() {
+
     return $("mainContent");
+
 }
+
 
 function escapeHTML(value) {
 
     return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
 }
 
-function showNotification(message) {
+
+function escapeJSString(value) {
+
+    return String(value)
+        .replaceAll(
+            "\\",
+            "\\\\"
+        )
+        .replaceAll(
+            "'",
+            "\\'"
+        );
+
+}
+
+
+function showNotification(
+    message
+) {
 
     let notification =
         $("blocketNotification");
@@ -1665,7 +2087,9 @@ function showNotification(message) {
     if (!notification) {
 
         notification =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         notification.id =
             "blocketNotification";
@@ -1676,6 +2100,7 @@ function showNotification(message) {
         document.body.appendChild(
             notification
         );
+
     }
 
     notification.textContent =
@@ -1700,7 +2125,9 @@ function showNotification(message) {
             },
             2200
         );
+
 }
+
 
 // ============================================================
 // START SCREEN
@@ -1715,33 +2142,49 @@ function startBlocket() {
         $("app");
 
     if (startScreen) {
+
         startScreen.style.display =
             "none";
+
     }
 
     if (app) {
+
         app.style.display =
             "flex";
+
     }
 
     updatePlayerInfo();
 
-    openTab("market");
+    openTab(
+        "market"
+    );
+
 }
+
 
 function playAsGuest() {
 
     currentUser = null;
+
     isGuest = true;
 
-    loadGame();
+    currentTheme =
+        "classic";
+
+    removeAllThemeClasses();
+
+    resetGuestState();
 
     startBlocket();
 
     showNotification(
         "Playing as Guest — progress won't be saved."
     );
+
 }
+
 
 async function initializeBlocket() {
 
@@ -1752,16 +2195,25 @@ async function initializeBlocket() {
         $("app");
 
     if (app) {
+
         app.style.display =
             "none";
+
     }
 
     if (startScreen) {
+
         startScreen.style.display =
             "flex";
+
     }
 
     if (!supabaseClient) {
+
+        console.warn(
+            "Supabase library did not load."
+        );
+
         return;
     }
 
@@ -1774,17 +2226,23 @@ async function initializeBlocket() {
         } =
             await supabaseClient.auth.getSession();
 
-        if (session?.user) {
+        if (
+            session &&
+            session.user
+        ) {
 
             currentUser =
                 session.user;
 
-            isGuest = false;
+            isGuest =
+                false;
 
             loadGame();
+
             loadTheme();
 
             startBlocket();
+
         }
 
     } catch (error) {
@@ -1797,24 +2255,33 @@ async function initializeBlocket() {
     }
 
     supabaseClient.auth.onAuthStateChange(
-        (_event, session) => {
+        (
+            _event,
+            session
+        ) => {
 
             currentUser =
-                session?.user ?? null;
-
-            isGuest = false;
+                session?.user ??
+                null;
 
             if (currentUser) {
 
+                isGuest =
+                    false;
+
                 loadGame();
+
                 loadTheme();
+
                 updatePlayerInfo();
 
             }
 
         }
     );
+
 }
+
 
 // ============================================================
 // PLAYER INFO
@@ -1843,60 +2310,105 @@ function updatePlayerInfo() {
             isGuest
                 ? "GUEST"
                 : "ACCOUNT";
+
     }
+
 }
 
+
 // ============================================================
-// TABS
+// NAVIGATION
 // ============================================================
 
 function openTab(tab) {
 
-    currentTab = tab;
+    currentTab =
+        tab;
 
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+
+        return;
+    }
 
     document
         .querySelectorAll(
             ".menu-item"
         )
-        .forEach(item => {
+        .forEach(
+            item => {
 
-            item.classList.remove(
-                "active"
-            );
+                item.classList.remove(
+                    "active"
+                );
 
-        });
+            }
+        );
 
-    document
-        .querySelector(
+    const activeItem =
+        document.querySelector(
             `[data-tab="${tab}"]`
-        )
-        ?.classList.add(
+        );
+
+    if (activeItem) {
+
+        activeItem.classList.add(
             "active"
         );
 
-    if (tab === "market") {
+    }
+
+    if (
+        tab ===
+        "market"
+    ) {
+
         renderMarket();
+
     }
 
-    if (tab === "blocks") {
+    if (
+        tab ===
+        "blocks"
+    ) {
+
         renderBlocks();
+
     }
 
-    if (tab === "news") {
+    if (
+        tab ===
+        "news"
+    ) {
+
         renderNews();
+
     }
 
-    if (tab === "solo") {
+    if (
+        tab ===
+        "solo"
+    ) {
+
         renderSolo();
+
+    }
+
+    if (
+        tab ===
+        "settings"
+    ) {
+
+        renderSettings();
+
     }
 
     updatePlayerInfo();
+
 }
+
 
 // ============================================================
 // MARKET
@@ -1907,7 +2419,9 @@ function renderMarket() {
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+        return;
+    }
 
     let html = `
 
@@ -1915,17 +2429,19 @@ function renderMarket() {
 
             <div>
 
-                <h1>MARKET</h1>
+                <h1>
+                    MARKET
+                </h1>
 
                 <p>
-                    Buy packs and discover
-                    new Blocks.
+                    Buy packs and discover new Blocks.
                 </p>
 
             </div>
 
             <div class="market-coins">
-                ${gameState.coins} Coins
+                ${gameState.coins}
+                Coins
             </div>
 
         </div>
@@ -1934,7 +2450,9 @@ function renderMarket() {
 
     `;
 
-    Object.values(packs).forEach(
+    Object.values(
+        packs
+    ).forEach(
         pack => {
 
             const imageHTML =
@@ -1955,10 +2473,10 @@ function renderMarket() {
                         </div>
                     `;
 
-            const safePackName =
-                pack.name
-                    .replaceAll("\\", "\\\\")
-                    .replaceAll("'", "\\'");
+            const safeName =
+                escapeJSString(
+                    pack.name
+                );
 
             html += `
 
@@ -1981,14 +2499,17 @@ function renderMarket() {
 
                     <button
                         class="primary-button"
-                        onclick="buyPack('${safePackName}')"
+                        onclick="buyPack('${safeName}')"
+                        type="button"
                     >
-                        ${pack.price} COINS
+                        ${pack.price}
+                        COINS
                     </button>
 
                     <button
                         class="secondary-button"
-                        onclick="showPackContents('${safePackName}')"
+                        onclick="showPackContents('${safeName}')"
+                        type="button"
                     >
                         VIEW CONTENTS
                     </button>
@@ -1996,6 +2517,7 @@ function renderMarket() {
                 </div>
 
             `;
+
         }
     );
 
@@ -2005,7 +2527,9 @@ function renderMarket() {
 
     content.innerHTML =
         html;
+
 }
+
 
 function buyPack(packName) {
 
@@ -2040,43 +2564,58 @@ function buyPack(packName) {
         packName;
 
     const reward =
-        getRandomReward(pack);
+        getRandomReward(
+            pack
+        );
+
+    saveGame();
+
+    updatePlayerInfo();
 
     animateOpening(
         pack,
         reward
     );
 
-    saveGame();
-    updatePlayerInfo();
 }
 
-function getRandomReward(pack) {
+
+function getRandomReward(
+    pack
+) {
 
     const roll =
-        Math.random() * 100;
+        Math.random() *
+        100;
 
-    let cumulative = 0;
+    let cumulative =
+        0;
 
     for (
-        const reward of pack.rewards
+        const reward
+        of pack.rewards
     ) {
 
         cumulative +=
             reward.pullRate;
 
         if (
-            roll <= cumulative
+            roll <=
+            cumulative
         ) {
 
             return reward;
+
         }
+
     }
 
     return pack.rewards[
         pack.rewards.length - 1
     ];
+
 }
+
 
 // ============================================================
 // PACK CONTENTS
@@ -2089,12 +2628,16 @@ function showPackContents(
     const pack =
         packs[packName];
 
-    if (!pack) return;
+    if (!pack) {
+        return;
+    }
 
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+        return;
+    }
 
     let rows = "";
 
@@ -2114,7 +2657,9 @@ function showPackContents(
                     `
 
                     : `
-                        <div class="mini-block-placeholder"></div>
+                        <div
+                            class="mini-block-placeholder"
+                        ></div>
                     `;
 
             rows += `
@@ -2147,6 +2692,7 @@ function showPackContents(
                 </div>
 
             `;
+
         }
     );
 
@@ -2171,6 +2717,7 @@ function showPackContents(
             <button
                 class="secondary-button"
                 onclick="openTab('market')"
+                type="button"
             >
                 BACK
             </button>
@@ -2182,10 +2729,12 @@ function showPackContents(
         </div>
 
     `;
+
 }
 
+
 // ============================================================
-// OPENING ANIMATION
+// PACK OPENING
 // ============================================================
 
 function animateOpening(
@@ -2193,14 +2742,23 @@ function animateOpening(
     targetReward
 ) {
 
-    const overlay =
-        document.createElement("div");
+    const oldOverlay =
+        $("openingOverlay");
 
-    overlay.className =
-        "opening-overlay";
+    if (oldOverlay) {
+        oldOverlay.remove();
+    }
+
+    const overlay =
+        document.createElement(
+            "div"
+        );
 
     overlay.id =
         "openingOverlay";
+
+    overlay.className =
+        "opening-overlay opening-black";
 
     document.body.appendChild(
         overlay
@@ -2210,37 +2768,44 @@ function animateOpening(
 
         {
             rarity: "Common",
-            className: "opening-common"
+            className:
+                "opening-common"
         },
 
         {
             rarity: "Uncommon",
-            className: "opening-uncommon"
+            className:
+                "opening-uncommon"
         },
 
         {
             rarity: "Rare",
-            className: "opening-rare"
+            className:
+                "opening-rare"
         },
 
         {
             rarity: "Epic",
-            className: "opening-epic"
+            className:
+                "opening-epic"
         },
 
         {
             rarity: "Legendary",
-            className: "opening-legendary"
+            className:
+                "opening-legendary"
         },
 
         {
             rarity: "Chroma",
-            className: "opening-chroma"
+            className:
+                "opening-chroma"
         },
 
         {
             rarity: "Mythical",
-            className: "opening-mythical"
+            className:
+                "opening-mythical"
         }
 
     ];
@@ -2273,21 +2838,35 @@ function animateOpening(
     const blockElement =
         $("openingBlock");
 
-    const targetIndex =
-        targetReward.rarity === "OG"
+    let targetIndex =
+        stages.findIndex(
+            stage =>
+                stage.rarity ===
+                targetReward.rarity
+        );
 
-            ? stages.length - 1
+    // OG uses the Mythical stage, then gets
+    // its own final reveal.
+    if (
+        targetReward.rarity ===
+        "OG"
+    ) {
 
-            : Math.max(
-                0,
-                stages.findIndex(
-                    stage =>
-                        stage.rarity ===
-                        targetReward.rarity
-                )
-            );
+        targetIndex =
+            stages.length - 1;
 
-    let stageIndex = -1;
+    }
+
+    if (
+        targetIndex < 0
+    ) {
+
+        targetIndex = 0;
+
+    }
+
+    let stageIndex =
+        -1;
 
     function nextStage() {
 
@@ -2316,6 +2895,7 @@ function animateOpening(
             nextStage,
             420
         );
+
     }
 
     function finishOpening() {
@@ -2323,7 +2903,9 @@ function animateOpening(
         overlay.className =
             "opening-overlay opening-final";
 
-        if (targetReward.image) {
+        if (
+            targetReward.image
+        ) {
 
             blockElement.innerHTML = `
 
@@ -2342,12 +2924,23 @@ function animateOpening(
                 getRewardVisual(
                     targetReward
                 );
+
         }
 
-        rarityElement.textContent =
-            targetReward.rarity === "OG"
-                ? "OG!"
-                : targetReward.rarity;
+        if (
+            targetReward.rarity ===
+            "OG"
+        ) {
+
+            rarityElement.textContent =
+                "OG!";
+
+        } else {
+
+            rarityElement.textContent =
+                targetReward.rarity;
+
+        }
 
         setTimeout(
             () => {
@@ -2367,16 +2960,16 @@ function animateOpening(
             },
             1800
         );
-    }
 
-    overlay.className =
-        "opening-overlay opening-black";
+    }
 
     setTimeout(
         nextStage,
         500
     );
+
 }
+
 
 function getRewardVisual(
     reward
@@ -2400,7 +2993,9 @@ function getRewardVisual(
         symbols[reward.name] ||
         "⬛"
     );
+
 }
+
 
 // ============================================================
 // INVENTORY
@@ -2412,22 +3007,34 @@ function addRewardToInventory(
 
     gameState.inventory.push({
 
-        name: reward.name,
-        rarity: reward.rarity,
-        image: reward.image ?? null,
-        obtained: Date.now()
+        name:
+            reward.name,
+
+        rarity:
+            reward.rarity,
+
+        image:
+            reward.image ??
+            null,
+
+        obtained:
+            Date.now()
 
     });
 
     saveGame();
+
 }
+
 
 function renderBlocks() {
 
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+        return;
+    }
 
     let html = `
 
@@ -2435,7 +3042,9 @@ function renderBlocks() {
 
             <div>
 
-                <h1>BLOCKS</h1>
+                <h1>
+                    BLOCKS
+                </h1>
 
                 <p>
                     Your collection of Blocks.
@@ -2477,6 +3086,7 @@ function renderBlocks() {
                 <button
                     class="primary-button"
                     onclick="openTab('market')"
+                    type="button"
                 >
                     GO TO MARKET
                 </button>
@@ -2512,7 +3122,9 @@ function renderBlocks() {
 
                     : `
                         <div class="block-placeholder">
-                            ${getRewardVisual(block)}
+                            ${getRewardVisual(
+                                block
+                            )}
                         </div>
                     `;
 
@@ -2532,9 +3144,7 @@ function renderBlocks() {
                     "
                 >
 
-                    <div
-                        class="block-card-image"
-                    >
+                    <div class="block-card-image">
                         ${imageHTML}
                     </div>
 
@@ -2556,6 +3166,7 @@ function renderBlocks() {
                     <button
                         class="primary-button"
                         onclick="equipBlock(${index})"
+                        type="button"
                     >
                         ${
                             equipped
@@ -2567,6 +3178,7 @@ function renderBlocks() {
                     <button
                         class="sell-button"
                         onclick="sellBlock(${index})"
+                        type="button"
                     >
                         SELL FOR
                         ${getSellValue(
@@ -2578,6 +3190,7 @@ function renderBlocks() {
                 </div>
 
             `;
+
         }
     );
 
@@ -2587,14 +3200,22 @@ function renderBlocks() {
 
     content.innerHTML =
         html;
+
 }
 
-function equipBlock(index) {
+
+function equipBlock(
+    index
+) {
 
     const block =
-        gameState.inventory[index];
+        gameState.inventory[
+            index
+        ];
 
-    if (!block) return;
+    if (!block) {
+        return;
+    }
 
     gameState.equipped =
         block;
@@ -2608,22 +3229,36 @@ function equipBlock(index) {
     showNotification(
         `${block.name} equipped!`
     );
+
 }
 
-function getSellValue(rarity) {
+
+function getSellValue(
+    rarity
+) {
 
     return (
-        rarityValues[rarity] ??
+        rarityValues[
+            rarity
+        ] ??
         0
     );
+
 }
 
-function sellBlock(index) {
+
+function sellBlock(
+    index
+) {
 
     const block =
-        gameState.inventory[index];
+        gameState.inventory[
+            index
+        ];
 
-    if (!block) return;
+    if (!block) {
+        return;
+    }
 
     const value =
         getSellValue(
@@ -2646,6 +3281,7 @@ function sellBlock(index) {
 
         gameState.equipped =
             null;
+
     }
 
     saveGame();
@@ -2657,32 +3293,45 @@ function sellBlock(index) {
     showNotification(
         `Sold ${block.name} for ${value} coins.`
     );
+
 }
+
 
 // ============================================================
 // HIDDEN BLOCKS
 // ============================================================
 
-function getHiddenBlock(name) {
+function getHiddenBlock(
+    name
+) {
 
     return hiddenBlocks.find(
         block =>
-            block.name === name
+            block.name ===
+            name
     );
+
 }
 
-function discoverHiddenBlock(name) {
+
+function discoverHiddenBlock(
+    name
+) {
 
     const hidden =
-        getHiddenBlock(name);
+        getHiddenBlock(
+            name
+        );
 
-    if (!hidden) return;
+    if (!hidden) {
+        return;
+    }
 
     const alreadyHave =
         gameState.inventory.some(
             block =>
                 block.name ===
-                    hidden.name
+                hidden.name
         );
 
     if (alreadyHave) {
@@ -2696,10 +3345,17 @@ function discoverHiddenBlock(name) {
 
     gameState.inventory.push({
 
-        name: hidden.name,
-        rarity: hidden.rarity,
-        image: hidden.image,
-        obtained: Date.now()
+        name:
+            hidden.name,
+
+        rarity:
+            hidden.rarity,
+
+        image:
+            hidden.image,
+
+        obtained:
+            Date.now()
 
     });
 
@@ -2717,7 +3373,9 @@ function discoverHiddenBlock(name) {
         renderBlocks();
 
     }
+
 }
+
 
 // ============================================================
 // NEWS
@@ -2728,7 +3386,9 @@ function renderNews() {
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+        return;
+    }
 
     let html = `
 
@@ -2736,7 +3396,9 @@ function renderNews() {
 
             <div>
 
-                <h1>NEWS</h1>
+                <h1>
+                    NEWS
+                </h1>
 
                 <p>
                     Update logs, new features,
@@ -2752,7 +3414,10 @@ function renderNews() {
     `;
 
     newsItems.forEach(
-        (item, index) => {
+        (
+            item,
+            index
+        ) => {
 
             html += `
 
@@ -2792,6 +3457,7 @@ function renderNews() {
                             news-details-button
                         "
                         onclick="showUpdateDetails(${index})"
+                        type="button"
                     >
                         MORE INFO
                     </button>
@@ -2799,6 +3465,7 @@ function renderNews() {
                 </div>
 
             `;
+
         }
     );
 
@@ -2808,21 +3475,29 @@ function renderNews() {
 
     content.innerHTML =
         html;
+
 }
+
 
 function showUpdateDetails(
     index
 ) {
 
     const item =
-        newsItems[index];
+        newsItems[
+            index
+        ];
 
-    if (!item) return;
+    if (!item) {
+        return;
+    }
 
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+        return;
+    }
 
     const detailsHTML =
         item.details
@@ -2871,6 +3546,7 @@ function showUpdateDetails(
             <button
                 class="secondary-button"
                 onclick="renderNews()"
+                type="button"
             >
                 BACK
             </button>
@@ -2896,7 +3572,9 @@ function showUpdateDetails(
         </div>
 
     `;
+
 }
+
 
 // ============================================================
 // SOLO
@@ -2904,16 +3582,24 @@ function showUpdateDetails(
 
 function renderSolo() {
 
-    soloSession.active = false;
+    soloSession.active =
+        false;
 
-    currentQuestion = null;
-    currentQuestionPool = [];
-    previousQuestion = null;
+    currentQuestion =
+        null;
+
+    currentQuestionPool =
+        [];
+
+    previousQuestion =
+        null;
 
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+        return;
+    }
 
     const subjects =
         Object.keys(
@@ -2926,15 +3612,9 @@ function renderSolo() {
         subject => {
 
             const safeSubject =
-                subject
-                    .replaceAll(
-                        "\\",
-                        "\\\\"
-                    )
-                    .replaceAll(
-                        "'",
-                        "\\'"
-                    );
+                escapeJSString(
+                    subject
+                );
 
             let description = "";
 
@@ -2958,6 +3638,7 @@ function renderSolo() {
                 <button
                     class="subject-button"
                     onclick="startSolo('${safeSubject}')"
+                    type="button"
                 >
 
                     <strong>
@@ -2975,6 +3656,7 @@ function renderSolo() {
                 </button>
 
             `;
+
         }
     );
 
@@ -2984,7 +3666,9 @@ function renderSolo() {
 
             <div>
 
-                <h1>SOLO</h1>
+                <h1>
+                    SOLO
+                </h1>
 
                 <p>
                     Study for as long as you want.
@@ -3011,13 +3695,14 @@ function renderSolo() {
             </p>
 
             <p>
-                Every normal correct answer gives
-                <strong>+2 Coins</strong>.
+                Normal subjects give
+                <strong>+2 Coins</strong>
+                for each correct answer.
             </p>
 
             <p>
-                <strong>All Correct</strong> is different:
-                every answer is correct.
+                <strong>All Correct</strong> is special:
+                every single answer is correct.
             </p>
 
             <p>
@@ -3028,16 +3713,22 @@ function renderSolo() {
         </div>
 
     `;
+
 }
+
 
 // ============================================================
 // START STUDY
 // ============================================================
 
-function startSolo(subject) {
+function startSolo(
+    subject
+) {
 
     if (
-        !soloQuestions[subject]
+        !soloQuestions[
+            subject
+        ]
     ) {
 
         showNotification(
@@ -3051,13 +3742,18 @@ function startSolo(subject) {
         subject;
 
     currentQuestionPool =
-        [...soloQuestions[subject]];
+        [
+            ...soloQuestions[
+                subject
+            ]
+        ];
 
     shuffleArray(
         currentQuestionPool
     );
 
-    previousQuestion = null;
+    previousQuestion =
+        null;
 
     soloSession = {
 
@@ -3072,7 +3768,9 @@ function startSolo(subject) {
     };
 
     nextSoloQuestion();
+
 }
+
 
 // ============================================================
 // NEXT QUESTION
@@ -3092,24 +3790,26 @@ function nextSoloQuestion() {
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+        return;
+    }
 
-    // Refill forever
     if (
         currentQuestionPool.length ===
         0
     ) {
 
         currentQuestionPool =
-            [...soloQuestions[
-                currentSoloSubject
-            ]];
+            [
+                ...soloQuestions[
+                    currentSoloSubject
+                ]
+            ];
 
         shuffleArray(
             currentQuestionPool
         );
 
-        // Avoid immediate duplicate
         if (
             previousQuestion &&
             currentQuestionPool.length >
@@ -3125,7 +3825,9 @@ function nextSoloQuestion() {
                 currentQuestionPool[1],
                 currentQuestionPool[0]
             ];
+
         }
+
     }
 
     currentQuestion =
@@ -3143,10 +3845,14 @@ function nextSoloQuestion() {
 
     ];
 
-    let answerButtons = "";
+    let answerButtons =
+        "";
 
     currentQuestion.answers.forEach(
-        (answer, index) => {
+        (
+            answer,
+            index
+        ) => {
 
             answerButtons += `
 
@@ -3156,6 +3862,7 @@ function nextSoloQuestion() {
                         ${answerColors[index]}
                     "
                     onclick="submitSoloAnswer(${index})"
+                    type="button"
                 >
                     ${escapeHTML(
                         answer
@@ -3163,6 +3870,7 @@ function nextSoloQuestion() {
                 </button>
 
             `;
+
         }
     );
 
@@ -3177,6 +3885,7 @@ function nextSoloQuestion() {
             <button
                 class="secondary-button"
                 onclick="stopSolo()"
+                type="button"
             >
                 STOP STUDYING
             </button>
@@ -3250,10 +3959,12 @@ function nextSoloQuestion() {
         </div>
 
     `;
+
 }
 
+
 // ============================================================
-// SUBMIT ANSWER
+// ANSWER
 // ============================================================
 
 function submitSoloAnswer(
@@ -3272,31 +3983,28 @@ function submitSoloAnswer(
 
     gameState.questionsAnswered++;
 
-    let isCorrect = false;
+    let isCorrect =
+        false;
 
-    // ========================================================
-    // ALL CORRECT
-    // EVERY SINGLE BUTTON IS CORRECT
-    // ========================================================
-
+    // ALL CORRECT:
+    // every answer is correct
     if (
         currentSoloSubject ===
         "All Correct"
     ) {
 
-        isCorrect = true;
+        isCorrect =
+            true;
 
     } else {
 
         isCorrect =
             Number(answerIndex) ===
-            Number(currentQuestion.correct);
+            Number(
+                currentQuestion.correct
+            );
 
     }
-
-    // ========================================================
-    // REWARD
-    // ========================================================
 
     if (isCorrect) {
 
@@ -3316,7 +4024,7 @@ function submitSoloAnswer(
         ) {
 
             showNotification(
-                "+2 COINS! ✅ EVERY ANSWER IS CORRECT!"
+                "+2 COINS! ✅"
             );
 
         } else {
@@ -3336,11 +4044,8 @@ function submitSoloAnswer(
     }
 
     saveGame();
-    updatePlayerInfo();
 
-    // ========================================================
-    // KEEP GOING
-    // ========================================================
+    updatePlayerInfo();
 
     setTimeout(
         () => {
@@ -3359,7 +4064,9 @@ function submitSoloAnswer(
             ? 180
             : 550
     );
+
 }
+
 
 // ============================================================
 // STOP STUDY
@@ -3403,7 +4110,14 @@ function stopSolo() {
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+        return;
+    }
+
+    const safeSubject =
+        escapeJSString(
+            subject
+        );
 
     content.innerHTML = `
 
@@ -3466,12 +4180,8 @@ function stopSolo() {
 
                 <button
                     class="primary-button"
-                    onclick="startSolo('${escapeHTML(
-                        subject
-                    ).replaceAll(
-                        "'",
-                        "\\'"
-                    )}')"
+                    onclick="startSolo('${safeSubject}')"
+                    type="button"
                 >
                     STUDY AGAIN
                 </button>
@@ -3479,6 +4189,7 @@ function stopSolo() {
                 <button
                     class="secondary-button"
                     onclick="renderSolo()"
+                    type="button"
                 >
                     CHOOSE SUBJECT
                 </button>
@@ -3490,17 +4201,23 @@ function stopSolo() {
     `;
 
     saveGame();
+
     updatePlayerInfo();
+
 }
+
 
 // ============================================================
 // SHUFFLE
 // ============================================================
 
-function shuffleArray(array) {
+function shuffleArray(
+    array
+) {
 
     for (
-        let i = array.length - 1;
+        let i =
+            array.length - 1;
         i > 0;
         i--
     ) {
@@ -3518,10 +4235,507 @@ function shuffleArray(array) {
             array[j],
             array[i]
         ];
+
     }
 
     return array;
+
 }
+
+
+// ============================================================
+// SETTINGS / THEMES
+// ============================================================
+
+const blocketThemes = {
+
+    classic: {
+
+        name:
+            "Classic Purple",
+
+        description:
+            "The original Blocket look.",
+
+        className:
+            ""
+
+    },
+
+    ruby: {
+
+        name:
+            "Ruby Red",
+
+        description:
+            "A strong red theme.",
+
+        className:
+            "theme-ruby"
+
+    },
+
+    ocean: {
+
+        name:
+            "Ocean Blue",
+
+        description:
+            "A cool blue theme.",
+
+        className:
+            "theme-ocean"
+
+    },
+
+    forest: {
+
+        name:
+            "Forest Green",
+
+        description:
+            "A natural green theme.",
+
+        className:
+            "theme-forest"
+
+    },
+
+    golden: {
+
+        name:
+            "Golden",
+
+        description:
+            "A bright golden theme.",
+
+        className:
+            "theme-golden"
+
+    },
+
+    midnight: {
+
+        name:
+            "Midnight",
+
+        description:
+            "A darker Blocket theme.",
+
+        className:
+            "theme-midnight"
+
+    },
+
+    oneRed: {
+
+        name:
+            "One Color Red",
+
+        description:
+            "A red-focused theme.",
+
+        className:
+            "theme-one-red"
+
+    },
+
+    oneBlue: {
+
+        name:
+            "One Color Blue",
+
+        description:
+            "A blue-focused theme.",
+
+        className:
+            "theme-one-blue"
+
+    },
+
+    oneGreen: {
+
+        name:
+            "One Color Green",
+
+        description:
+            "A green-focused theme.",
+
+        className:
+            "theme-one-green"
+
+    },
+
+    onePurple: {
+
+        name:
+            "One Color Purple",
+
+        description:
+            "A purple-focused theme.",
+
+        className:
+            "theme-one-purple"
+
+    }
+
+};
+
+
+function removeAllThemeClasses() {
+
+    Object.values(
+        blocketThemes
+    ).forEach(
+        theme => {
+
+            if (
+                theme.className
+            ) {
+
+                document.body.classList.remove(
+                    theme.className
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+function renderSettings() {
+
+    const content =
+        getMainContent();
+
+    if (!content) {
+        return;
+    }
+
+    let html = `
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    SETTINGS
+                </h1>
+
+                <p>
+                    Change your Blocket theme.
+                    Every theme is free.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="settings-section">
+
+            <div class="settings-section-header">
+
+                <h2>
+                    🎨 FREE THEMES
+                </h2>
+
+                <span>
+                    ${
+                        Object.keys(
+                            blocketThemes
+                        ).length
+                    }
+                    available
+                </span>
+
+            </div>
+
+            <div class="theme-grid">
+
+    `;
+
+    Object.entries(
+        blocketThemes
+    ).forEach(
+        (
+            [
+                id,
+                theme
+            ]
+        ) => {
+
+            const selected =
+                currentTheme === id
+                    ? "selected"
+                    : "";
+
+            html += `
+
+                <button
+                    class="
+                        theme-card
+                        ${selected}
+                    "
+                    onclick="setTheme('${id}')"
+                    type="button"
+                >
+
+                    <div class="theme-preview">
+
+                        <div
+                            class="
+                                theme-preview-top
+                                ${theme.className}
+                            "
+                        ></div>
+
+                        <div
+                            class="
+                                theme-preview-body
+                                ${theme.className}
+                            "
+                        >
+
+                            <div class="theme-preview-box"></div>
+
+                            <div class="theme-preview-box"></div>
+
+                            <div class="theme-preview-box"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="theme-card-info">
+
+                        <strong>
+                            ${escapeHTML(
+                                theme.name
+                            )}
+                        </strong>
+
+                        <span>
+                            ${escapeHTML(
+                                theme.description
+                            )}
+                        </span>
+
+                    </div>
+
+                    ${
+                        selected
+
+                            ? `
+                                <div class="theme-selected">
+                                    ✓ SELECTED
+                                </div>
+                            `
+
+                            : `
+                                <div class="theme-free">
+                                    FREE
+                                </div>
+                            `
+                    }
+
+                </button>
+
+            `;
+
+        }
+    );
+
+    html += `
+
+            </div>
+
+        </div>
+
+        <div class="settings-info">
+
+            <h2>
+                ⚙️ YOUR SETTINGS
+            </h2>
+
+            <p>
+                Current theme:
+                <strong>
+                    ${escapeHTML(
+                        blocketThemes[
+                            currentTheme
+                        ].name
+                    )}
+                </strong>
+            </p>
+
+            ${
+                isGuest
+
+                    ? `
+                        <p>
+                            You're playing as a guest,
+                            so your theme resets when
+                            you leave.
+                        </p>
+                    `
+
+                    : `
+                        <p>
+                            Your selected theme is saved
+                            to your account.
+                        </p>
+                    `
+            }
+
+        </div>
+
+    `;
+
+    content.innerHTML =
+        html;
+
+}
+
+
+function setTheme(
+    themeId
+) {
+
+    const theme =
+        blocketThemes[
+            themeId
+        ];
+
+    if (!theme) {
+        return;
+    }
+
+    currentTheme =
+        themeId;
+
+    removeAllThemeClasses();
+
+    if (
+        theme.className
+    ) {
+
+        document.body.classList.add(
+            theme.className
+        );
+
+    }
+
+    // Guests don't save themes
+    if (
+        currentUser &&
+        !isGuest
+    ) {
+
+        try {
+
+            localStorage.setItem(
+                `blocket_theme_${currentUser.id}`,
+                themeId
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Could not save theme:",
+                error
+            );
+
+        }
+
+    }
+
+    showNotification(
+        `${theme.name} selected!`
+    );
+
+    if (
+        currentTab ===
+        "settings"
+    ) {
+
+        renderSettings();
+
+    }
+
+}
+
+
+function loadTheme() {
+
+    removeAllThemeClasses();
+
+    if (
+        !currentUser ||
+        isGuest
+    ) {
+
+        currentTheme =
+            "classic";
+
+        return;
+    }
+
+    try {
+
+        const savedTheme =
+            localStorage.getItem(
+                `blocket_theme_${currentUser.id}`
+            );
+
+        if (
+            savedTheme &&
+            blocketThemes[
+                savedTheme
+            ]
+        ) {
+
+            currentTheme =
+                savedTheme;
+
+        } else {
+
+            currentTheme =
+                "classic";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Could not load theme:",
+            error
+        );
+
+        currentTheme =
+            "classic";
+
+    }
+
+    const theme =
+        blocketThemes[
+            currentTheme
+        ];
+
+    if (
+        theme &&
+        theme.className
+    ) {
+
+        document.body.classList.add(
+            theme.className
+        );
+
+    }
+
+}
+
 
 // ============================================================
 // ACCOUNT
@@ -3532,7 +4746,9 @@ function openAccount() {
     const overlay =
         $("accountOverlay");
 
-    if (!overlay) return;
+    if (!overlay) {
+        return;
+    }
 
     overlay.classList.add(
         "show"
@@ -3551,26 +4767,34 @@ function openAccount() {
         renderAccountMenu();
 
     }
+
 }
+
 
 function closeAccount() {
 
     const overlay =
         $("accountOverlay");
 
-    if (!overlay) return;
+    if (!overlay) {
+        return;
+    }
 
     overlay.classList.remove(
         "show"
     );
+
 }
+
 
 function renderAccountMenu() {
 
     const accountContent =
         $("accountContent");
 
-    if (!accountContent) return;
+    if (!accountContent) {
+        return;
+    }
 
     accountContent.innerHTML = `
 
@@ -3595,14 +4819,18 @@ function renderAccountMenu() {
         </button>
 
     `;
+
 }
+
 
 function renderGuestAccount() {
 
     const accountContent =
         $("accountContent");
 
-    if (!accountContent) return;
+    if (!accountContent) {
+        return;
+    }
 
     accountContent.innerHTML = `
 
@@ -3632,14 +4860,18 @@ function renderGuestAccount() {
         </button>
 
     `;
+
 }
+
 
 function renderLoggedInAccount() {
 
     const accountContent =
         $("accountContent");
 
-    if (!accountContent) return;
+    if (!accountContent) {
+        return;
+    }
 
     const email =
         currentUser?.email ||
@@ -3652,7 +4884,9 @@ function renderLoggedInAccount() {
         </h2>
 
         <p>
-            ${escapeHTML(email)}
+            ${escapeHTML(
+                email
+            )}
         </p>
 
         <p>
@@ -3674,7 +4908,9 @@ function renderLoggedInAccount() {
         </button>
 
     `;
+
 }
+
 
 // ============================================================
 // LOGIN
@@ -3685,7 +4921,9 @@ function showLogin() {
     const accountContent =
         $("accountContent");
 
-    if (!accountContent) return;
+    if (!accountContent) {
+        return;
+    }
 
     accountContent.innerHTML = `
 
@@ -3698,6 +4936,7 @@ function showLogin() {
             class="account-input"
             type="email"
             placeholder="Email"
+            autocomplete="email"
         >
 
         <input
@@ -3705,6 +4944,7 @@ function showLogin() {
             class="account-input"
             type="password"
             placeholder="Password"
+            autocomplete="current-password"
         >
 
         <button
@@ -3724,18 +4964,18 @@ function showLogin() {
         </button>
 
     `;
+
 }
 
-// ============================================================
-// SIGNUP
-// ============================================================
 
 function showSignup() {
 
     const accountContent =
         $("accountContent");
 
-    if (!accountContent) return;
+    if (!accountContent) {
+        return;
+    }
 
     accountContent.innerHTML = `
 
@@ -3748,6 +4988,7 @@ function showSignup() {
             class="account-input"
             type="email"
             placeholder="Email"
+            autocomplete="email"
         >
 
         <input
@@ -3755,6 +4996,7 @@ function showSignup() {
             class="account-input"
             type="password"
             placeholder="Password"
+            autocomplete="new-password"
         >
 
         <button
@@ -3774,7 +5016,9 @@ function showSignup() {
         </button>
 
     `;
+
 }
+
 
 // ============================================================
 // LOGIN ACTION
@@ -3800,7 +5044,10 @@ async function login() {
         $("loginPassword")
             ?.value;
 
-    if (!email || !password) {
+    if (
+        !email ||
+        !password
+    ) {
 
         showNotification(
             "Enter your email and password."
@@ -3813,8 +5060,13 @@ async function login() {
 
         const result =
             await supabaseClient.auth.signInWithPassword({
-                email,
-                password
+
+                email:
+                    email,
+
+                password:
+                    password
+
             });
 
         const {
@@ -3840,9 +5092,11 @@ async function login() {
         currentUser =
             data.user;
 
-        isGuest = false;
+        isGuest =
+            false;
 
         loadGame();
+
         loadTheme();
 
         saveGame();
@@ -3865,11 +5119,14 @@ async function login() {
         showNotification(
             "Could not connect to Supabase."
         );
+
     }
+
 }
 
+
 // ============================================================
-// SIGNUP ACTION
+// SIGNUP
 // ============================================================
 
 async function signup() {
@@ -3883,7 +5140,10 @@ async function signup() {
         $("signupPassword")
             ?.value;
 
-    if (!email || !password) {
+    if (
+        !email ||
+        !password
+    ) {
 
         showNotification(
             "Enter your email and password."
@@ -3931,9 +5191,11 @@ async function signup() {
         const result =
             await supabaseClient.auth.signUp({
 
-                email: email,
+                email:
+                    email,
 
-                password: password
+                password:
+                    password
 
             });
 
@@ -3977,7 +5239,8 @@ async function signup() {
         currentUser =
             data.user;
 
-        isGuest = false;
+        isGuest =
+            false;
 
         gameState = {
 
@@ -4030,8 +5293,11 @@ async function signup() {
         showNotification(
             "Could not connect to Supabase."
         );
+
     }
+
 }
+
 
 // ============================================================
 // LOGOUT
@@ -4056,23 +5322,21 @@ async function logout() {
 
     }
 
-    currentUser = null;
+    currentUser =
+        null;
 
-    isGuest = true;
+    isGuest =
+        true;
 
-    gameState = {
+    currentTheme =
+        "classic";
 
-        coins: 100,
+    removeAllThemeClasses();
 
-        inventory: [],
+    resetGuestState();
 
-        equipped: null,
-
-        questionsAnswered: 0,
-
-        correctAnswers: 0
-
-    };
+    soloSession.active =
+        false;
 
     closeAccount();
 
@@ -4099,13 +5363,17 @@ async function logout() {
     showNotification(
         "Logged out."
     );
+
 }
+
 
 // ============================================================
 // SEARCH
 // ============================================================
 
-function searchBlocks(query) {
+function searchBlocks(
+    query
+) {
 
     const search =
         String(
@@ -4119,19 +5387,24 @@ function searchBlocks(query) {
         renderBlocks();
 
         return;
+
     }
 
     const content =
         getMainContent();
 
-    if (!content) return;
+    if (!content) {
+        return;
+    }
 
     const results =
         gameState.inventory.filter(
             block =>
                 block.name
                     .toLowerCase()
-                    .includes(search)
+                    .includes(
+                        search
+                    )
         );
 
     let html = `
@@ -4146,7 +5419,9 @@ function searchBlocks(query) {
 
                 <p>
                     Search results for
-                    "${escapeHTML(query)}"
+                    "${escapeHTML(
+                        query
+                    )}"
                 </p>
 
             </div>
@@ -4154,6 +5429,7 @@ function searchBlocks(query) {
             <button
                 class="secondary-button"
                 onclick="renderBlocks()"
+                type="button"
             >
                 CLEAR
             </button>
@@ -4187,6 +5463,7 @@ function searchBlocks(query) {
             html;
 
         return;
+
     }
 
     html += `
@@ -4247,6 +5524,7 @@ function searchBlocks(query) {
                     <button
                         class="primary-button"
                         onclick="equipBlock(${originalIndex})"
+                        type="button"
                     >
                         EQUIP
                     </button>
@@ -4254,6 +5532,7 @@ function searchBlocks(query) {
                 </div>
 
             `;
+
         }
     );
 
@@ -4263,80 +5542,9 @@ function searchBlocks(query) {
 
     content.innerHTML =
         html;
+
 }
 
-// ============================================================
-// THEME
-// ============================================================
-
-function toggleTheme() {
-
-    document.body.classList.toggle(
-        "light-theme"
-    );
-
-    const enabled =
-        document.body.classList.contains(
-            "light-theme"
-        );
-
-    try {
-
-        if (
-            !isGuest &&
-            currentUser
-        ) {
-
-            localStorage.setItem(
-                `blocket_theme_${currentUser.id}`,
-                enabled
-                    ? "light"
-                    : "dark"
-            );
-
-        }
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-}
-
-function loadTheme() {
-
-    if (
-        !currentUser ||
-        isGuest
-    ) {
-
-        return;
-    }
-
-    try {
-
-        const theme =
-            localStorage.getItem(
-                `blocket_theme_${currentUser.id}`
-            );
-
-        if (
-            theme ===
-            "light"
-        ) {
-
-            document.body.classList.add(
-                "light-theme"
-            );
-
-        }
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-}
 
 // ============================================================
 // KEYBOARD
@@ -4367,8 +5575,9 @@ document.addEventListener(
     }
 );
 
+
 // ============================================================
-// NAVIGATION
+// NAVIGATION SETUP
 // ============================================================
 
 function setupNavigation() {
@@ -4389,7 +5598,9 @@ function setupNavigation() {
 
                         if (tab) {
 
-                            openTab(tab);
+                            openTab(
+                                tab
+                            );
 
                         }
 
@@ -4398,10 +5609,12 @@ function setupNavigation() {
 
             }
         );
+
 }
 
+
 // ============================================================
-// START BUTTONS
+// START BUTTON SETUP
 // ============================================================
 
 function setupStartButtons() {
@@ -4435,10 +5648,12 @@ function setupStartButtons() {
         );
 
     }
+
 }
 
+
 // ============================================================
-// WINDOW EXPORTS
+// EXPORT FUNCTIONS
 // ============================================================
 
 window.startBlocket =
@@ -4474,12 +5689,6 @@ window.showUpdateDetails =
 window.renderSolo =
     renderSolo;
 
-window.equipBlock =
-    equipBlock;
-
-window.sellBlock =
-    sellBlock;
-
 window.startSolo =
     startSolo;
 
@@ -4491,6 +5700,24 @@ window.submitSoloAnswer =
 
 window.stopSolo =
     stopSolo;
+
+window.equipBlock =
+    equipBlock;
+
+window.sellBlock =
+    sellBlock;
+
+window.searchBlocks =
+    searchBlocks;
+
+window.discoverHiddenBlock =
+    discoverHiddenBlock;
+
+window.renderSettings =
+    renderSettings;
+
+window.setTheme =
+    setTheme;
 
 window.openAccount =
     openAccount;
@@ -4513,14 +5740,6 @@ window.signup =
 window.logout =
     logout;
 
-window.searchBlocks =
-    searchBlocks;
-
-window.toggleTheme =
-    toggleTheme;
-
-window.discoverHiddenBlock =
-    discoverHiddenBlock;
 
 // ============================================================
 // INITIALIZE
