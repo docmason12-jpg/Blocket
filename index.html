@@ -1,214 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Blocket</title>
 
-    <link
-        rel="stylesheet"
-        href="./style.css?v=20"
-    >
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- =====================================================
-         START SCREEN
-         ===================================================== -->
+    <!-- START SCREEN -->
+    <section id="startScreen" class="start-screen">
 
-    <div
-        id="startScreen"
-        class="start-screen"
-    >
+        <div class="start-card">
 
-        <div class="start-box">
+            <div class="logo">
+                BLOCKET
+            </div>
 
-            <h1>BLOCKET</h1>
+            <p class="start-subtitle">
+                Collect. Play. Discover.
+            </p>
 
-            <button
-                id="startLoginButton"
-                class="start-button"
-                type="button"
-            >
+            <button id="loginStart" class="big-button">
                 LOG IN
             </button>
 
-            <button
-                id="guestButton"
-                class="start-button"
-                type="button"
-            >
+            <button id="guestStart" class="big-button secondary">
                 PLAY AS GUEST
             </button>
 
         </div>
 
-    </div>
+    </section>
 
 
-    <!-- =====================================================
-         MAIN APP
-         ===================================================== -->
+    <!-- MAIN APP -->
+    <div id="app" class="app hidden">
 
-    <div
-        id="app"
-        class="app"
-        style="display: none;"
-    >
-
-        <!-- =================================================
-             SIDEBAR
-             ================================================= -->
-
+        <!-- SIDEBAR -->
         <aside class="sidebar">
 
             <div class="sidebar-logo">
                 BLOCKET
             </div>
 
-            <div class="sidebar-menu">
+            <nav>
 
-                <div
-                    class="menu-item active"
-                    data-tab="market"
-                >
+                <button class="nav-button active" data-tab="market">
+                    <span>🛒</span>
                     MARKET
-                </div>
+                </button>
 
-                <div
-                    class="menu-item"
-                    data-tab="blocks"
-                >
+                <button class="nav-button" data-tab="blocks">
+                    <span>🧱</span>
                     BLOCKS
-                </div>
+                </button>
 
-                <div
-                    class="menu-item"
-                    data-tab="news"
-                >
-                    NEWS
-                </div>
-
-                <div
-                    class="menu-item"
-                    data-tab="solo"
-                >
+                <button class="nav-button" data-tab="solo">
+                    <span>🎮</span>
                     SOLO
-                </div>
+                </button>
 
-                <div
-                    class="menu-item"
-                    data-tab="settings"
-                >
+                <button class="nav-button" data-tab="news">
+                    <span>📰</span>
+                    NEWS
+                </button>
+
+                <button class="nav-button" data-tab="settings">
+                    <span>⚙️</span>
                     SETTINGS
-                </div>
+                </button>
 
-            </div>
+            </nav>
 
         </aside>
 
 
-        <!-- =================================================
-             MAIN
-             ================================================= -->
-
+        <!-- MAIN -->
         <main class="main">
 
-            <div class="player-info">
+            <header class="topbar">
 
                 <button
-                    class="theme-button"
-                    id="themeButton"
-                    onclick="openTab('settings')"
-                    aria-label="Open themes"
+                    id="themeQuick"
+                    class="icon-button"
                     title="Themes"
-                    type="button"
                 >
                     🎨
                 </button>
 
-                <button
-                    class="account-button"
-                    onclick="openAccount()"
-                    type="button"
-                >
-                    ACCOUNT
-                </button>
+                <div class="player-bar">
 
-                <div
-                    class="coin-display"
-                    id="coinDisplay"
-                >
-                    100 Coins
+                    <div id="coinDisplay" class="coins">
+                        100 Coins
+                    </div>
+
+                    <button id="accountButton" class="account-button">
+                        ACCOUNT
+                    </button>
+
                 </div>
 
-            </div>
+            </header>
 
 
-            <div
-                class="main-content"
-                id="mainContent"
-            >
-            </div>
+            <section id="content" class="content"></section>
 
         </main>
 
     </div>
 
 
-    <!-- =====================================================
-         ACCOUNT OVERLAY
-         ===================================================== -->
+    <!-- ACCOUNT MODAL -->
+    <div id="accountModal" class="modal hidden">
 
-    <div
-        id="accountOverlay"
-        class="account-overlay"
-    >
+        <div class="modal-card">
 
-        <div class="account-window">
-
-            <button
-                class="account-close"
-                onclick="closeAccount()"
-                aria-label="Close account"
-                type="button"
-            >
+            <button class="modal-close" id="closeAccount">
                 ×
             </button>
 
-            <h1>
-                BLOCKET
-            </h1>
+            <div id="accountContent"></div>
 
-            <div id="accountContent">
+        </div>
 
-                <h2>
-                    ACCOUNT
-                </h2>
+    </div>
 
-                <button
-                    class="account-main-button"
-                    onclick="showLogin()"
-                    type="button"
-                >
-                    LOG IN
-                </button>
 
-                <button
-                    class="account-main-button"
-                    onclick="showSignup()"
-                    type="button"
-                >
-                    SIGN UP
-                </button>
+    <!-- PACK OPENING -->
+    <div id="opening" class="opening hidden">
 
+        <div class="opening-card">
+
+            <div id="openingRarity" class="opening-rarity">
+                OPENING...
+            </div>
+
+            <div id="openingImage" class="opening-image">
+                ?
+            </div>
+
+            <h2 id="openingName">
+                Mystery Block
+            </h2>
+
+            <div id="openingPack">
+                PACK
             </div>
 
         </div>
@@ -216,23 +156,13 @@
     </div>
 
 
-    <!-- =====================================================
-         SUPABASE
-         ===================================================== -->
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-    ></script>
+    <!-- NOTIFICATION -->
+    <div id="notification" class="notification">
+        Hello!
+    </div>
 
 
-    <!-- =====================================================
-         BLOCKET JS
-         ===================================================== -->
-
-    <script
-        src="./script.js?v=20"
-    ></script>
+    <script src="script.js"></script>
 
 </body>
-
 </html>
