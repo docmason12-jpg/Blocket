@@ -274,13 +274,13 @@ const rarityValues = {
 
     Uncommon: 10,
 
-    Rare: 25,
+    Rare: 20,
 
-    Epic: 50,
+    Epic: 75,
 
-    Legendary: 100,
+    Legendary: 200,
 
-    Chroma: 500,
+    Chroma: 750,
 
     Mythical: 2500,
 
@@ -315,7 +315,7 @@ const packs = {
             {
                 name: "Red",
                 rarity: "Common",
-                pullRate: 30,
+                pullRate: 31.80,
                 image: null
             },
 
@@ -363,15 +363,36 @@ const packs = {
 
             {
                 name: "Black",
+                rarity: "Legendary",
+                pullRate: 1.99,
+                image: null
+            },
+
+                        {
+                name: "Bronze",
                 rarity: "Chroma",
-                pullRate: 1.7,
+                pullRate: 0.80,
+                image: null
+            },
+
+                        {
+                name: "Sliver",
+                rarity: "Chroma",
+                pullRate: 0.60,
+                image: null
+            },
+
+                        {
+                name: "Gold",
+                rarity: "Chroma",
+                pullRate: 0.40,
                 image: null
             },
 
             {
                 name: "Rainbow",
                 rarity: "Mythical",
-                pullRate: 0.3,
+                pullRate: 0.01,
                 image: null
             }
 
