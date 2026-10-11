@@ -2278,6 +2278,452 @@ body.theme-ocean .theme-selected {
     background: #0284c7;
 }
 
+body.theme-ocean .sidebar {
+    background:
+        linear-gradient(
+            180deg,
+            #075985,
+            #0284c7
+        );
+}
+
+body.theme-ocean .menu-item.active {
+    color: #0369a1;
+}
+
+body.theme-ocean .primary-button,
+body.theme-ocean .account-button {
+    background: #0284c7;
+}
+
+body.theme-ocean .page-header h1 {
+    color: #0369a1;
+}
+
+body.theme-ocean .market-coins,
+body.theme-ocean .coin-display {
+    color: #0369a1;
+}
+
+body.theme-ocean .theme-selected {
+    background: #0284c7;
+}
+
+body.theme-ocean .app {
+    background:
+        linear-gradient(
+            135deg,
+            #effaff,
+            #f5fcff
+        );
+}
+
+
+
+/* ============================================================
+   BLOCKET SPOOKY THEME
+   Midnight black + layered purple + orange
+   ============================================================ */
+
+body.theme-spooky {
+    --night: #080610;
+    --night-panel: #130D1C;
+    --night-card: #1B1125;
+    --night-inner: #281638;
+    --purple: #542080;
+    --purple-bright: #7135A5;
+    --purple-border: #572581;
+    --orange: #FF922B;
+    --orange-soft: #FFB347;
+    --muted: #D1B4E8;
+
+    background: var(--night) !important;
+    color: var(--orange-soft) !important;
+}
+
+/* Main layout: remove lavender and white surfaces */
+body.theme-spooky .app,
+body.theme-spooky .main,
+body.theme-spooky .main-content {
+    background: var(--night) !important;
+    color: var(--orange-soft) !important;
+}
+
+/* Sidebar */
+body.theme-spooky .sidebar {
+    background: linear-gradient(
+        180deg,
+        #241036 0%,
+        #48206D 50%,
+        #7135A5 100%
+    ) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-border) !important;
+}
+
+body.theme-spooky .sidebar-logo {
+    background: var(--night-panel) !important;
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .menu-item {
+    color: #F0DDFB !important;
+}
+
+body.theme-spooky .menu-item:hover {
+    background: #542080 !important;
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .menu-item.active {
+    background: #281638 !important;
+    color: var(--orange) !important;
+}
+
+/* Top account bar and coin counters */
+body.theme-spooky .player-info {
+    background: transparent !important;
+}
+
+body.theme-spooky .coin-display,
+body.theme-spooky .market-coins,
+body.theme-spooky .account-button,
+body.theme-spooky .theme-button {
+    background: var(--purple) !important;
+    color: var(--orange-soft) !important;
+    border: 1px solid var(--purple-bright) !important;
+    box-shadow: none !important;
+}
+
+/* Page headings and descriptions */
+body.theme-spooky .page-header h1 {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .page-header p {
+    color: var(--orange-soft) !important;
+}
+
+/* Market pack cards */
+body.theme-spooky .pack-card {
+    background: var(--night-card) !important;
+    color: var(--orange-soft) !important;
+    border: 2px solid var(--purple-border) !important;
+    box-shadow: none !important;
+}
+
+body.theme-spooky .pack-card:hover {
+    border-color: var(--purple-bright) !important;
+    box-shadow: 0 12px 28px #00000055 !important;
+}
+
+body.theme-spooky .pack-card h2 {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .pack-card p {
+    color: var(--orange-soft) !important;
+}
+
+/* Image containers: recolor the background, not the artwork */
+body.theme-spooky .pack-image,
+body.theme-spooky .block-card-image {
+    background: var(--night-inner) !important;
+    border-color: var(--purple-border) !important;
+}
+
+/* Pack placeholder icons */
+body.theme-spooky .pack-placeholder,
+body.theme-spooky .block-placeholder,
+body.theme-spooky .mini-block-placeholder {
+    background: var(--purple) !important;
+    color: var(--orange-soft) !important;
+}
+
+/* Buttons used throughout the game */
+body.theme-spooky .primary-button,
+body.theme-spooky .secondary-button,
+body.theme-spooky .sell-button {
+    background: var(--purple) !important;
+    color: var(--orange-soft) !important;
+    border: 1px solid var(--purple-bright) !important;
+}
+
+body.theme-spooky .primary-button:hover,
+body.theme-spooky .secondary-button:hover,
+body.theme-spooky .sell-button:hover {
+    background: var(--purple-bright) !important;
+    color: #FFFFFF !important;
+}
+
+/* Blocks collection */
+body.theme-spooky .block-card {
+    background: var(--night-card) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-border) !important;
+}
+
+body.theme-spooky .block-card h3 {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .block-card.equipped {
+    border-color: var(--orange) !important;
+}
+
+/* Reward lists and rarity rows */
+body.theme-spooky .reward-row {
+    background: var(--night-card) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-border) !important;
+}
+
+body.theme-spooky .reward-name {
+    color: var(--orange-soft) !important;
+}
+
+body.theme-spooky .reward-rate {
+    color: var(--muted) !important;
+}
+
+/* News and update cards */
+body.theme-spooky .news-card,
+body.theme-spooky .update-details-card {
+    background: var(--night-card) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-border) !important;
+    box-shadow: none !important;
+}
+
+body.theme-spooky .news-card h2,
+body.theme-spooky .update-details-card h2 {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .news-card p,
+body.theme-spooky .update-details-card p,
+body.theme-spooky .update-details-card ul {
+    color: var(--orange-soft) !important;
+}
+
+/* Solo subject selection */
+body.theme-spooky .subject-button {
+    background: linear-gradient(
+        135deg,
+        #281638,
+        #1B1125
+    ) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-border) !important;
+}
+
+body.theme-spooky .subject-button strong {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .subject-button span {
+    color: var(--muted) !important;
+}
+
+body.theme-spooky .study-info-card {
+    background: var(--night-card) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-border) !important;
+}
+
+body.theme-spooky .study-info-card h2,
+body.theme-spooky .solo-subject-name {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .solo-header {
+    color: var(--muted) !important;
+}
+
+body.theme-spooky .solo-stats {
+    color: var(--orange-soft) !important;
+}
+
+/* Solo question panel */
+body.theme-spooky .question-card {
+    background: var(--night-card) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-border) !important;
+}
+
+body.theme-spooky .question-number {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .question-card h1 {
+    color: var(--orange-soft) !important;
+}
+
+/* Keep answers distinct but within the spooky palette */
+body.theme-spooky .answer-button {
+    background: var(--purple) !important;
+    color: var(--orange-soft) !important;
+    border: 1px solid var(--purple-bright) !important;
+}
+
+body.theme-spooky .answer-red {
+    background: #692647 !important;
+}
+
+body.theme-spooky .answer-yellow {
+    background: #75451B !important;
+}
+
+body.theme-spooky .answer-green {
+    background: #28523B !important;
+}
+
+body.theme-spooky .answer-blue {
+    background: #303B76 !important;
+}
+
+/* Study results and finished screen */
+body.theme-spooky .study-finished-card {
+    background: var(--night) !important;
+    color: var(--orange-soft) !important;
+}
+
+body.theme-spooky .study-finished-card h1 {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .study-finished-card > p {
+    color: var(--orange-soft) !important;
+}
+
+body.theme-spooky .study-results > div {
+    background: var(--night-card) !important;
+    border-color: var(--purple-border) !important;
+}
+
+body.theme-spooky .study-results strong {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .study-results span {
+    color: var(--muted) !important;
+}
+
+/* Settings and theme selection cards */
+body.theme-spooky .settings-section-header h2,
+body.theme-spooky .settings-info h2 {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .settings-section-header span,
+body.theme-spooky .settings-info p {
+    color: var(--orange-soft) !important;
+}
+
+body.theme-spooky .theme-card,
+body.theme-spooky .settings-info {
+    background: var(--night-card) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-border) !important;
+}
+
+body.theme-spooky .theme-card-info strong {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .theme-card-info span {
+    color: var(--muted) !important;
+}
+
+body.theme-spooky .theme-preview {
+    background: var(--night-inner) !important;
+}
+
+body.theme-spooky .theme-preview-top {
+    background: var(--purple) !important;
+}
+
+body.theme-spooky .theme-preview-body {
+    background: var(--night-panel) !important;
+}
+
+body.theme-spooky .theme-preview-body::before {
+    background: var(--purple-bright) !important;
+}
+
+body.theme-spooky .theme-preview-box {
+    background: var(--night-inner) !important;
+}
+
+body.theme-spooky .theme-selected,
+body.theme-spooky .theme-free {
+    background: var(--purple) !important;
+    color: var(--orange-soft) !important;
+    box-shadow: none !important;
+}
+
+/* Account popup */
+body.theme-spooky .account-window {
+    background: var(--night-card) !important;
+    color: var(--orange-soft) !important;
+    border: 1px solid var(--purple-border) !important;
+}
+
+body.theme-spooky .account-window > h1,
+body.theme-spooky .account-window h2 {
+    color: var(--orange) !important;
+}
+
+body.theme-spooky .account-window p {
+    color: var(--orange-soft) !important;
+}
+
+body.theme-spooky .account-close,
+body.theme-spooky .account-main-button,
+body.theme-spooky .account-secondary-button {
+    background: var(--purple) !important;
+    color: var(--orange-soft) !important;
+}
+
+body.theme-spooky .account-input {
+    background: var(--night-panel) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-bright) !important;
+}
+
+/* Notifications */
+body.theme-spooky .blocket-notification {
+    background: var(--night-inner) !important;
+    color: var(--orange-soft) !important;
+    border: 1px solid var(--purple-bright) !important;
+}
+
+/* General text and form controls inside this theme */
+body.theme-spooky .main-content label,
+body.theme-spooky .main-content p,
+body.theme-spooky .main-content li {
+    color: var(--orange-soft);
+}
+
+body.theme-spooky .main-content input,
+body.theme-spooky .main-content select,
+body.theme-spooky .main-content textarea {
+    background: var(--night-panel) !important;
+    color: var(--orange-soft) !important;
+    border-color: var(--purple-bright) !important;
+}
+
+body.theme-spooky .main-content input::placeholder,
+body.theme-spooky .main-content textarea::placeholder {
+    color: var(--muted) !important;
+}
+
+body.theme-spooky hr {
+    border-color: var(--purple-border) !important;
+}
+
+
+
 
 /* ============================================================
    FOREST THEME
