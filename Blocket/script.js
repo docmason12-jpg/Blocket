@@ -815,6 +815,18 @@ const hiddenBlocks = [
 const newsItems = [
 
     {
+        date: "October 11, 2026",
+        version: "v2.1",
+        title: " 🎃 Spooky Things  🎃",
+        text:
+            "Since its spooky month, we have new SPOOKY content!",
+        details: [
+
+            "There is new Spooky Pack with Halloween-themed Blocks.",
+        ]
+    },
+
+    {
         date: "September 20, 2026",
         version: "v2.0",
         title: "🏰 Medieval Pack",
