@@ -318,7 +318,7 @@ const packs = {
 
     "Bot Pack": {
         name: "Bot Pack",
-        price: 20,
+        price: 25,
         image: "./Images/robot.png.png",
         rewards: [
             { name: "Rusty Bot", rarity: "Common", pullRate: 35, image: "./Images/Rusty-bot.png" },
@@ -368,7 +368,7 @@ const packs = {
 
     "Medieval Pack": {
         name: "Medieval Pack",
-        price: 40,
+        price: 20,
         image: "./Images/king.svg",
         rewards: [
             { name: "Witch", rarity: "Common", pullRate: 8, image: "./Images/witch.svg" },
@@ -389,19 +389,20 @@ const packs = {
     "Spooky Pack": {
         name: "Spooky Pack",
         price: 30,
-        image: "./Images/zombie.svg",
+        image: "./Images/zombie.png",
         rewards: [
-            { name: "Pumpkin", rarity: "Common", pullRate: 8, image: "./Images/pumpkin.svg" },
-            { name: "Zombie", rarity: "Common", pullRate: 7, image: "./Images/zombie.svg" },
-            { name: "Skull", rarity: "Uncommon", pullRate: 6, image: "./Images/skull.svg" },
-            { name: "Mummy", rarity: "Rare", pullRate: 5, image: "./Images/mummy.svg" },
-            { name: "Vampire", rarity: "Epic", pullRate: 4, image: "./Images/vampire.svg" },
-            { name: "Bat", rarity: "Epic", pullRate: 25, image: "./Images/bat.svg" },
-            { name: "Frankenstein", rarity: "Legendary", pullRate: 15, image: "./Images/frankenstein.svg" },
-            { name: "Ghost", rarity: "Legendary", pullRate: 10, image: "./Images/ghost.svg" },
-            { name: "Spooky-Pumpkin", rarity: "Chroma", pullRate: 10, image: "./Images/Spooky-Pumpkin.svg" },
-            { name: "Spooky-Ghost", rarity: "Chroma", pullRate: 9.85, image: "./Images/Spooky-Ghost.svg" },
-            { name: "Spooky Skull", rarity: "Mythical", pullRate: 0.10, image: "./Images/Spooky-Skull.svg" },
+            { name: "Pumpkin", rarity: "Common", pullRate: 52.489, image: "./Images/pumpkin.png" },
+            { name: "Zombie", rarity: "Common", pullRate: 25, image: "./Images/zombie.png" },
+            { name: "Skull", rarity: "Uncommon", pullRate: 10, image: "./Images/skeleton.png" },
+             { name: "Mummy", rarity: "Rare", pullRate: 5, image: "./Images/mummy.png" },
+            { name: "Vampire", rarity: "Epic", pullRate: 2.5, image: "./Images/vampire.png" },
+            { name: "Bat", rarity: "Epic", pullRate: 2.5, image: "./Images/bat.png" },
+            { name: "Frankenstein", rarity: "Legendary", pullRate: 1, image: "./Images/frank.png" },
+            { name: "Ghost", rarity: "Legendary", pullRate: 1, image: "./Images/ghost.png" },
+            { name: "Spooky-Pumpkin", rarity: "Chroma", pullRate: 0.5, image: "./Images/Spooky Pumpkin.png" },
+            { name: "Spooky-Ghost", rarity: "Chroma", pullRate: 0.01, image: "./Images/Spooky-Ghost.png" },
+            { name: "Spooky Skull", rarity: "Mythical", pullRate: 0.0009, image: "./Images/Spooky-Skeleton.png" },
+            { name: "Screaming Zombie", rarity: "Hidden", pullRate: 0.0001, image: "./Images/Screaming Zombie.png" },
         ]
     }
 };
