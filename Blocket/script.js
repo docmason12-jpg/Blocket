@@ -296,493 +296,116 @@ const rarityValues = {
 // ============================================================
 
 const packs = {
-
-
-    // ========================================================
-    // COLOR PACK
-    // ========================================================
-
     "Color Pack": {
-
         name: "Color Pack",
-
         price: 20,
-
         image: null,
-
         rewards: [
-
-            {
-                name: "Red",
-                rarity: "Common",
-                pullRate: 31.80,
-                image: null
-            },
-
-            {
-                name: "Yellow",
-                rarity: "Common",
-                pullRate: 25,
-                image: null
-            },
-
-            {
-                name: "Blue",
-                rarity: "Common",
-                pullRate: 20,
-                image: null
-            },
-
-            {
-                name: "Purple",
-                rarity: "Uncommon",
-                pullRate: 10,
-                image: null
-            },
-
-            {
-                name: "Green",
-                rarity: "Rare",
-                pullRate: 7,
-                image: null
-            },
-
-            {
-                name: "Pink",
-                rarity: "Epic",
-                pullRate: 4,
-                image: null
-            },
-
-            {
-                name: "White",
-                rarity: "Legendary",
-                pullRate: 2,
-                image: null
-            },
-
-            {
-                name: "Black",
-                rarity: "Legendary",
-                pullRate: 1.99,
-                image: null
-            },
-
-                        {
-                name: "Bronze",
-                rarity: "Chroma",
-                pullRate: 0.80,
-                image: null
-            },
-
-                        {
-                name: "Sliver",
-                rarity: "Chroma",
-                pullRate: 0.60,
-                image: null
-            },
-
-                        {
-                name: "Gold",
-                rarity: "Chroma",
-                pullRate: 0.40,
-                image: null
-            },
-
-            {
-                name: "Rainbow",
-                rarity: "Mythical",
-                pullRate: 0.01,
-                image: null
-            }
-
+            { name: "Red", rarity: "Common", pullRate: 31.80, image: null },
+            { name: "Yellow", rarity: "Common", pullRate: 25, image: null },
+            { name: "Blue", rarity: "Common", pullRate: 20, image: null },
+            { name: "Purple", rarity: "Uncommon", pullRate: 10, image: null },
+            { name: "Green", rarity: "Rare", pullRate: 7, image: null },
+            { name: "Pink", rarity: "Epic", pullRate: 4, image: null },
+            { name: "White", rarity: "Legendary", pullRate: 2, image: null },
+            { name: "Black", rarity: "Legendary", pullRate: 1.99, image: null },
+            { name: "Bronze", rarity: "Chroma", pullRate: 0.80, image: null },
+            { name: "Sliver", rarity: "Chroma", pullRate: 0.60, image: null },
+            { name: "Gold", rarity: "Chroma", pullRate: 0.40, image: null },
+            { name: "Rainbow", rarity: "Mythical", pullRate: 0.01, image: null }
         ]
-
     },
-
-
-    // ========================================================
-    // BOT PACK
-    // ========================================================
 
     "Bot Pack": {
-
         name: "Bot Pack",
-
-        price: 20,
-
-        image:
-            "./Images/robot.png.png",
-
+        price: 25,
+        image: "./Images/robot.png.png",
         rewards: [
-
-            {
-                name: "Rusty Bot",
-                rarity: "Common",
-                pullRate: 35,
-                image:
-                    "./Images/Rusty-bot.png"
-            },
-
-            {
-                name: "Lil Bot",
-                rarity: "Common",
-                pullRate: 25,
-                image:
-                    "./Images/lil%20bot.png"
-            },
-
-            {
-                name: "Robot",
-                rarity: "Uncommon",
-                pullRate: 18,
-                image:
-                    "./Images/robot.png.png"
-            },
-
-            {
-                name: "Cyber Bot",
-                rarity: "Rare",
-                pullRate: 10,
-                image:
-                    "./Images/Cyber-bot.png"
-            },
-
-            {
-                name: "Titan",
-                rarity: "Epic",
-                pullRate: 6,
-                image:
-                    "./Images/Titan.png"
-            },
-
-            {
-                name: "Mega Titan",
-                rarity: "Legendary",
-                pullRate: 6,
-                image:
-                    "./Images/Mega%20Titan.png"
-            }
-
+            { name: "Rusty Bot", rarity: "Common", pullRate: 35, image: "./Images/Rusty-bot.png" },
+            { name: "Lil Bot", rarity: "Common", pullRate: 25, image: "./Images/lil%20bot.png" },
+            { name: "Robot", rarity: "Uncommon", pullRate: 18, image: "./Images/robot.png.png" },
+            { name: "Cyber Bot", rarity: "Rare", pullRate: 10, image: "./Images/Cyber-bot.png" },
+            { name: "Titan", rarity: "Epic", pullRate: 6, image: "./Images/Titan.png" },
+            { name: "Mega Titan", rarity: "Legendary", pullRate: 6, image: "./Images/Mega%20Titan.png" }
         ]
-
     },
-
-
-    // ========================================================
-    // OG PACK
-    // ========================================================
 
     "OG Pack": {
-
         name: "OG Pack",
-
         price: 50,
-
         image: null,
-
         rewards: [
-
-            {
-                name:
-                    "@Totallynotatheatrekid",
-                rarity: "OG",
-                pullRate: 8
-            },
-
-            {
-                name: "@strykr-v2k",
-                rarity: "OG",
-                pullRate: 7
-            },
-
-            {
-                name: "@HelenSmith-o3k",
-                rarity: "OG",
-                pullRate: 6
-            },
-
-            {
-                name:
-                    "@LeviPlaysAndEdits",
-                rarity: "OG",
-                pullRate: 5
-            },
-
-            {
-                name: "Waymore",
-                rarity: "OG",
-                pullRate: 5
-            },
-
-            {
-                name: "@adrianarturosm",
-                rarity: "OG",
-                pullRate: 5
-            },
-
-            {
-                name: "@TheJoeyCha-real",
-                rarity: "OG",
-                pullRate: 5
-            },
-
-            {
-                name: "sinozilla",
-                rarity: "OG",
-                pullRate: 5
-            },
-
-            {
-                name: "Sentinel",
-                rarity: "OG",
-                pullRate: 4
-            },
-
-            {
-                name: "math roblox",
-                rarity: "OG",
-                pullRate: 4
-            },
-
-            {
-                name: "knuckles",
-                rarity: "OG",
-                pullRate: 4
-            },
-
-            {
-                name:
-                    "@fortzgeometrydash",
-                rarity: "OG",
-                pullRate: 4
-            },
-
-            {
-                name: "starborn",
-                rarity: "OG",
-                pullRate: 4
-            },
-
-            {
-                name: "@Forniteboy",
-                rarity: "OG",
-                pullRate: 4
-            },
-
-            {
-                name: "@NicholeCohen",
-                rarity: "OG",
-                pullRate: 4
-            },
-
-            {
-                name: "@KETCHAAA534",
-                rarity: "OG",
-                pullRate: 3
-            },
-
-            {
-                name:
-                    "@bradleyrauch4881",
-                rarity: "OG",
-                pullRate: 3
-            },
-
-            {
-                name:
-                    "@SfsultamateGamer",
-                rarity: "OG",
-                pullRate: 3
-            },
-
-            {
-                name:
-                    "@ALemonFoxranter",
-                rarity: "OG",
-                pullRate: 3
-            },
-
-            {
-                name: "@cloudysquash",
-                rarity: "OG",
-                pullRate: 2
-            },
-
-            {
-                name: "@JACollins07",
-                rarity: "OG",
-                pullRate: 2
-            },
-
-            {
-                name: "@AnabelleDale",
-                rarity: "OG",
-                pullRate: 2
-            },
-
-            {
-                name: "@Jennifer-c5q2h",
-                rarity: "OG",
-                pullRate: 2
-            },
-
-            {
-                name:
-                    "@Cptbabyrabbit-n4x",
-                rarity: "OG",
-                pullRate: 1
-            },
-
-            {
-                name:
-                    "@Fat_frog_in_space",
-                rarity: "OG",
-                pullRate: 1
-            },
-
-            {
-                name: "@AmeeSoni1",
-                rarity: "OG",
-                pullRate: 1
-            },
-
-            {
-                name:
-                    "@Sheldon-cooper-explains",
-                rarity: "OG",
-                pullRate: 1
-            },
-
-            {
-                name: "@TheJoeyCha-",
-                rarity: "OG",
-                pullRate: 2
-            }
-
+            { name: "@Totallynotatheatrekid", rarity: "OG", pullRate: 8 },
+            { name: "@strykr-v2k", rarity: "OG", pullRate: 7 },
+            { name: "@HelenSmith-o3k", rarity: "OG", pullRate: 6 },
+            { name: "@LeviPlaysAndEdits", rarity: "OG", pullRate: 5 },
+            { name: "Waymore", rarity: "OG", pullRate: 5 },
+            { name: "@adrianarturosm", rarity: "OG", pullRate: 5 },
+            { name: "@TheJoeyCha-real", rarity: "OG", pullRate: 5 },
+            { name: "sinozilla", rarity: "OG", pullRate: 5 },
+            { name: "Sentinel", rarity: "OG", pullRate: 4 },
+            { name: "math roblox", rarity: "OG", pullRate: 4 },
+            { name: "knuckles", rarity: "OG", pullRate: 4 },
+            { name: "@fortzgeometrydash", rarity: "OG", pullRate: 4 },
+            { name: "starborn", rarity: "OG", pullRate: 4 },
+            { name: "@Forniteboy", rarity: "OG", pullRate: 4 },
+            { name: "@NicholeCohen", rarity: "OG", pullRate: 4 },
+            { name: "@KETCHAAA534", rarity: "OG", pullRate: 3 },
+            { name: "@bradleyrauch4881", rarity: "OG", pullRate: 3 },
+            { name: "@SfsultamateGamer", rarity: "OG", pullRate: 3 },
+            { name: "@ALemonFoxranter", rarity: "OG", pullRate: 3 },
+            { name: "@cloudysquash", rarity: "OG", pullRate: 2 },
+            { name: "@JACollins07", rarity: "OG", pullRate: 2 },
+            { name: "@AnabelleDale", rarity: "OG", pullRate: 2 },
+            { name: "@Jennifer-c5q2h", rarity: "OG", pullRate: 2 },
+            { name: "@Cptbabyrabbit-n4x", rarity: "OG", pullRate: 1 },
+            { name: "@Fat_frog_in_space", rarity: "OG", pullRate: 1 },
+            { name: "@AmeeSoni1", rarity: "OG", pullRate: 1 },
+            { name: "@Sheldon-cooper-explains", rarity: "OG", pullRate: 1 },
+            { name: "@TheJoeyCha-", rarity: "OG", pullRate: 2 }
         ]
-
     },
 
-
-    // ========================================================
-    // MEDIEVAL PACK
-    // ========================================================
-
     "Medieval Pack": {
-
         name: "Medieval Pack",
-
-        price: 40,
-
-        image:
-            "./Images/dragon.svg",
-
+        price: 20,
+        image: "./Images/king.svg",
         rewards: [
-
-            {
-                name: "Witch",
-                rarity: "Common",
-                pullRate: 8,
-                image:
-                    "./Images/witch.svg"
-            },
-
-            {
-                name: "Wizard",
-                rarity: "Common",
-                pullRate: 7,
-                image:
-                    "./Images/wizard.svg"
-            },
-
-            {
-                name: "Elf",
-                rarity: "Common",
-                pullRate: 6,
-                image:
-                    "./Images/elf.svg"
-            },
-
-            {
-                name: "Fairy",
-                rarity: "Common",
-                pullRate: 5,
-                image:
-                    "./Images/fairy.svg"
-            },
-
-            {
-                name: "Slime Monster",
-                rarity: "Common",
-                pullRate: 4,
-                image:
-                    "./Images/slimemonster.svg"
-            },
-
-            {
-                name: "Jester",
-                rarity: "Uncommon",
-                pullRate: 25,
-                image:
-                    "./Images/jester.svg"
-            },
-
-            {
-                name: "Unicorn",
-                rarity: "Rare",
-                pullRate: 15,
-                image:
-                    "./Images/unicorn.svg"
-            },
-
-            {
-                name: "Dragon",
-                rarity: "Epic",
-                pullRate: 10,
-                image:
-                    "./Images/dragon.svg"
-            },
-
-            {
-                name: "Queen",
-                rarity: "Legendary",
-                pullRate: 10,
-                image:
-                    "./Images/queen.svg"
-            },
-
-            {
-                name: "King",
-                rarity: "Legendary",
-                pullRate: 9.85,
-                image:
-                    "./Images/king.svg"
-            },
-
-            {
-                name: "Phantom Queen",
-                rarity: "Chroma",
-                pullRate: 0.10,
-                image:
-                    "./Images/static-assets-upload7275842502952922222.webp"
-            },
-
-            {
-                name: "Phantom King",
-                rarity: "Chroma",
-                pullRate: 0.05,
-                image:
-                    "./Images/phathom%20king.webp"
-            }
-
+            { name: "Witch", rarity: "Common", pullRate: 8, image: "./Images/witch.svg" },
+            { name: "Wizard", rarity: "Common", pullRate: 7, image: "./Images/wizard.svg" },
+            { name: "Elf", rarity: "Common", pullRate: 6, image: "./Images/elf.svg" },
+            { name: "Fairy", rarity: "Common", pullRate: 5, image: "./Images/fairy.svg" },
+            { name: "Slime Monster", rarity: "Common", pullRate: 4, image: "./Images/slimemonster.svg" },
+            { name: "Jester", rarity: "Uncommon", pullRate: 25, image: "./Images/jester.svg" },
+            { name: "Unicorn", rarity: "Rare", pullRate: 15, image: "./Images/unicorn.svg" },
+            { name: "Dragon", rarity: "Epic", pullRate: 10, image: "./Images/dragon.svg" },
+            { name: "Queen", rarity: "Legendary", pullRate: 10, image: "./Images/queen.svg" },
+            { name: "King", rarity: "Legendary", pullRate: 9.85, image: "./Images/king.svg" },
+            { name: "Phantom Queen", rarity: "Chroma", pullRate: 0.10, image: "./Images/static-assets-upload7275842502952922222.webp" },
+            { name: "Phantom King", rarity: "Chroma", pullRate: 0.05, image: "./Images/phathom%20king.webp" }
         ]
+    },
 
+    "Spooky Pack": {
+        name: "Spooky Pack",
+        price: 30,
+        image: "./Images/zombie.png",
+        rewards: [
+            { name: "Pumpkin", rarity: "Common", pullRate: 52.489, image: "./Images/pumpkin.png" },
+            { name: "Zombie", rarity: "Common", pullRate: 25, image: "./Images/zombie.png" },
+            { name: "Skull", rarity: "Uncommon", pullRate: 10, image: "./Images/skeleton.png" },
+             { name: "Mummy", rarity: "Rare", pullRate: 5, image: "./Images/mummy.png" },
+            { name: "Vampire", rarity: "Epic", pullRate: 2.5, image: "./Images/vampire.png" },
+            { name: "Bat", rarity: "Epic", pullRate: 2.5, image: "./Images/bat.png" },
+            { name: "Frankenstein", rarity: "Legendary", pullRate: 1, image: "./Images/frank.png" },
+            { name: "Ghost", rarity: "Legendary", pullRate: 1, image: "./Images/ghost.png" },
+            { name: "Spooky-Pumpkin", rarity: "Chroma", pullRate: 0.5, image: "./Images/Spooky Pumpkin.png" },
+            { name: "Spooky-Ghost", rarity: "Chroma", pullRate: 0.01, image: "./Images/Spooky-Ghost.png" },
+            { name: "Spooky Skull", rarity: "Mythical", pullRate: 0.0009, image: "./Images/Spooky-Skeleton.png" },
+            { name: "Screaming Zombie", rarity: "Hidden", pullRate: 0.0001, image: "./Images/Screaming Zombie.png" },
+        ]
     }
-
 };
-
-
 // ============================================================
 // HIDDEN BLOCKS
 // ============================================================
@@ -823,6 +446,7 @@ const newsItems = [
         details: [
 
             "There is new Spooky Pack with Halloween-themed Blocks.",
+            "There is new Spooky Theme for Blocket., Try it out in Settings.",
         ]
     },
 
@@ -4305,6 +3929,19 @@ const blocketThemes = {
 
         className:
             "theme-ruby"
+
+    },
+
+    Halloween: {
+
+        name:
+            "Halloween",
+
+        description:
+            "A spooky Halloween theme.",
+
+        className:
+            "theme-spooky"
 
     },
 
