@@ -298,21 +298,22 @@ const rarityValues = {
 const packs = {
     "Color Pack": {
         name: "Color Pack",
+        image: "./Images/Rainbow.png",
         price: 20,
-        image: null,
         rewards: [
-            { name: "Red", rarity: "Common", pullRate: 31.80, image: null },
-            { name: "Yellow", rarity: "Common", pullRate: 25, image: null },
-            { name: "Blue", rarity: "Common", pullRate: 20, image: null },
-            { name: "Purple", rarity: "Uncommon", pullRate: 10, image: null },
-            { name: "Green", rarity: "Rare", pullRate: 7, image: null },
-            { name: "Pink", rarity: "Epic", pullRate: 4, image: null },
-            { name: "White", rarity: "Legendary", pullRate: 2, image: null },
-            { name: "Black", rarity: "Legendary", pullRate: 1.99, image: null },
-            { name: "Bronze", rarity: "Chroma", pullRate: 0.80, image: null },
-            { name: "Sliver", rarity: "Chroma", pullRate: 0.60, image: null },
-            { name: "Gold", rarity: "Chroma", pullRate: 0.40, image: null },
-            { name: "Rainbow", rarity: "Mythical", pullRate: 0.01, image: null }
+            { name: "Red", rarity: "Common", pullRate: 31.80, image: "./Images/Red.png" },
+            { name: "Yellow", rarity: "Common", pullRate: 25, image: "./Images/Yellow.png" },
+            { name: "Blue", rarity: "Common", pullRate: 20, image: "./Images/Blue.png" },
+            { name: "Purple", rarity: "Uncommon", pullRate: 10, image: "./Images/Purple.png" },
+            { name: "Green", rarity: "Rare", pullRate: 7, image: "./Images/Green.png" },
+            { name: "Orange", rarity: "Rare", pullRate: 5, image: "./Images/Orange.png" },
+            { name: "Pink", rarity: "Epic", pullRate: 4, image: "./Images/Pink.png" },
+            { name: "White", rarity: "Legendary", pullRate: 2, image: "./Images/White.png" },
+            { name: "Black", rarity: "Legendary", pullRate: 1.99, image: "./Images/Black.png" },
+            { name: "Bronze", rarity: "Chroma", pullRate: 0.80, image: "./Images/Bronze.png" },
+            { name: "Sliver", rarity: "Chroma", pullRate: 0.60, image: "./Images/Sliver.png" },
+            { name: "Gold", rarity: "Chroma", pullRate: 0.40, image: "./Images/Gold.png" },
+            { name: "Rainbow", rarity: "Mythical", pullRate: 0.01, image: "./Images/Rainbow.png" }
         ]
     },
 
@@ -324,45 +325,9 @@ const packs = {
             { name: "Rusty Bot", rarity: "Common", pullRate: 35, image: "./Images/Rusty-bot.png" },
             { name: "Lil Bot", rarity: "Common", pullRate: 25, image: "./Images/lil%20bot.png" },
             { name: "Robot", rarity: "Uncommon", pullRate: 18, image: "./Images/robot.png.png" },
-            { name: "Cyber Bot", rarity: "Rare", pullRate: 10, image: "./Images/Cyber-bot.png" },
+            { name: "Cyber Bot", rarity: "Rare", pullRate: 15, image: "./Images/Cyber-bot.png" },
             { name: "Titan", rarity: "Epic", pullRate: 6, image: "./Images/Titan.png" },
-            { name: "Mega Titan", rarity: "Legendary", pullRate: 6, image: "./Images/Mega%20Titan.png" }
-        ]
-    },
-
-    "OG Pack": {
-        name: "OG Pack",
-        price: 50,
-        image: null,
-        rewards: [
-            { name: "@Totallynotatheatrekid", rarity: "OG", pullRate: 8 },
-            { name: "@strykr-v2k", rarity: "OG", pullRate: 7 },
-            { name: "@HelenSmith-o3k", rarity: "OG", pullRate: 6 },
-            { name: "@LeviPlaysAndEdits", rarity: "OG", pullRate: 5 },
-            { name: "Waymore", rarity: "OG", pullRate: 5 },
-            { name: "@adrianarturosm", rarity: "OG", pullRate: 5 },
-            { name: "@TheJoeyCha-real", rarity: "OG", pullRate: 5 },
-            { name: "sinozilla", rarity: "OG", pullRate: 5 },
-            { name: "Sentinel", rarity: "OG", pullRate: 4 },
-            { name: "math roblox", rarity: "OG", pullRate: 4 },
-            { name: "knuckles", rarity: "OG", pullRate: 4 },
-            { name: "@fortzgeometrydash", rarity: "OG", pullRate: 4 },
-            { name: "starborn", rarity: "OG", pullRate: 4 },
-            { name: "@Forniteboy", rarity: "OG", pullRate: 4 },
-            { name: "@NicholeCohen", rarity: "OG", pullRate: 4 },
-            { name: "@KETCHAAA534", rarity: "OG", pullRate: 3 },
-            { name: "@bradleyrauch4881", rarity: "OG", pullRate: 3 },
-            { name: "@SfsultamateGamer", rarity: "OG", pullRate: 3 },
-            { name: "@ALemonFoxranter", rarity: "OG", pullRate: 3 },
-            { name: "@cloudysquash", rarity: "OG", pullRate: 2 },
-            { name: "@JACollins07", rarity: "OG", pullRate: 2 },
-            { name: "@AnabelleDale", rarity: "OG", pullRate: 2 },
-            { name: "@Jennifer-c5q2h", rarity: "OG", pullRate: 2 },
-            { name: "@Cptbabyrabbit-n4x", rarity: "OG", pullRate: 1 },
-            { name: "@Fat_frog_in_space", rarity: "OG", pullRate: 1 },
-            { name: "@AmeeSoni1", rarity: "OG", pullRate: 1 },
-            { name: "@Sheldon-cooper-explains", rarity: "OG", pullRate: 1 },
-            { name: "@TheJoeyCha-", rarity: "OG", pullRate: 2 }
+            { name: "Mega Titan", rarity: "Legendary", pullRate: 1, image: "./Images/Mega%20Titan.png" }
         ]
     },
 
@@ -404,7 +369,84 @@ const packs = {
             { name: "Spooky Skull", rarity: "Mythical", pullRate: 0.0009, image: "./Images/Spooky-Skeleton.png" },
             { name: "Screaming Zombie", rarity: "Hidden", pullRate: 0.0001, image: "./Images/Screaming Zombie.png" },
         ]
-    }
+    },
+
+    "Space Pack": {
+        name: "Space Pack",
+        price: 25,
+        image:"./Images/Astronaut.png",
+        rewards: [
+            { name: "Astronaut", rarity: "Common", pullRate: 30, image: "./Images/Astronaut.png" },
+            { name: "Earth", rarity: "Common", pullRate: 25,image: "./Images/Earth.png" },
+            { name: "Rocket Ship", rarity: "Uncommon", pullRate: 15, image: "./Images/rocket-ship.png" },
+            { name: "Alien", rarity: "Rare", pullRate: 15.01, image: "./Images/Alien.png" },
+            { name: "Mars", rarity: "Epic", pullRate: 9,image: "./Images/Mars.png" },
+            { name: "UFO", rarity: "Legendary", pullRate:4.89, image: "./Images/UFO.png" },
+            { name: "ISS", rarity: "Chroma", pullRate: 0.1,  image: "./Images/ISS.png" },   
+            { name: "The Sun", rarity: "Chroma", pullRate:0.01, image: "./Images/the-sun.png" },                                                                                                         
+
+        ]
+    },
+
+       "OG Pack": {
+        name: "OG Pack",
+        price: 50,
+        image: null,
+        rewards: [
+            { name: "@Totallynotatheatrekid", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@strykr-v2k", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@HelenSmith-o3k", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@LeviPlaysAndEdits", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "Waymore", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@adrianarturosm", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@TheJoeyCha-real", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "sinozilla", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "Sentinel", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "math roblox", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "knuckles", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@fortzgeometrydash", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "starborn", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@Forniteboy", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@NicholeCohen", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@KETCHAAA534", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@bradleyrauch4881", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@SfsultamateGamer", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@ALemonFoxranter", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@cloudysquash", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@JACollins07", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@AnabelleDale", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@Jennifer-c5q2h", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@Cptbabyrabbit-n4x", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@Fat_frog_in_space", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@AmeeSoni1", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@Sheldon-cooper-explains", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@TheJoeyCha-", rarity: "OG", pullRate: 3.571392857142857 },
+            { name: "@GoldenTaterDEV-", rarity: "Hidden", pullRate: 0.001 }
+
+        ]
+    },
+
+    "Superhero Pack": {
+        name: "Superhero Pack",
+        price: 25,
+        image:"./Images/Superman.png",
+        rewards: [
+            { name: "Flash", rarity: "Common", pullRate: 30, image: "./Images/Flash.png" },
+            { name: "Captain America", rarity: "Common", pullRate: 25,image: "./Images/Captain America.png" },
+            { name: "Green-Lantern", rarity: "Uncommon", pullRate: 15, image: "./Images/Green-Lantern.png" },
+            { name: "Spider-man", rarity: "Rare", pullRate: 15.01, image: "./Images/Spider-man.png" },
+            { name: "Batman", rarity: "Epic", pullRate: 9,image: "./Images/Batman.png" },
+            { name: "Thor", rarity: "Epic", pullRate: 9,image: "./Images/Thor.png" },
+            { name: "Superman", rarity: "Legendary", pullRate:4.89, image: "./Images/Superman.png" },
+            { name: "Thor's Hammer", rarity: "Chroma", pullRate: 0.1,  image: "./Images/Thor's Hammer.png" },   
+            { name: "Iron man", rarity: "Mythical", pullRate:0.01, image: "./Images/Iron man.png" },                                                                                                         
+
+        ]
+    },
+
+
+
+
 };
 // ============================================================
 // HIDDEN BLOCKS
@@ -436,6 +478,21 @@ const hiddenBlocks = [
 // ============================================================
 
 const newsItems = [
+
+    {
+        date: "October 12, 2026",
+        version: "v2.2",
+        title: "Its Raining PACKS!!!",
+        text:
+            "Look at the weather, its raining... Packs?!",
+        details: [
+
+            "2 new PACKS! Superhero pack, and Space Pack! .",
+            "Redesigned the OG pack with 29 OG Blocks.",
+            "Added Images to color pack!"
+
+        ]
+    },
 
     {
         date: "October 11, 2026",
@@ -2125,8 +2182,7 @@ function renderMarket() {
                     `
 
                     : `
-                        <div class="pack-placeholder">
-                            ?
+\                                 ?
                         </div>
                     `;
 
@@ -2394,238 +2450,187 @@ function showPackContents(
 // PACK OPENING
 // ============================================================
 
-function animateOpening(
-    pack,
-    targetReward
-) {
 
-    const oldOverlay =
-        $("openingOverlay");
+function animateOpening(pack, targetReward) {
+    const oldOverlay = $("openingOverlay");
 
-    if (oldOverlay) {
-        oldOverlay.remove();
-    }
+    if (oldOverlay) oldOverlay.remove();
 
-    const overlay =
-        document.createElement(
-            "div"
-        );
-
-    overlay.id =
-        "openingOverlay";
-
-    overlay.className =
-        "opening-overlay opening-black";
-
-    document.body.appendChild(
-        overlay
-    );
-
-    const stages = [
-
-        {
-            rarity: "Common",
-            className:
-                "opening-common"
-        },
-
-        {
-            rarity: "Uncommon",
-            className:
-                "opening-uncommon"
-        },
-
-        {
-            rarity: "Rare",
-            className:
-                "opening-rare"
-        },
-
-        {
-            rarity: "Epic",
-            className:
-                "opening-epic"
-        },
-
-        {
-            rarity: "Legendary",
-            className:
-                "opening-legendary"
-        },
-
-        {
-            rarity: "Chroma",
-            className:
-                "opening-chroma"
-        },
-
-        {
-            rarity: "Mythical",
-            className:
-                "opening-mythical"
-        }
-
-    ];
+    const overlay = document.createElement("div");
+    overlay.id = "openingOverlay";
+    overlay.className = "opening-overlay opening-black";
 
     overlay.innerHTML = `
+        <div class="opening-rays"></div>
+        <div class="opening-flash"></div>
 
         <div class="opening-box">
-
-            <div
-                class="opening-rarity"
-                id="openingRarity"
-            >
+            <div class="opening-rarity" id="openingRarity">
                 OPENING...
             </div>
 
-            <div
-                class="opening-block"
-                id="openingBlock"
-            >
-                ?
+            <div class="opening-pack">
+                <div class="opening-silhouette">
+                    <span>?</span>
+                </div>
             </div>
 
+            <div class="opening-block" id="openingBlock"></div>
         </div>
-
     `;
 
-    const rarityElement =
-        $("openingRarity");
+    document.body.appendChild(overlay);
 
-    const blockElement =
-        $("openingBlock");
+    const rarityElement = overlay.querySelector("#openingRarity");
+    const blockElement = overlay.querySelector("#openingBlock");
+    const packElement = overlay.querySelector(".opening-pack");
+    const silhouette = overlay.querySelector(".opening-silhouette");
+    const rays = overlay.querySelector(".opening-rays");
+    const flash = overlay.querySelector(".opening-flash");
 
-    let targetIndex =
-        stages.findIndex(
-            stage =>
-                stage.rarity ===
-                targetReward.rarity
-        );
+    const stages = [
+        { rarity: "Common", className: "opening-common" },
+        { rarity: "Uncommon", className: "opening-uncommon" },
+        { rarity: "Rare", className: "opening-rare" },
+        { rarity: "Epic", className: "opening-epic" },
+        { rarity: "Legendary", className: "opening-legendary" },
+        { rarity: "Chroma", className: "opening-chroma" },
+        { rarity: "Mythical", className: "opening-mythical" }
+    ];
 
-    // OG uses the Mythical stage, then gets
-    // its own final reveal.
-    if (
-        targetReward.rarity ===
-        "OG"
-    ) {
-
-        targetIndex =
-            stages.length - 1;
-
-    }
-
-    if (
-        targetIndex < 0
-    ) {
-
-        targetIndex = 0;
-
-    }
-
-    let stageIndex =
-        -1;
-
-    function nextStage() {
-
-        stageIndex++;
-
-        if (
-            stageIndex >
-            targetIndex
-        ) {
-
-            finishOpening();
-
-            return;
-        }
-
-        const stage =
-            stages[stageIndex];
-
-        rarityElement.textContent =
-            stage.rarity;
-
-        overlay.className =
-            `opening-overlay ${stage.className}`;
-
-        setTimeout(
-            nextStage,
-            420
-        );
-
-    }
-
-    function finishOpening() {
-
-        overlay.className =
-            "opening-overlay opening-final";
-
-        if (
-            targetReward.image
-        ) {
-
-            blockElement.innerHTML = `
-
-                <img
-                    src="${targetReward.image}"
-                    alt="${escapeHTML(
-                        targetReward.name
-                    )}"
-                >
-
-            `;
-
-        } else {
-
-            blockElement.textContent =
-                getRewardVisual(
-                    targetReward
-                );
-
-        }
-
-        if (
-            targetReward.rarity ===
-            "OG"
-        ) {
-
-            rarityElement.textContent =
-                "OG!";
-
-        } else {
-
-            rarityElement.textContent =
-                targetReward.rarity;
-
-        }
-
-        setTimeout(
-            () => {
-
-                addRewardToInventory(
-                    targetReward
-                );
-
-                overlay.remove();
-
-                showNotification(
-                    `You got ${targetReward.name}!`
-                );
-
-                renderMarket();
-
-            },
-            1800
-        );
-
-    }
-
-    setTimeout(
-        nextStage,
-        500
+    let targetIndex = stages.findIndex(
+        stage => stage.rarity === targetReward.rarity
     );
 
+    if (targetReward.rarity === "OG") {
+        targetIndex = stages.length - 1;
+    }
+
+    if (targetIndex < 0) targetIndex = 0;
+
+    const wait = ms =>
+        new Promise(resolve => setTimeout(resolve, ms));
+
+    const rarityColors = {
+        Common: "#68686f",
+        Uncommon: "#169947",
+        Rare: "#286fca",
+        Epic: "#7338b7",
+        Legendary: "#c99500",
+        Chroma: "#10a6bd",
+        Mythical: "#c82642",
+        OG: "#ffffff"
+    };
+
+    async function runOpening() {
+        // 1. Pack appears from below.
+        await wait(150);
+
+        packElement.classList.add("pack-rise");
+
+        // 2. Silhouette emerges from the pack.
+        await wait(650);
+
+        silhouette.classList.add("silhouette-rise");
+
+        // 3. Silhouette shakes.
+        await wait(550);
+
+        silhouette.classList.add("silhouette-shake");
+
+        await wait(650);
+
+        // 4. Cycle through rarity stages.
+        for (let i = 0; i <= targetIndex; i++) {
+            const stage = stages[i];
+
+            overlay.className =
+                `opening-overlay ${stage.className}`;
+
+            rarityElement.textContent = stage.rarity;
+
+            const color = rarityColors[stage.rarity] || "#ffffff";
+            overlay.style.setProperty("--rarity-color", color);
+
+            rays.classList.remove("rays-burst");
+            void rays.offsetWidth;
+            rays.classList.add("rays-burst");
+
+            blockElement.animate(
+                [
+                    { transform: "scale(1) rotate(0deg)" },
+                    { transform: "scale(1.08) rotate(-5deg)" },
+                    { transform: "scale(1.08) rotate(5deg)" },
+                    { transform: "scale(1) rotate(0deg)" }
+                ],
+                { duration: 300 }
+            );
+
+            await wait(450);
+        }
+
+        // 5. Final flash.
+        overlay.classList.add("opening-final");
+        flash.classList.remove("flash-burst");
+        void flash.offsetWidth;
+        flash.classList.add("flash-burst");
+
+        await wait(350);
+
+        // 6. Reveal the actual Blook.
+        packElement.remove();
+        silhouette.remove();
+
+        if (targetReward.image) {
+            const image = document.createElement("img");
+            image.src = targetReward.image;
+            image.alt = targetReward.name || "Reward";
+            blockElement.replaceChildren(image);
+        } else {
+            blockElement.textContent = getRewardVisual(targetReward);
+        }
+
+        blockElement.classList.add("reward-reveal");
+
+        rarityElement.textContent =
+            targetReward.rarity === "OG"
+                ? "OG!"
+                : targetReward.rarity;
+
+        const details = document.createElement("div");
+        details.className = "opening-details";
+
+        const name = document.createElement("h2");
+        name.textContent = targetReward.name || "Unknown Blook";
+
+        const rarity = document.createElement("p");
+        rarity.textContent = `${targetReward.rarity || "Unknown"} Blook`;
+
+        const rate = document.createElement("p");
+        rate.className = "opening-pull-rate";
+        rate.textContent =
+            targetReward.pullRate != null
+                ? `${targetReward.pullRate}% pull chance`
+                : "Pull chance unknown";
+
+        details.append(name, rarity, rate);
+        blockElement.insertAdjacentElement("afterend", details);
+
+        await wait(2200);
+
+        addRewardToInventory(targetReward);
+        overlay.remove();
+
+        showNotification(`You got ${targetReward.name}!`);
+        renderMarket();
+    }
+
+    runOpening().catch(error => {
+        console.error("Pack opening animation failed:", error);
+        overlay.remove();
+    });
 }
+
 
 
 function getRewardVisual(
@@ -2658,206 +2663,247 @@ function getRewardVisual(
 // INVENTORY
 // ============================================================
 
-function addRewardToInventory(
-    reward
-) {
-
+function addRewardToInventory(reward) {
     gameState.inventory.push({
-
-        name:
-            reward.name,
-
-        rarity:
-            reward.rarity,
-
-        image:
-            reward.image ??
-            null,
-
-        obtained:
-            Date.now()
-
+        name: reward.name,
+        rarity: reward.rarity,
+        image: reward.image ?? null,
+        packName: currentPack,
+        obtained: Date.now()
     });
 
     saveGame();
-
 }
 
 
+
 function renderBlocks() {
+    const content = getMainContent();
+    if (!content) return;
 
-    const content =
-        getMainContent();
+    const rarityOrder = [
+        "Common", "Uncommon", "Rare", "Epic",
+        "Legendary", "Chroma", "Mythical", "OG", "Hidden"
+    ];
 
-    if (!content) {
-        return;
-    }
+    const previousSearch =
+        document.getElementById("blockSearch")?.value || "";
 
-    let html = `
+    const previousRarity =
+        document.getElementById("blockRarityFilter")?.value || "All";
 
+    const showPacks =
+        document.getElementById("showCollectionPacks")?.checked ?? true;
+
+    const showFree =
+        document.getElementById("showFreeBlocks")?.checked ?? true;
+
+    content.innerHTML = `
         <div class="page-header">
-
             <div>
-
-                <h1>
-                    BLOCKS
-                </h1>
-
-                <p>
-                    Your collection of Blocks.
-                </p>
-
+                <h1>MY BLOCKS</h1>
+                <p>Discover every Block across every pack.</p>
             </div>
-
             <div class="market-coins">
-                ${gameState.inventory.length}
-                Blocks
+                ${gameState.inventory.length} collected
             </div>
-
         </div>
 
-    `;
+        <div class="collection-controls">
+            <input
+                id="blockSearch"
+                type="search"
+                placeholder="Search Blocks..."
+                value="${escapeHTML(previousSearch)}"
+            >
 
-    if (
-        gameState.inventory.length ===
-        0
-    ) {
+            <select id="blockRarityFilter">
+                <option value="All">All Rarities</option>
+                ${rarityOrder.map(rarity => `
+                    <option
+                        value="${rarity}"
+                        ${previousRarity === rarity ? "selected" : ""}
+                    >${rarity}</option>
+                `).join("")}
+            </select>
 
-        html += `
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    📦
-                </div>
-
-                <h2>
-                    No Blocks Yet
-                </h2>
-
-                <p>
-                    Buy a pack in the Market
-                    to start collecting.
-                </p>
-
-                <button
-                    class="primary-button"
-                    onclick="openTab('market')"
-                    type="button"
+            <label>
+                <input
+                    id="showCollectionPacks"
+                    type="checkbox"
+                    ${showPacks ? "checked" : ""}
                 >
-                    GO TO MARKET
-                </button>
+                Show Packs
+            </label>
 
-            </div>
+            <label>
+                <input
+                    id="showFreeBlocks"
+                    type="checkbox"
+                    ${showFree ? "checked" : ""}
+                >
+                Show Free Blocks
+            </label>
+        </div>
 
-        `;
-
-        content.innerHTML =
-            html;
-
-        return;
-    }
-
-    html += `
-        <div class="block-grid">
+        <div id="collectionSections"></div>
     `;
 
-    gameState.inventory.forEach(
-        (block, index) => {
+    const searchInput = document.getElementById("blockSearch");
+    const raritySelect = document.getElementById("blockRarityFilter");
+    const packsToggle = document.getElementById("showCollectionPacks");
+    const freeToggle = document.getElementById("showFreeBlocks");
+    const sections = document.getElementById("collectionSections");
 
-            const imageHTML =
-                block.image
+    function renderCollectionSections() {
+        const search = searchInput.value.trim().toLowerCase();
+        const selectedRarity = raritySelect.value;
+        const displayPacks = packsToggle.checked;
+        const displayFree = freeToggle.checked;
 
-                    ? `
-                        <img
-                            src="${block.image}"
-                            alt="${escapeHTML(
-                                block.name
-                            )}"
-                        >
-                    `
+        let output = "";
 
-                    : `
-                        <div class="block-placeholder">
-                            ${getRewardVisual(
-                                block
-                            )}
+        function makeCard(reward, inventoryIndex) {
+            const unlocked = inventoryIndex !== -1;
+
+            if (
+                search &&
+                !reward.name.toLowerCase().includes(search) &&
+                !(unlocked && reward.rarity.toLowerCase().includes(search))
+            ) {
+                return "";
+            }
+
+            if (
+                selectedRarity !== "All" &&
+                reward.rarity !== selectedRarity
+            ) {
+                return "";
+            }
+
+            // Locked collectible: silhouette only.
+            if (!unlocked) {
+                return `
+                    <div class="collection-block locked-block"
+                         title="Not unlocked">
+                        <div class="collection-block-image">
+                            <div class="locked-silhouette">
+                                <span class="lock-icon">🔒</span>
+                            </div>
                         </div>
-                    `;
+                    </div>
+                `;
+            }
+
+            const block = gameState.inventory[inventoryIndex];
 
             const equipped =
-                gameState.equipped &&
-                gameState.equipped.name ===
-                    block.name
-                    ? "equipped"
-                    : "";
+                gameState.equipped?.name === block.name;
 
-            html += `
+            const image = block.image
+                ? `<img src="${block.image}" alt="${escapeHTML(block.name)}">`
+                : `<div class="block-placeholder">${getRewardVisual(block)}</div>`;
 
-                <div
-                    class="
-                        block-card
-                        ${equipped}
-                    "
+            // Clickable tile. The click handler is attached below.
+            return `
+                <button
+                    class="collection-block ${equipped ? "equipped" : ""}"
+                    type="button"
+                    data-block-index="${inventoryIndex}"
+                    aria-label="View ${escapeHTML(block.name)}"
                 >
-
-                    <div class="block-card-image">
-                        ${imageHTML}
+                    <div class="collection-block-image">
+                        ${image}
                     </div>
-
-                    <h3>
-                        ${escapeHTML(
-                            block.name
-                        )}
-                    </h3>
-
-                    <div
-                        class="
-                            rarity-badge
-                            rarity-${block.rarity.toLowerCase()}
-                        "
-                    >
-                        ${block.rarity}
-                    </div>
-
-                    <button
-                        class="primary-button"
-                        onclick="equipBlock(${index})"
-                        type="button"
-                    >
-                        ${
-                            equipped
-                                ? "EQUIPPED"
-                                : "EQUIP"
-                        }
-                    </button>
-
-                    <button
-                        class="sell-button"
-                        onclick="sellBlock(${index})"
-                        type="button"
-                    >
-                        SELL FOR
-                        ${getSellValue(
-                            block.rarity
-                        )}
-                        COINS
-                    </button>
-
-                </div>
-
+                </button>
             `;
-
         }
-    );
 
-    html += `
-        </div>
-    `;
+        // Display every pack and every reward, even locked ones.
+        if (displayPacks) {
+            Object.entries(packs).forEach(([packKey, pack]) => {
+                const cards = pack.rewards.map(reward => {
+                    const inventoryIndex = gameState.inventory.findIndex(
+                        block =>
+                            block.name === reward.name &&
+                            (
+                                block.packName === packKey ||
+                                block.packName === pack.name ||
+                                !block.packName
+                            )
+                    );
 
-    content.innerHTML =
-        html;
+                    return makeCard(reward, inventoryIndex);
+                }).join("");
 
+                if (cards) {
+                    output += `
+                        <section class="collection-pack">
+                            <h2>${escapeHTML(pack.name)}</h2>
+                            <div class="collection-pack-grid">
+                                ${cards}
+                            </div>
+                        </section>
+                    `;
+                }
+            });
+        }
+
+        // Hidden collectibles not listed in any pack go in Other.
+        const hiddenCollected = gameState.inventory
+            .map((block, index) => ({ block, index }))
+            .filter(({ block }) =>
+                block.rarity === "Hidden" &&
+                !Object.values(packs).some(pack =>
+                    pack.rewards.some(reward => reward.name === block.name)
+                )
+            );
+
+        const hiddenCards = hiddenCollected.map(({ block, index }) =>
+            makeCard(block, index)
+        ).join("");
+
+        if (hiddenCards) {
+            output += `
+                <section class="collection-pack">
+                    <h2>Other</h2>
+                    <div class="collection-pack-grid">
+                        ${hiddenCards}
+                    </div>
+                </section>
+            `;
+        }
+
+        if (displayFree) {
+            // Add free collectibles here when their list is defined.
+        }
+
+        sections.innerHTML = output ||
+            `<p class="empty-state">No Blocks match those filters.</p>`;
+
+        // IMPORTANT: handle clicks from tiles inside the collection.
+        sections.onclick = function(event) {
+            const tile = event.target.closest("[data-block-index]");
+
+            if (!tile || !sections.contains(tile)) return;
+
+            const index = Number(tile.dataset.blockIndex);
+
+            if (
+                Number.isInteger(index) &&
+                gameState.inventory[index]
+            ) {
+                showBlockDetails(index);
+            }
+        };
+    }
+
+    searchInput.addEventListener("input", renderCollectionSections);
+    raritySelect.addEventListener("change", renderCollectionSections);
+    packsToggle.addEventListener("change", renderCollectionSections);
+    freeToggle.addEventListener("change", renderCollectionSections);
+
+    renderCollectionSections();
 }
 
 
@@ -2903,6 +2949,65 @@ function getSellValue(
 
 }
 
+function showBlockDetails(index) {
+    const block = gameState.inventory[index];
+    if (!block) return;
+
+    document.getElementById("blockDetailsOverlay")?.remove();
+
+    const overlay = document.createElement("div");
+    overlay.id = "blockDetailsOverlay";
+    overlay.className = "block-details-overlay";
+
+    const image = block.image
+        ? `<img src="${block.image}" alt="${escapeHTML(block.name)}">`
+        : `<div class="block-details-emoji">${getRewardVisual(block)}</div>`;
+
+    overlay.innerHTML = `
+        <div class="block-details-panel" role="dialog" aria-modal="true">
+            <button class="block-details-close" type="button">✕</button>
+
+            <div class="block-details-image">
+                ${image}
+            </div>
+
+            <h2>${escapeHTML(block.name)}</h2>
+
+            <div class="rarity-badge rarity-${block.rarity.toLowerCase()}">
+                ${escapeHTML(block.rarity)}
+            </div>
+
+            <p>Collected Block</p>
+
+            <button class="primary-button" id="detailsEquip" type="button">
+                ${gameState.equipped?.name === block.name ? "EQUIPPED" : "EQUIP"}
+            </button>
+
+            <button class="sell-button" id="detailsSell" type="button">
+                SELL FOR ${getSellValue(block.rarity)} COINS
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelector(".block-details-close").onclick =
+        () => overlay.remove();
+
+    overlay.addEventListener("click", event => {
+        if (event.target === overlay) overlay.remove();
+    });
+
+    document.getElementById("detailsEquip").onclick = () => {
+        equipBlock(index);
+        overlay.remove();
+    };
+
+    document.getElementById("detailsSell").onclick = () => {
+        sellBlock(index);
+        overlay.remove();
+    };
+}
 
 function sellBlock(
     index
@@ -3668,12 +3773,12 @@ function submitSoloAnswer(
         soloSession.correctAnswers++;
 
         soloSession.coinsEarned +=
-            2;
+            1000000;
 
         gameState.correctAnswers++;
 
         gameState.coins +=
-            2;
+            1000000;
 
         if (
             currentSoloSubject ===

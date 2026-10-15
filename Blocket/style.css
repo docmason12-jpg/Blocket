@@ -3304,3 +3304,211 @@ body.theme-one-purple .menu-item.active {
     }
 
 }
+
+
+/* Pack and silhouette */
+.opening-pack {
+    width: 150px;
+    height: 150px;
+    margin: 20px auto 0;
+    border-radius: 22px;
+    background: #25252d;
+    border: 4px solid #555562;
+    box-shadow: 0 12px 30px #0008;
+    opacity: 0;
+    transform: translateY(130px) scale(.65);
+}
+
+.pack-rise {
+    animation: packRise .65s cubic-bezier(.2, 1.4, .4, 1) forwards;
+}
+
+.opening-silhouette {
+    position: absolute;
+    width: 100px;
+    height: 110px;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    background: #050508;
+    border-radius: 28px 28px 18px 18px;
+    opacity: 0;
+    box-shadow: 0 0 0 8px #0002;
+}
+
+.opening-silhouette span {
+    display: block;
+    color: transparent;
+}
+
+.silhouette-rise {
+    animation: silhouetteRise .55s ease-out forwards;
+}
+
+.silhouette-shake {
+    animation: silhouetteShake .65s ease-in-out;
+}
+
+@keyframes packRise {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes silhouetteRise {
+    from {
+        opacity: 0;
+        bottom: 10%;
+        transform: translate(-50%, 30px) scale(.7);
+    }
+    to {
+        opacity: 1;
+        bottom: 100%;
+        transform: translate(-50%, 0) scale(1);
+    }
+}
+
+@keyframes silhouetteShake {
+    0%, 100% { rotate: 0deg; }
+    20% { rotate: -7deg; }
+    40% { rotate: 7deg; }
+    60% { rotate: -5deg; }
+    80% { rotate: 5deg; }
+}
+
+/* Rarity rays */
+.opening-rays {
+    position: absolute;
+    inset: -50%;
+    pointer-events: none;
+    opacity: 0;
+    background: repeating-conic-gradient(
+        from 0deg,
+        transparent 0deg 10deg,
+        var(--rarity-color, #ffffff) 11deg 13deg,
+        transparent 14deg 22deg
+    );
+    mask-image: radial-gradient(
+        circle,
+        black 0%,
+        transparent 68%
+    );
+}
+
+.rays-burst {
+    animation: raysBurst .45s ease-out;
+}
+
+@keyframes raysBurst {
+    0% {
+        opacity: 0;
+        transform: scale(.35) rotate(0deg);
+    }
+    35% { opacity: .8; }
+    100% {
+        opacity: .25;
+        transform: scale(1.1) rotate(18deg);
+    }
+}
+
+/* White flash */
+.opening-flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.flash-burst {
+    animation: flashBurst .35s ease-out;
+}
+
+@keyframes flashBurst {
+    0% { opacity: 0; }
+    25% { opacity: .95; }
+    100% { opacity: 0; }
+}
+
+/* Final reward */
+.reward-reveal {
+    animation: rewardReveal .55s cubic-bezier(.2, 1.5, .4, 1) both;
+}
+
+@keyframes rewardReveal {
+    from {
+        opacity: 0;
+        transform: scale(.35) rotate(-12deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.opening-pull-rate {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+
+
+/* FIX: Blocks and pack image sizing */
+
+.block-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(150px, 1fr)
+    );
+    gap: 18px;
+    align-items: start;
+    width: 100%;
+}
+
+.block-card {
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.block-card-image {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.block-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Keep pack artwork from stretching */
+.pack-card img,
+.pack-image img {
+    display: block;
+    width: 100%;
+    height: 160px;
+    object-fit: contain;
+}
+
+/* Small screens */
+@media (max-width: 500px) {
+    .block-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .block-card-image {
+        height: 120px;
+    }
+}
