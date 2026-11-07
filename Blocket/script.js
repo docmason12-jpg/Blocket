@@ -1342,6 +1342,32 @@ joinGameButton.addEventListener("click", () => {
       }
 
       // ========================================
+      // IMPOSTERS MULTIPLAYER MESSAGES
+      // ========================================
+
+      // Receive the shared game state, secret role,
+      // and private task list from the host.
+      if (data.type === "imposter-start") {
+        startImposterGameClient(data.state, data.role, data.tasks);
+      }
+
+      // Receive public game updates.
+      if (data.type === "imposter-state") {
+        imposterGameState = data.state;
+
+        renderImposterGame();
+
+        if (typeof renderImposterTaskProgress === "function") {
+          renderImposterTaskProgress();
+        }
+      }
+
+      // Receive the result of a task answer.
+      if (data.type === "imposter-task-result") {
+        receiveImposterTaskResult(data);
+      }
+
+      // ========================================
       // OTHER GAME MODE MESSAGES
       // ========================================
 
@@ -1428,23 +1454,15 @@ leaveLobbyButton.addEventListener("click", () => {
 startGameButton.addEventListener("click", () => {
   if (!isRoomHost) return;
 
-  // Start Pirate Treasure when that mode is selected.
   if (selectedGameMode === "pirate") {
     startPirateGame();
     return;
   }
 
-  // Other game modes.
-  hostConnections.forEach((connection) => {
-    if (connection.open) {
-      connection.send({
-        type: "game-starting",
-        gameMode: selectedGameMode,
-      });
-    }
-  });
-
-  lobbyMessage.textContent = "Imposter gameplay is coming next!";
+  if (selectedGameMode === "imposter") {
+    startImposterGame();
+    return;
+  }
 });
 
 // ========================================
