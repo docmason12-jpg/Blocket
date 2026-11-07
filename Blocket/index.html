@@ -1,238 +1,229 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blocket</title>
-
-    <link
-        rel="stylesheet"
-        href="./style.css?v=20"
-    >
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <!-- =====================================================
-         START SCREEN
-         ===================================================== -->
-
-    <div
-        id="startScreen"
-        class="start-screen"
-    >
-
-        <div class="start-box">
-
-            <h1>BLOCKET</h1>
-
-            <button
-                id="startLoginButton"
-                class="start-button"
-                type="button"
-            >
-                LOG IN
-            </button>
-
-            <button
-                id="guestButton"
-                class="start-button"
-                type="button"
-            >
-                PLAY AS GUEST
-            </button>
-
+    <!-- ACCOUNT WELCOME SCREEN -->
+    <div id="account-screen" class="account-screen">
+        <div class="account-box">
+            <h1>🟪 BLOCKET</h1>
+            <p>Collect. Play. Have fun!</p>
+            <button id="login-button" class="account-button">Log In</button>
+            <button id="signup-button" class="account-button">Create Account</button>
+            <button id="guest-button" class="account-button">Play as Guest</button>
         </div>
-
     </div>
 
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="account-screen" style="display:none;">
+        <div class="account-box">
+            <h1>Welcome Back!</h1>
+            <input id="login-username" placeholder="Username" autocomplete="username">
+            <input id="login-password" type="password" placeholder="Password" autocomplete="current-password">
+            <p id="login-message"></p>
+            <button id="login-submit" class="account-button">Log In</button>
+            <button id="login-back" class="account-button">Back</button>
+        </div>
+    </div>
 
-    <!-- =====================================================
-         MAIN APP
-         ===================================================== -->
+    <!-- SIGNUP SCREEN -->
+    <div id="signup-screen" class="account-screen" style="display:none;">
+        <div class="account-box">
+            <h1>Create Account</h1>
+            <input id="signup-username" placeholder="Username" autocomplete="username">
+            <input id="signup-password" type="password" placeholder="Password" autocomplete="new-password">
+            <input id="signup-confirm" type="password" placeholder="Confirm Password" autocomplete="new-password">
+            <p id="signup-message"></p>
+            <button id="signup-submit" class="account-button">Create Account</button>
+            <button id="signup-back" class="account-button">Back</button>
+        </div>
+    </div>
 
-    <div
-        id="app"
-        class="app"
-        style="display: none;"
-    >
+    <!-- MAIN APPLICATION -->
+    <div id="app-layout" class="app-layout" style="display:none;">
 
-        <!-- =================================================
-             SIDEBAR
-             ================================================= -->
-
+        <!-- SIDEBAR -->
         <aside class="sidebar">
-
             <div class="sidebar-logo">
-                BLOCKET
+                <div class="logo-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <h2 class="logo-text">BLOCKET</h2>
             </div>
 
-            <div class="sidebar-menu">
+            <nav class="side-nav">
+                <button id="packs-nav" class="nav-button active">📦 Packs</button>
+                <button id="collection-nav" class="nav-button">📚 Collection</button>
+                <button id="play-nav" class="nav-button">🎮 Play</button>
+                <button id="host-nav" class="nav-button">🖥️ Host</button>
+                <button id="daily-reward-button" class="nav-button">🎁 Claim Daily Reward</button>
+            </nav>
 
-                <div
-                    class="menu-item active"
-                    data-tab="market"
-                >
-                    MARKET
-                </div>
-
-                <div
-                    class="menu-item"
-                    data-tab="blocks"
-                >
-                    BLOCKS
-                </div>
-
-                <div
-                    class="menu-item"
-                    data-tab="news"
-                >
-                    NEWS
-                </div>
-
-                <div
-                    class="menu-item"
-                    data-tab="solo"
-                >
-                    SOLO
-                </div>
-
-                <div
-                    class="menu-item"
-                    data-tab="settings"
-                >
-                    SETTINGS
-                </div>
-
+            <div class="token-display">
+                🪙 <span id="token-balance">500</span>
             </div>
-
         </aside>
 
+        <div id="username-display">👤 Guest</div>
 
-        <!-- =================================================
-             MAIN
-             ================================================= -->
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
 
-        <main class="main">
-
-            <div class="player-info">
-
-                <button
-                    class="theme-button"
-                    id="themeButton"
-                    onclick="openTab('settings')"
-                    aria-label="Open themes"
-                    title="Themes"
-                    type="button"
-                >
-                    🎨
-                </button>
-
-                <button
-                    class="account-button"
-                    onclick="openAccount()"
-                    type="button"
-                >
-                    ACCOUNT
-                </button>
-
-                <div
-                    class="coin-display"
-                    id="coinDisplay"
-                >
-                    100 Coins
+            <!-- PACKS PAGE -->
+            <section id="packs-page">
+                <div class="page-heading">
+                    <h1>Packs</h1>
+                    <p>Open packs and discover new Blooks!</p>
                 </div>
 
-            </div>
+                <div id="pack-container" class="pack-container"></div>
+            </section>
 
+            <!-- COLLECTION PAGE -->
+            <section id="collection-page" style="display:none;">
+                <div class="page-heading">
+                    <h1>My Collection</h1>
+                    <p>All the Blooks you've discovered.</p>
+                </div>
 
-            <div
-                class="main-content"
-                id="mainContent"
-            >
-            </div>
+                <div id="collection-container"></div>
+            </section>
+
+            <!-- PLAY PAGE -->
+            <section id="play-page" style="display:none;">
+                <div class="page-heading">
+                    <h1>Play</h1>
+                    <p>Join a game with your friends!</p>
+                </div>
+
+                <div class="game-join-box">
+                    <h2>Join a Game</h2>
+                    <p>Enter the room code provided by the host.</p>
+
+                    <input
+                        id="join-room-code"
+                        type="text"
+                        maxlength="6"
+                        placeholder="ENTER CODE"
+                        autocomplete="off"
+                    >
+
+                    <button id="join-game-button" class="account-button">
+                        JOIN GAME
+                    </button>
+
+                    <p id="join-game-message"></p>
+                </div>
+            </section>
+
+            <!-- HOST PAGE -->
+            <section id="host-page" style="display:none;">
+                <div class="page-heading">
+                    <h1>Host a Game</h1>
+                    <p>Choose a game mode to get started!</p>
+                </div>
+
+                <h2 class="game-section-heading">Choose a Game Mode</h2>
+
+                <div class="game-mode-container">
+
+                    <button class="game-mode-card" data-game-mode="imposter">
+                        <div class="game-mode-icon">🕵️</div>
+                        <h2>Imposter</h2>
+                        <p>Complete tasks, answer questions, and watch out for the Imposter!</p>
+                        <span class="game-mode-select">SELECT</span>
+                    </button>
+
+                    <button class="game-mode-card" data-game-mode="pirate">
+                        <div class="game-mode-icon">🏴‍☠️</div>
+                        <h2>Pirate Treasure</h2>
+                        <p>Set sail, explore the seas, and search for hidden treasure!</p>
+                        <span class="game-mode-select">SELECT</span>
+                    </button>
+
+                </div>
+
+                <p id="selected-game-message">
+                    Select a game mode to continue.
+                </p>
+
+                <div class="host-game-controls">
+                    <button id="create-game-button" class="account-button" disabled>
+                        CREATE GAME
+                    </button>
+                </div>
+            </section>
+
+            <!-- LOBBY PAGE -->
+            <section id="lobby-page" style="display:none;">
+                <div class="page-heading">
+                    <h1>Game Lobby</h1>
+                    <p>Get ready to play!</p>
+                </div>
+
+                <div class="lobby-container">
+
+                    <div class="lobby-header">
+                        <div>
+                            <h2 id="lobby-game-name">Imposter</h2>
+                            <p>Waiting for players...</p>
+                        </div>
+
+                        <div class="room-code-container">
+                            <span>ROOM CODE</span>
+                            <strong id="lobby-room-code">------</strong>
+                        </div>
+                    </div>
+
+                    <div class="lobby-player-heading">
+                        <h3>Players</h3>
+                        <span id="lobby-player-count">1 Player</span>
+                    </div>
+
+                    <div id="lobby-player-list">
+                        <div class="lobby-player">
+                            <div class="lobby-player-blook">
+                                <img id="lobby-host-blook" src="" alt="Equipped Blook">
+                            </div>
+
+                            <div class="lobby-player-info">
+                                <strong id="lobby-host-username">Player</strong>
+                                <span>Host</span>
+                            </div>
+
+                            <div class="host-badge">HOST</div>
+                        </div>
+                    </div>
+
+                    <div class="lobby-footer">
+                        <button id="leave-lobby-button" class="account-button">
+                            Leave Lobby
+                        </button>
+
+                        <button id="start-game-button" class="account-button">
+                            START GAME
+                        </button>
+                    </div>
+
+                    <p id="lobby-message"></p>
+                </div>
+            </section>
 
         </main>
-
     </div>
 
-
-    <!-- =====================================================
-         ACCOUNT OVERLAY
-         ===================================================== -->
-
-    <div
-        id="accountOverlay"
-        class="account-overlay"
-    >
-
-        <div class="account-window">
-
-            <button
-                class="account-close"
-                onclick="closeAccount()"
-                aria-label="Close account"
-                type="button"
-            >
-                ×
-            </button>
-
-            <h1>
-                BLOCKET
-            </h1>
-
-            <div id="accountContent">
-
-                <h2>
-                    ACCOUNT
-                </h2>
-
-                <button
-                    class="account-main-button"
-                    onclick="showLogin()"
-                    type="button"
-                >
-                    LOG IN
-                </button>
-
-                <button
-                    class="account-main-button"
-                    onclick="showSignup()"
-                    type="button"
-                >
-                    SIGN UP
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         SUPABASE
-         ===================================================== -->
-
-    <script8
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-    ></script>
-
-
-    <!-- =====================================================
-         BLOCKET JS
-         ===================================================== -->
-
-    <script
-        src="./script.js?v=20"
-    ></script>
+<script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
+<script src="script.js"></script>
+<script src="pirate.js"></script>
 
 </body>
-
 </html>
